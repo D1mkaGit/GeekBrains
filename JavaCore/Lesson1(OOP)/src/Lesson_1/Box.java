@@ -1,13 +1,8 @@
 package Lesson_1;
 
 public class Box {
-    String color;
     String name;
     int weight;
-
-    void info(int a){
-        System.out.println(color + " " + name + " " + weight);
-    }
 
     public Box(String _name, int weight) {
         name = _name;
