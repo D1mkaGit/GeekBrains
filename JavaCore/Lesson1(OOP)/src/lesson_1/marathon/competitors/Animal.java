@@ -1,14 +1,14 @@
 package lesson_1.marathon.competitors;
 
 public class Animal implements Competitor {
-    String type;
-    String name;
+    private final String type;
+    private final String name;
 
-    int maxRunDistance;
-    int maxJumpHeight;
-    int maxSwimDistance;
+    private final int maxRunDistance;
+    private final int maxJumpHeight;
+    private final int maxSwimDistance;
 
-    boolean onDistance;
+    private boolean onDistance;
 
     @Override
     public boolean isOnDistance() {

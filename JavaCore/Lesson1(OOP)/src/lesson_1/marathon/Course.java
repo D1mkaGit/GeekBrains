@@ -6,5 +6,5 @@ package lesson_1.marathon;
  * который будет просить команду пройти всю полосу;
  */
 
-public class Cource {
+public class Course {
 }
