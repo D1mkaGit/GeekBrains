@@ -1,4 +1,4 @@
-package Lesson_1.Marathon;
+package lesson_1.marathon.competitors;
 
 public class Animal implements Competitor {
     String type;
