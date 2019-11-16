@@ -9,17 +9,17 @@ public class Human implements Competitor {
 
     private boolean active;
 
-    @Override
-    public boolean isOnDistance() {
-        return active;
-    }
-
     public Human(String name) {
         this.name = name;
         this.maxRunDistance = 5000;
         this.maxJumpHeight = 30;
         this.maxSwimDistance = 200;
         this.active = true;
+    }
+
+    @Override
+    public boolean isOnDistance() {
+        return active;
     }
 
     @Override

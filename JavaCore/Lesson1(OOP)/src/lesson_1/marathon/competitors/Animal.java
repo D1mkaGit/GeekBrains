@@ -10,11 +10,6 @@ public class Animal implements Competitor {
 
     private boolean onDistance;
 
-    @Override
-    public boolean isOnDistance() {
-        return onDistance;
-    }
-
     public Animal(String type, String name, int maxRunDistance, int maxJumpHeight, int maxSwimDistance) {
         this.type = type;
         this.name = name;
@@ -22,6 +17,11 @@ public class Animal implements Competitor {
         this.maxJumpHeight = maxJumpHeight;
         this.maxSwimDistance = maxSwimDistance;
         this.onDistance = true;
+    }
+
+    @Override
+    public boolean isOnDistance() {
+        return onDistance;
     }
 
     @Override
