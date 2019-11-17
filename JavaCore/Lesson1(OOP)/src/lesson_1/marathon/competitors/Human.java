@@ -1,18 +1,13 @@
-package Lesson_1.Marathon;
+package lesson_1.marathon.competitors;
 
 public class Human implements Competitor {
-    String name;
+    private final String name;
 
-    int maxRunDistance;
-    int maxJumpHeight;
-    int maxSwimDistance;
+    private final int maxRunDistance;
+    private final int maxJumpHeight;
+    private final int maxSwimDistance;
 
-    boolean active;
-
-    @Override
-    public boolean isOnDistance() {
-        return active;
-    }
+    private boolean active;
 
     public Human(String name) {
         this.name = name;
@@ -20,6 +15,11 @@ public class Human implements Competitor {
         this.maxJumpHeight = 30;
         this.maxSwimDistance = 200;
         this.active = true;
+    }
+
+    @Override
+    public boolean isOnDistance() {
+        return active;
     }
 
     @Override

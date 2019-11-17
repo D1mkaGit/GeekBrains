@@ -1,19 +1,14 @@
-package Lesson_1.Marathon;
+package lesson_1.marathon.competitors;
 
 public class Animal implements Competitor {
-    String type;
-    String name;
+    private final String type;
+    private final String name;
 
-    int maxRunDistance;
-    int maxJumpHeight;
-    int maxSwimDistance;
+    private final int maxRunDistance;
+    private final int maxJumpHeight;
+    private final int maxSwimDistance;
 
-    boolean onDistance;
-
-    @Override
-    public boolean isOnDistance() {
-        return onDistance;
-    }
+    private boolean onDistance;
 
     public Animal(String type, String name, int maxRunDistance, int maxJumpHeight, int maxSwimDistance) {
         this.type = type;
@@ -22,6 +17,11 @@ public class Animal implements Competitor {
         this.maxJumpHeight = maxJumpHeight;
         this.maxSwimDistance = maxSwimDistance;
         this.onDistance = true;
+    }
+
+    @Override
+    public boolean isOnDistance() {
+        return onDistance;
     }
 
     @Override
