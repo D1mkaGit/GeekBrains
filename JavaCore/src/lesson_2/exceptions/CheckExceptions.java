@@ -9,30 +9,45 @@ package lesson_2.exceptions;
  * должно быть брошено исключение MyArrayDataException – с детализацией, в какой именно ячейке лежат неверные данные.
  */
 
-public class Exceptions {
+public class CheckExceptions {
 
-    public void checkArray(String[][] arrToCheck) throws Exception {
+    public void checkArray(String[][] arrToCheck) throws MyArrayDataException, MyArraySizeException {
         int sumOfInts = 0;
         int arrDim2 = 4;
         int arrDim1 = 4;
-        String arraySizeExceptionMessage = "MyArraySizeException: массив должнен быть двумерный и строковый, размером " +
+        String arraySizeExceptionMessage = "массив должнен быть двумерный и строковый, размером " +
                 arrDim1 + "x" + arrDim2;
 
-        if (arrToCheck.length != arrDim1) throw new Exception(arraySizeExceptionMessage); // проверяем на длинну строки
+        if (arrToCheck.length != arrDim1)
+            throw new MyArraySizeException(arraySizeExceptionMessage); // проверяем на длинну строки
         for (int i = 0; i < arrToCheck.length; i++) {
             for (int j = 0; j < arrToCheck[i].length; j++) {
                 if (arrToCheck[i].length != arrDim1 || arrToCheck[j].length != arrDim2)
-                    throw new Exception(arraySizeExceptionMessage); //проверяем на длинну столбцы
+                    throw new MyArraySizeException(arraySizeExceptionMessage); //проверяем на длинну столбцы
                 try {
                     sumOfInts += Integer.parseInt(arrToCheck[i][j]);
                 } catch (NumberFormatException numFormEx) {
-                    throw new NumberFormatException("MyArrayDataException: в строке: " + i + " колонке: " + j + " находится " +
+                    throw new MyArrayDataException("в строке: " + i + " колонке: " + j + " находится " +
                             "не число, место этого там: " + numFormEx.getMessage().split(": ")[1]);
                     // убираем часть английского месседжа оставляем только проблемный стринг
                 }
             }
         }
         System.out.println("Сумма чисел в масиве: " + sumOfInts);
+    }
+}
+
+class MyArrayDataException extends Exception {
+
+    public MyArrayDataException(String msg) {
+        super(msg);
+    }
+}
+
+class MyArraySizeException extends Exception {
+
+    public MyArraySizeException(String msg) {
+        super(msg);
     }
 }
 

@@ -11,7 +11,7 @@ public class ExceptionsMain {
         try {
             // correct array of symbols (not for numbers check)
             /*System.out.println("***MyArrayDataException***");
-            new Exceptions().checkArray(new String[][]{
+            new CheckExceptions().checkArray(new String[][]{
             {"1", "2", "3", "4"},
             {"1", "2", "/", "d"},
             {"1", "2", "e", "f"},
@@ -19,7 +19,7 @@ public class ExceptionsMain {
 
             // incorrect array 1
             /*System.out.println("***MyArraySizeException***");
-            new Exceptions().checkArray(new String[][]{
+            new CheckExceptions().checkArray(new String[][]{
             {"1", "2", "3", "4"},
             {"1", "2", "c", "d"},
             {"1", "2", "e", "f"}
@@ -27,14 +27,14 @@ public class ExceptionsMain {
 
             // incorrect array 2
             /*System.out.println("***MyArraySizeException**");
-            new Exceptions().checkArray(new String[][]{
+            new CheckExceptions().checkArray(new String[][]{
             {"1", "2", "3", "4"},
             {"1", "2", "c", "d"},
             {"1", "2", "e", "f"},
             {"1","2"}});*/
 
             System.out.println("***Корректный массив с суммой***");
-            new Exceptions().checkArray(new String[][]{
+            new CheckExceptions().checkArray(new String[][]{
                     {"1", "2", "3", "4"},
                     {"1", "2", "3", "4"},
                     {"1", "2", "3", "4"},
