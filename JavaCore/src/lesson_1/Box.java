@@ -70,11 +70,12 @@ class MainBox {
 }
 
 class Tools {
+    String tools;
+
     public Tools(String tools) {
         this.tools = tools;
     }
 
-    String tools;
     void infoToolsAndBox(Box box) {
         System.out.println(tools + " "
                 + box.name + " "

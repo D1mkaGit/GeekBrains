@@ -14,48 +14,11 @@ public class Test {
 //}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //class Task1 {
 //    public static void main(String[] args) {
 //        System.out.println(new Task1());
 //    }
 //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //class A {
@@ -77,35 +40,6 @@ public class Test {
 //}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //class TestEquals {
 //    public static void main(String[] args) {
 //        String s1 = new String("Bicycle");
@@ -115,69 +49,12 @@ public class Test {
 //}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class TestInc {
     public static void main(String[] args) {
         int x = 0;
-        System.out.print(x++==++x);
+        System.out.print(x++ == ++x);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //class TestStr {

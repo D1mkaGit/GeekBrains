@@ -4,17 +4,16 @@ import java.util.Arrays;
 
 public class Animal {
 
-    private int mass[] = {1,2,3};
-
-    public int[] getMass() {
-        return mass;
-    }
-
     String name;
+    private int mass[] = {1, 2, 3};
 
     public Animal(String name) {
         //System.out.println("Animal");
         this.name = name;
+    }
+
+    public int[] getMass() {
+        return mass;
     }
 
     void info() {
@@ -41,7 +40,7 @@ class SuperCat extends Cat {
 
     public SuperCat(String name, String color, String surName) {
         super(name, color);
-       // System.out.println("SuperCat");
+        // System.out.println("SuperCat");
         this.surName = surName;
     }
 

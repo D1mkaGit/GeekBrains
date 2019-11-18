@@ -21,7 +21,7 @@ abstract class Hero {
     abstract void healing(Hero hero);
 
     void causeDamage(int damage) {
-        if(health < 0) {
+        if (health < 0) {
             System.out.println("Герой уже мертвый!");
         } else {
             health -= damage;
@@ -52,7 +52,7 @@ class Warrior extends Hero {
     @Override
     void hit(Hero hero) {
         if (hero != this) {
-            if(health < 0) {
+            if (health < 0) {
                 System.out.println("Герой погиб и бить не может!");
             } else {
                 hero.causeDamage(damage);
@@ -80,7 +80,7 @@ class Assasin extends Hero {
     @Override
     void hit(Hero hero) {
         if (hero != this) {
-            if(health < 0) {
+            if (health < 0) {
                 System.out.println("Герой погиб и бить не может!");
             } else {
                 hero.causeDamage(damage + cricitalHit);
@@ -130,14 +130,14 @@ class Game {
 
         for (int j = 0; j < round; j++) {
             for (int i = 0; i < team1.length; i++) {
-                if(randomStep.nextInt(2) == 0) {
-                    if(team1[i] instanceof Doctor) {
+                if (randomStep.nextInt(2) == 0) {
+                    if (team1[i] instanceof Doctor) {
                         team1[i].healing(team1[randomHealing.nextInt(2)]);
                     } else {
                         team1[i].hit(team2[i]);
                     }
                 } else {
-                    if(team2[i] instanceof Doctor) {
+                    if (team2[i] instanceof Doctor) {
                         team2[i].healing(team2[randomHealing.nextInt(2)]);
                     } else {
                         team2[i].hit(team1[i]);
@@ -148,11 +148,11 @@ class Game {
 
         System.out.println("---------------");
 
-        for (Hero t1: team1) {
+        for (Hero t1 : team1) {
             t1.info();
         }
 
-        for (Hero t2: team2) {
+        for (Hero t2 : team2) {
             t2.info();
         }
 
