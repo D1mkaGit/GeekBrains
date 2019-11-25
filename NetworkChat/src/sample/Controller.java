@@ -10,9 +10,13 @@ public class Controller {
     TextArea textArea;
 
     @FXML
+    TextArea textBlock;
+
+    @FXML
     TextField textField;
 
     public void sendMsg() {
+        textArea.setWrapText(true);
         textArea.appendText(textField.getText() + "\n");
         textField.clear();
         textField.requestFocus();
