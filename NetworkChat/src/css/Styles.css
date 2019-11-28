@@ -1,3 +1,16 @@
 #btn1 {
-    -fx-background-color: blue;
+    -fx-background-color:#3C91E6;
+    -fx-text-fill:#FAFFFD;
+}
+#textField{
+    -fx-text-fill:#342E37;
+    -fx-background-color:#ebedf7;
+}
+#textField:focused{
+    -fx-background-color:#fff;
+}
+
+#textArea .content{
+-fx-background-color:#FAFFFD;
+
 }
