@@ -1,11 +1,10 @@
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
-
 <?scenebuilder-stylesheet /css/Styles.css?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 <VBox fx:controller="sample.Controller"
       xmlns:fx="http://javafx.com/fxml" alignment="center">
@@ -16,6 +15,6 @@
     <HBox>
         <TextField fx:id="textField" HBox.hgrow="ALWAYS"
                    promptText="Введите сообщение..." onAction="#sendMsg"/>
-        <Button fx:id="btn1" text="Send" onAction="#sendMsg"/>
+        <Button fx:id="btn1" text="Отправить" onAction="#sendMsg"/>
     </HBox>
 </VBox>
