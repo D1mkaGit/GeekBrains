@@ -13,7 +13,7 @@ public class MultiThreadsCalculations {
 
     private float[] prepareArray() {
         float[] _arr = new float[size];
-        Arrays.fill(_arr, 1);
+        Arrays.fill(_arr, 1f);
         return _arr;
     }
 
