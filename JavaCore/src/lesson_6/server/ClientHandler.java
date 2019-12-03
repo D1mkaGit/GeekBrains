@@ -11,6 +11,10 @@ public class ClientHandler {
     MainServ serv;
     private Socket socket;
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     public ClientHandler( MainServ serv, Socket socket ) {
         try {
             this.socket = socket;

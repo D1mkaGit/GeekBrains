@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
 import static lesson_6.a_console_chat.constants.IP_ADDRESS;
@@ -19,77 +18,67 @@ public class Client {
         try {
             socket = new Socket(IP_ADDRESS, PORT);
             System.out.println("Клиент запущен!");
-
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (socket == null) System.exit(0); // иначе все дальнейшие действия выполняются
+        }
 
-            System.out.println("Клиент подключился к серверу. Теперь можно общаться!\nВведите текст: ");
-            Scanner scanner = new Scanner(System.in);
+        System.out.println("Клиент подключился к серверу. Теперь можно общаться!\nВведите текст: ");
+        Scanner scanner = new Scanner(System.in);
 
-            Thread incomingMessages = new Thread(new Runnable() {
-                @Override
-                public void run() {
+        Thread incomingMessages = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
                     while (true) {
-                        String incomingText;
-                        try {
-                            incomingText = in.readUTF();
-                            if (incomingText.equals("/serverClosed")) {
-                                throw new SocketException("Connection reset");
-                            }
-                            System.out.println("Admin: " + incomingText);
-                        } catch (IOException e) {
-                            if (e.getMessage().contains("Connection reset")
-                                    || e.getMessage().contains("Connection refused")) {
-                                System.out.println("Потеря соединения с сервером, попробуйте запустить приложение " +
-                                        "еще раз");
-                            } else {
-                                e.printStackTrace();
-                            }
-                            try {
-                                socket.close();
-                                System.exit(0);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                        String incomingText = in.readUTF();
+                        if (incomingText.equals("/serverClosed")) {
+                            break;
+                            //throw new SocketException("Connection reset");
                         }
+                        System.out.println("Admin: " + incomingText);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        in.close();
+                        out.close();
+                        System.out.println("Сервер отключился, попробуйте перезапустить клиента");
+                        socket.close();
+                        System.exit(0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            });
+            }
+        });
 
-            Thread outgoingMessages = new Thread(new Runnable() {
-                @Override
-                public void run() {
+        Thread outgoingMessages = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
                     while (true) {
                         String outgoingText = scanner.nextLine();
                         //System.out.println("You: " + outgoingText);
-                        try {
-                            out.writeUTF(outgoingText);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        out.writeUTF(outgoingText);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-
-            incomingMessages.start();
-            outgoingMessages.start();
-
-            try {
-                incomingMessages.join();
-                outgoingMessages.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        });
 
-        } catch (IOException e) {
+        incomingMessages.start();
+        outgoingMessages.start();
+
+        try {
+            incomingMessages.join();
+            outgoingMessages.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                assert socket != null;
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
