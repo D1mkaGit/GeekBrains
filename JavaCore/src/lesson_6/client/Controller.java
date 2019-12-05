@@ -45,6 +45,16 @@ public class Controller implements Initializable {
                         e.printStackTrace();
                     } finally {
                         try {
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            out.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             socket.close();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -59,9 +69,11 @@ public class Controller implements Initializable {
 
     public void sendMsg() {
         try {
-            out.writeUTF(textField.getText());
-            textField.clear();
-            textField.requestFocus();
+            if (!socket.isClosed()) {
+                out.writeUTF(textField.getText());
+                textField.clear();
+                textField.requestFocus();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
