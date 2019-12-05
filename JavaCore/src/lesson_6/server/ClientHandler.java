@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientHandler {
+    String nick;
     DataInputStream in;
     DataOutputStream out;
     MainServ serv;
@@ -24,12 +25,30 @@ public class ClientHandler {
                     try {
                         while (true) {
                             String msg = in.readUTF();
+                            if (msg.startsWith("/auth")) {
+                                String[] tokens = msg.split(" ");
+                                String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                                if (newNick != null) {
+                                    sendMsg("/authok");
+                                    nick = newNick;
+                                    serv.subscribe(ClientHandler.this);
+                                    break;
+                                } else {
+                                    sendMsg("Неверный логин/пароль");
+                                }
+                            }
+                        }
+
+
+                        while (true) {
+                            String msg = in.readUTF();
                             if (msg.equals("/end")) {
                                 out.writeUTF("/serverClosed");
                                 break;
                             }
-                            serv.broadcastMsg(msg);
+                            serv.broadcastMsg(nick + " " + msg);
                         }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -48,6 +67,7 @@ public class ClientHandler {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        serv.unsubscribe(ClientHandler.this);
                     }
                 }
             }).start();

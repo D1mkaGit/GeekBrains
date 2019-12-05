@@ -13,13 +13,14 @@ public class MainServ {
         ServerSocket server = null;
         Socket socket = null;
         try {
+            AuthService.connect();
             server = new ServerSocket(8189);
             System.out.println("Сервер запущен!");
 
             while (true) {
                 socket = server.accept();
                 System.out.println("Клиент подключился!");
-                clients.add(new ClientHandler(this, socket));
+                new ClientHandler(this, socket);
             }
 
         } catch (IOException e) {
@@ -35,6 +36,7 @@ public class MainServ {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            AuthService.disconnect();
         }
     }
 
@@ -42,5 +44,13 @@ public class MainServ {
         for (ClientHandler o : clients) {
             o.sendMsg(msg);
         }
+    }
+
+    public void subscribe( ClientHandler client ) {
+        clients.add(client);
+    }
+
+    public void unsubscribe( ClientHandler client ) {
+        clients.remove(client);
     }
 }
