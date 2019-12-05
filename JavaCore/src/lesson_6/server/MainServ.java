@@ -42,7 +42,8 @@ public class MainServ {
 
     public void broadcastMsg( String msg ) {
         for (ClientHandler o : clients) {
-            o.sendMsg(msg);
+            if (!o.getSocket().isClosed())
+                o.sendMsg(msg);
         }
     }
 
