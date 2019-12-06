@@ -19,19 +19,20 @@ public class Main extends Application {
     public void start( Stage primaryStage ) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         Parent root = loader.load(getClass().getResourceAsStream("sample.fxml"));
-        primaryStage.setTitle("Chat 2k19");
+        primaryStage.setTitle("Chat");
         c = loader.getController();
+        c.setStage(primaryStage);
 
         Scene scene = new Scene(root, 310, 350);
         primaryStage.setScene(scene);
         primaryStage.show();
-
 
         primaryStage.setOnCloseRequest(event -> {
             c.Dispose();
             Platform.exit();
             System.exit(0);
         });
+
 
 //
 //        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));

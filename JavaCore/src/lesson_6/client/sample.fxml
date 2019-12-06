@@ -9,7 +9,7 @@
 
     <TextArea fx:id="textArea" editable="false" VBox.vgrow="ALWAYS"/>
     <HBox fx:id="bottomPanel" managed="false" visible="false">
-        <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Введите сообщение"/>
+        <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="Введите сообщение" onAction="#sendMsg"/>
         <Button fx:id="btn1" text="Send" onAction="#sendMsg"/>
     </HBox>
 </VBox>

@@ -32,17 +32,25 @@ public class ClientHandler {
                             if (msg.startsWith("/auth")) {
                                 String[] tokens = msg.split(" ");
                                 String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                                String errMsg = null;
+                                for (ClientHandler client : serv.getClients()) {
+                                    if (client.nick.equals(newNick)) {
+                                        errMsg = "Вы уже вошли в чат в другом окне";
+                                        newNick = null;
+                                        break;
+                                    }
+                                }
                                 if (newNick != null) {
-                                    sendMsg("/authok");
+                                    sendMsg("/authok:" + newNick);
                                     nick = newNick;
                                     serv.subscribe(ClientHandler.this);
                                     break;
                                 } else {
-                                    sendMsg("Неверный логин/пароль");
+                                    if (errMsg == null) errMsg = "Неверный логин/пароль";
+                                    sendMsg(errMsg);
                                 }
                             }
                         }
-
 
                         while (true) {
                             String msg = in.readUTF();
@@ -50,10 +58,18 @@ public class ClientHandler {
                                 out.writeUTF("/serverClosed");
                                 break;
                             }
-                            serv.broadcastMsg(nick + " " + msg);
+                            if (msg.startsWith("/w ")) {
+                                String oppositeNickName = msg.split(" ", 3)[1];
+                                for (ClientHandler client : serv.getClients()) {
+                                    if (client.nick.equals(oppositeNickName))
+                                        client.out.writeUTF(nick + ": " + msg.split(" " + oppositeNickName + " ")[1]);
+                                }
+                            } else {
+                                serv.broadcastMsg(nick + " " + msg);
+                            }
                         }
-
-                    } catch (IOException e) {
+                    } catch (
+                            IOException e) {
                         e.printStackTrace();
                     } finally {
                         try {
@@ -75,7 +91,8 @@ public class ClientHandler {
                     }
                 }
             }).start();
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             e.printStackTrace();
         }
     }
