@@ -68,8 +68,7 @@ public class ClientHandler {
                                 serv.broadcastMsg(nick + " " + msg);
                             }
                         }
-                    } catch (
-                            IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
                         try {
@@ -91,8 +90,7 @@ public class ClientHandler {
                     }
                 }
             }).start();
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
