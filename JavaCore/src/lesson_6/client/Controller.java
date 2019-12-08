@@ -1,11 +1,12 @@
 package lesson_6.client;
 
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,18 +14,17 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Controller {
-    @FXML
-    TextArea textArea;
-
-    @FXML
-    TextField textField;
-
     Socket socket;
     DataInputStream in;
     DataOutputStream out;
 
     final String IP_ADRESS = "localhost";
     final int PORT = 8189;
+
+    @FXML
+    TextArea textArea;
+    @FXML
+    TextField textField;
     @FXML
     HBox bottomPanel;
     @FXML
@@ -33,7 +33,15 @@ public class Controller {
     TextField loginField;
     @FXML
     PasswordField passwordField;
+
+    Stage stage;
+    private String nick;
+
     private boolean isAuthorized;
+
+    public void setStage( Stage stage ) {
+        this.stage = stage;
+    }
 
     public void setAuthorized( boolean isAuthorized ) {
         this.isAuthorized = isAuthorized;
@@ -45,6 +53,9 @@ public class Controller {
         } else {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
+            textArea.clear();
+            Platform.runLater((() -> stage.setTitle(nick))); // часа 3 голову ломал, потом нашел в гугле про
+            // многопоточность и javaFX
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
         }
@@ -62,8 +73,9 @@ public class Controller {
                     try {
                         while (true) {
                             String srt = in.readUTF();
-                            if (srt.equals("/authok")) {
+                            if (srt.startsWith("/authok")) {
                                 setAuthorized(true);
+                                nick = String.valueOf(srt.split(":", 2)[1]);
                                 break;
                             } else {
                                 textArea.appendText(srt + "\n");
@@ -99,6 +111,7 @@ public class Controller {
                     }
                 }
             }).start();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,7 +140,7 @@ public class Controller {
         }
     }
 
-    public void tryToAuth( ActionEvent actionEvent ) {
+    public void tryToAuth() {
         if (socket == null || socket.isClosed()) {
             connect();
         }

@@ -42,7 +42,6 @@ public class MainServ {
 
     public void broadcastMsg( String msg ) {
         for (ClientHandler o : clients) {
-            if (!o.getSocket().isClosed())
                 o.sendMsg(msg);
         }
     }
@@ -53,5 +52,9 @@ public class MainServ {
 
     public void unsubscribe( ClientHandler client ) {
         clients.remove(client);
+    }
+
+    public Vector<ClientHandler> getClients() {
+        return clients;
     }
 }
