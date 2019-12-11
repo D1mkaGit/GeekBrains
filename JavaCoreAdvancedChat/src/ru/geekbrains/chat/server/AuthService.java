@@ -1,6 +1,9 @@
 package ru.geekbrains.chat.server;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class AuthService {
     private static Connection connection;
@@ -27,6 +30,67 @@ public class AuthService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void addUserToBlackListForSpecificUser( String nickWhoRequest, String nickToBlock ) {
+        try {
+            String query = "INSERT INTO blacklist (user_id, blocked_user_id) VALUES ((" +
+                    "SELECT id FROM main where nickname = ?), (" +
+                    "SELECT id FROM main where nickname = ?));";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, nickWhoRequest);
+            ps.setString(2, nickToBlock);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeUserToBlackListForSpecificUser( String nickWhoRequest, String nickToBlock ) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM blacklist " +
+                    "WHERE user_id = (SELECT id FROM main where nickname = ?) " +
+                    "AND blocked_user_id = (SELECT id FROM main where nickname = ?)");
+            ps.setString(1, nickWhoRequest);
+            ps.setString(2, nickToBlock);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getBlacklist( String nickWhoRequest ) {
+        String blackListString = getBlackList(nickWhoRequest).get(0);
+
+        for (int i = 1; i < getBlackList(nickWhoRequest).size(); i++) {
+            blackListString += ", " + getBlackList(nickWhoRequest).get(i);
+        }
+
+        return blackListString;
+    }
+
+    public static List<String> getBlackList( String nickWhoRequest ) {
+        List<String> blockedNicks = new ArrayList<>();
+        try {
+            ResultSet nickNamesFromBD = stmt.executeQuery("SELECT id, nickname from main");
+            HashMap<Integer, String> nickNamesMap = new HashMap();
+            while (nickNamesFromBD.next()) {
+                nickNamesMap.put(nickNamesFromBD.getInt(1), nickNamesFromBD.getString(2));
+            }
+            ResultSet rs = stmt.executeQuery("SELECT blacklist.blocked_user_id FROM main " +
+                    "INNER JOIN blacklist on main.id = blacklist.user_id " +
+                    "where nickname='" + nickWhoRequest + "'");
+            while (rs.next()) {
+                int bNId = rs.getInt(1);
+                for (Integer key : nickNamesMap.keySet()) {
+                    if (key == bNId)
+                        blockedNicks.add(nickNamesMap.get(bNId));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return blockedNicks;
     }
 
     public static String getNickByLoginAndPass( String login, String pass ) {
