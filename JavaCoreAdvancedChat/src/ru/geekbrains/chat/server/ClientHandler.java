@@ -34,6 +34,7 @@ public class ClientHandler {
                                     sendMsg("/authok");
                                     nick = newNick;
                                     server.subscribe(this);
+                                    blackList = AuthService.getBlackList(nick);
                                     break;
                                 } else {
                                     sendMsg("Учетная запись уже используется");
@@ -55,10 +56,56 @@ public class ClientHandler {
                                 String m = str.substring(tokens[1].length() + 4);
                                 server.sendPersonalMsg(this, tokens[1], tokens[2]);
                             }
-                            if (str.startsWith("/blacklist ")) { // /blacklist nick3
+                            if (str.startsWith("/block ")) { // /blacklist nick3
                                 String[] tokens = str.split(" ");
-                                blackList.add(tokens[1]);
-                                sendMsg("Вы добавили пользователя " + tokens[1] + " в черный список");
+                                String blackListNick = tokens[1];
+                                if (blackListNick != null) {
+                                    if (server.isNickBusy(blackListNick)) {
+                                        boolean alreadyBlocked = false;
+                                        for (String s : blackList) {
+                                            if (s.equals(blackListNick)) {
+                                                sendMsg("Пользовател " + blackListNick + " уже присутствует в черном " +
+                                                        "списке");
+                                                alreadyBlocked = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!alreadyBlocked) {
+                                            AuthService.addUserToBlackListForSpecificUser(nick,
+                                                    blackListNick);
+                                            blackList.add(blackListNick);
+                                            sendMsg("Вы добавили пользователя " + blackListNick + " в черный список");
+                                        }
+                                    } else {
+                                        sendMsg("Вы не можете добавить " + blackListNick + ", т.к. такого ника нет в " +
+                                                "чате.");
+                                    }
+                                }
+                            }
+                            if (str.equals("/getblacklist")) { // /blacklist nick3
+                                if (blackList.isEmpty()) sendMsg("У вас нет черного списка");
+                                else
+                                    sendMsg("У вас в черном списке следующие пользователи: " + AuthService.getBlacklist(nick));
+                            }
+                            if (str.startsWith("/unblock ")) { // /blacklist nick3
+                                String[] tokens = str.split(" ");
+                                String blackListNick = tokens[1];
+                                if (blackListNick != null && !blackList.isEmpty()) {
+                                    boolean isBlocked = false;
+                                    for (int i = 0; i < blackList.size(); i++) {
+                                        if (blackList.get(i).equals(blackListNick)) {
+                                            AuthService.removeUserToBlackListForSpecificUser(nick,
+                                                    blackListNick);
+                                            blackList.remove(blackListNick);
+                                            sendMsg("Вы удалили из чернорго списка пользователя под ником: " + blackListNick);
+                                            isBlocked = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isBlocked) {
+                                        sendMsg("Пользователя с ником " + blackListNick + " нет в черном списке");
+                                    }
+                                }
                             }
                         } else {
                             server.broadcastMsg(this, nick + ": " + str);
