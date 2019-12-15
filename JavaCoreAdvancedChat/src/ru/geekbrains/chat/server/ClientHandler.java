@@ -28,13 +28,13 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.startsWith("/auth")) { // /auth login72 pass72
                             String[] tokens = str.split(" ");
-                            String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                            String newNick = WorkWithDbService.getNickByLoginAndPass(tokens[1], tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickBusy(newNick)) {
                                     sendMsg("/authok");
                                     nick = newNick;
                                     server.subscribe(this);
-                                    blackList = AuthService.getBlackList(nick);
+                                    blackList = WorkWithDbService.getBlackList(nick);
                                     break;
                                 } else {
                                     sendMsg("Учетная запись уже используется");
@@ -71,7 +71,7 @@ public class ClientHandler {
                                             }
                                         }
                                         if (!alreadyBlocked) {
-                                            AuthService.addUserToBlackListForSpecificUser(nick,
+                                            WorkWithDbService.addUserToBlackListForSpecificUser(nick,
                                                     blackListNick);
                                             blackList.add(blackListNick);
                                             sendMsg("Вы добавили пользователя " + blackListNick + " в черный список");
@@ -85,7 +85,7 @@ public class ClientHandler {
                             if (str.equals("/getblacklist")) { // /blacklist nick3
                                 if (blackList.isEmpty()) sendMsg("У вас нет черного списка");
                                 else
-                                    sendMsg("У вас в черном списке следующие пользователи: " + AuthService.getBlacklist(nick));
+                                    sendMsg("У вас в черном списке следующие пользователи: " + WorkWithDbService.getBlacklist(nick));
                             }
                             if (str.startsWith("/unblock ")) { // /blacklist nick3
                                 String[] tokens = str.split(" ");
@@ -94,7 +94,7 @@ public class ClientHandler {
                                     boolean isBlocked = false;
                                     for (int i = 0; i < blackList.size(); i++) {
                                         if (blackList.get(i).equals(blackListNick)) {
-                                            AuthService.removeUserToBlackListForSpecificUser(nick,
+                                            WorkWithDbService.removeUserToBlackListForSpecificUser(nick,
                                                     blackListNick);
                                             blackList.remove(blackListNick);
                                             sendMsg("Вы удалили из чернорго списка пользователя под ником: " + blackListNick);

@@ -13,7 +13,7 @@ public class Server {
         ServerSocket server = null;
         Socket socket = null;
         try {
-            AuthService.connect();
+            WorkWithDbService.connect();
             server = new ServerSocket(8189);
             System.out.println("Сервер запущен. Ожидаем клиентов...");
             while (true) {
@@ -34,7 +34,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            AuthService.disconnect();
+            WorkWithDbService.disconnect();
         }
     }
 

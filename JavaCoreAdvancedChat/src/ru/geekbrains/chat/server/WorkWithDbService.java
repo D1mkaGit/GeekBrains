@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AuthService {
+public class WorkWithDbService {
     private static Connection connection;
     private static Statement stmt;
 
