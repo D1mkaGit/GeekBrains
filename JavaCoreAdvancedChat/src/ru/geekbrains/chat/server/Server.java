@@ -3,7 +3,10 @@ package ru.geekbrains.chat.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Vector;
+
+import static ru.geekbrains.chat.server.WorkWithDbService.getBlackList;
 
 public class Server {
     private Vector<ClientHandler> clients;
@@ -67,13 +70,18 @@ public class Server {
     }
 
     public void broadcastClientsList() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("/clientslist ");
         for (ClientHandler o : clients) {
-            sb.append(o.getNick() + " ");
-        }
-        String out = sb.toString();
-        for (ClientHandler o : clients) {
+            StringBuilder sb = new StringBuilder();
+            String out = null;
+            List<String> blackList = getBlackList(o.getNick());
+            sb.append("/clientslist ");
+            for (ClientHandler cl : clients) {
+                for (String bl : blackList) {
+                    if (bl.equals(cl.getNick())) sb.append("(b)");
+                }
+                sb.append(cl.getNick()).append(" ");
+            }
+            out = sb.toString();
             o.sendMsg(out);
         }
     }
