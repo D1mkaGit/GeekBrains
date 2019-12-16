@@ -110,6 +110,32 @@ public class WorkWithDbService {
         return null;
     }
 
+    public static boolean checkIfNickIsAvailableInDb( String nick ) {
+        try {
+            ResultSet result = stmt.executeQuery("SELECT count(*) AS count FROM main where nickname='" + nick + "'");
+            int count = result.getInt("count");
+            if (count == 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean checkIfLoginIsAvailableInDb( String login ) {
+        try {
+            ResultSet result = stmt.executeQuery("SELECT count(*) AS count FROM main where login='" + login + "'");
+            int count = result.getInt("count");
+            if (count == 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static void disconnect() {
         try {
             connection.close();

@@ -43,6 +43,23 @@ public class ClientHandler {
                                 sendMsg("Неверный логин/пароль");
                             }
                         }
+                        if (str.startsWith("/register")) {
+                            String[] tokens = str.split(" ");
+                            String login = tokens[2];
+                            String nick = tokens[1];
+                            String pass = tokens[3];
+                            if (WorkWithDbService.checkIfLoginIsAvailableInDb(login) &&// проверка на
+                                    // существующий акаунт
+                                    WorkWithDbService.checkIfNickIsAvailableInDb(nick)) {// проверка на
+                                // существующий ник
+                                // тогда регаем пользователя
+                                sendMsg("/regOk");
+                                WorkWithDbService.addUser(login, pass, nick);
+                            } else {
+                                sendMsg("/regExists");
+                                //System.out.println("Существующий Логин или Псевдоним, попробуйте указать другие данные");
+                            }
+                        }
                     }
                     while (true) {
                         String str = in.readUTF();
