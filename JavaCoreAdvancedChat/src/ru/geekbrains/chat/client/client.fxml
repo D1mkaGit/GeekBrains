@@ -8,6 +8,14 @@
         <TextField fx:id="loginField" promptText="Логин" HBox.hgrow="ALWAYS"/>
         <PasswordField fx:id="passwordField" onAction="#tryToAuth" promptText="Пароль"/>
         <Button onAction="#tryToAuth" text="Авторизоваться"/>
+        <Button onAction="#openRegistration" text="Зрегистрироваться"/>
+    </HBox>
+    <HBox fx:id="registerPanel">
+        <TextField fx:id="nickNameField" promptText="Псевдоним" HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="loginNameField" promptText="Логин" HBox.hgrow="ALWAYS"/>
+        <PasswordField fx:id="password1Field" promptText="Пароль"/>
+        <PasswordField fx:id="password2Field" onAction="#tryToRegister" promptText="Повторите Пароль"/>
+        <Button onAction="#tryToRegister" text="Зарегистрироваться"/>
     </HBox>
     <HBox VBox.vgrow="ALWAYS">
         <VBox HBox.hgrow="ALWAYS">

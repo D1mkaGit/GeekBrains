@@ -36,15 +36,31 @@ public class Controller implements Initializable {
     PasswordField passwordField;
     @FXML
     ListView<String> clientsList;
+
+    @FXML
+    HBox registerPanel;
+    @FXML
+    TextField nickNameField;
+    @FXML
+    TextField loginNameField;
+    @FXML
+    PasswordField password1Field;
+    @FXML
+    PasswordField password2Field;
+
+
     Socket socket;
     DataInputStream in;
     DataOutputStream out;
     List<TextArea> textAreas;
     private boolean isAuthorized;
+    private boolean isRegister;
+    private boolean isAlreadyRegistered;
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
         setAuthorized(false);
+        setRegister(false);
         textAreas = new ArrayList<>();
         textAreas.add(chatArea);
     }
@@ -52,8 +68,17 @@ public class Controller implements Initializable {
     public void setAuthorized( boolean isAuthorized ) {
         this.isAuthorized = isAuthorized;
         if (!isAuthorized) {
-            upperPanel.setVisible(true);
-            upperPanel.setManaged(true);
+            if (isRegister) {
+                upperPanel.setVisible(false);
+                upperPanel.setManaged(false);
+                registerPanel.setVisible(true);
+                registerPanel.setVisible(true);
+            } else {
+                upperPanel.setVisible(true);
+                upperPanel.setManaged(true);
+                registerPanel.setVisible(false);
+                registerPanel.setVisible(false);
+            }
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
             clientsList.setVisible(false);
@@ -65,6 +90,18 @@ public class Controller implements Initializable {
             bottomPanel.setManaged(true);
             clientsList.setVisible(true);
             clientsList.setManaged(true);
+            chatArea.clear();
+        }
+    }
+
+    public void setRegister( boolean isRegister ) {
+        this.isRegister = isRegister;
+        if (isRegister) {
+            registerPanel.setVisible(true);
+            registerPanel.setVisible(true);
+        } else {
+            registerPanel.setVisible(false);
+            registerPanel.setVisible(false);
         }
     }
 
@@ -81,6 +118,25 @@ public class Controller implements Initializable {
                         if (str.startsWith("/authok")) {
                             setAuthorized(true);
                             break;
+                        } else if (str.startsWith("/regOk")) {
+                            setRegister(false);
+                            System.out.println("Регистрация прошла успешно");
+                            // логинемся пользователем
+                            try {
+                                out.writeUTF("/auth " + loginNameField.getText() + " " + password1Field.getText());
+                                loginNameField.clear();
+                                password1Field.clear();
+                                password2Field.clear();
+                                nickNameField.clear();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (str.startsWith("/regExists")) {
+                            isAlreadyRegistered = true;
+                            System.out.println("Существующий Логин или Псевдоним, попробуйте указать другие данные");
+                            for (TextArea o : textAreas) {
+                                o.appendText("Существующий Логин или Псевдоним, попробуйте указать другие данные" + "\n");
+                            }
                         } else {
                             for (TextArea o : textAreas) {
                                 o.appendText(str + "\n");
@@ -145,10 +201,54 @@ public class Controller implements Initializable {
         }
     }
 
+    public void openRegistration() {
+        isRegister = true;
+        setAuthorized(false);
+    }
+
+    public void tryToRegister() {
+        System.out.println(nickNameField.getText());
+        if (fieldNotEmpty(nickNameField) &&
+                fieldNotEmpty(loginNameField) &&
+                checkPasswordFieldAreEquals()) {
+            // делаем регистрацию
+            connect();
+            sendDataToRegisterOnServer(nickNameField.getText(), loginNameField.getText(), password2Field.getText());
+        } else {
+            for (TextArea o : textAreas) {
+                o.appendText("Для регистрации заданы неверные данные" + "\n");
+            }
+            //System.out.println("Неверные данные");
+        }
+    }
+
+    private void sendDataToRegisterOnServer( String nick, String login, String pass ) {
+        System.out.println("Пробуем зарегистрироваться со следующими данными:");
+        System.out.println("Псевдоним: " + nick);
+        System.out.println("Логин: " + login);
+        System.out.println("Пароль: " + pass);
+        try {
+            out.writeUTF("/register " + nick + " " + login + " " + pass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void selectClient( MouseEvent mouseEvent ) {
         if (mouseEvent.getClickCount() == 2) {
             MiniStage ms = new MiniStage(clientsList.getSelectionModel().getSelectedItem(), out, textAreas);
             ms.show();
         }
+    }
+
+    private boolean fieldNotEmpty( TextField field ) {
+        return field.getText() != "" || field.getText() != null;
+    }
+
+    private boolean checkPasswordFieldAreEquals() {
+        return password1Field.getText().equals(password2Field.getText())
+                && password1Field.getText() != null && !password2Field.getText().equals("");
+        // тут можно добавить любую проверку
     }
 }
