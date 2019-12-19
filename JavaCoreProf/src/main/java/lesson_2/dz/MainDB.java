@@ -9,7 +9,6 @@ import java.sql.*;
 public class MainDB {
     private static Connection connection;
     private static Statement stmt;
-    private static PreparedStatement pstm;
 
     public static void main(String[] args) {
         try {
