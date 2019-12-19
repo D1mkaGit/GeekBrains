@@ -1,4 +1,4 @@
-package Lesson_1.DZ;
+package lesson_1.dz.dz_correct;
 
 import java.util.ArrayList;
 import java.util.Arrays;

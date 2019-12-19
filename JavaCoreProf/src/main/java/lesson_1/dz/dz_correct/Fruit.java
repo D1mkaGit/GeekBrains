@@ -1,4 +1,4 @@
-package Lesson_1.DZ;
+package lesson_1.dz.dz_correct;
 
 public abstract class Fruit {
     protected float weight;
