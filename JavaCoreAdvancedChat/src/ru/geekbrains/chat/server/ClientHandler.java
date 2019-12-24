@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.geekbrains.chat.server.WorkWithDbService.LogEventType.*;
+
 public class ClientHandler {
     List<String> blackList;
     private Server server;
@@ -14,8 +16,9 @@ public class ClientHandler {
     private DataOutputStream out;
     private DataInputStream in;
     private String nick;
+    private String login;
 
-    public ClientHandler( Server server, Socket socket ) {
+    public ClientHandler(Server server, Socket socket) {
         try {
             this.socket = socket;
             this.server = server;
@@ -28,18 +31,22 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.startsWith("/auth")) { // /auth login72 pass72
                             String[] tokens = str.split(" ");
-                            String newNick = WorkWithDbService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                            login = tokens[1];
+                            String newNick = WorkWithDbService.getNickByLoginAndPass(login, tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickBusy(newNick)) {
                                     sendMsg("/authok");
+                                    WorkWithDbService.log(LOGIN, login);
                                     nick = newNick;
                                     server.subscribe(this);
                                     blackList = WorkWithDbService.getBlackList(nick);
                                     break;
                                 } else {
+                                    WorkWithDbService.log(INCORRECT_LOGIN, login);
                                     sendMsg("Учетная запись уже используется");
                                 }
                             } else {
+                                WorkWithDbService.log(INCORRECT_LOGIN, login);
                                 sendMsg("Неверный логин/пароль");
                             }
                         }
@@ -148,6 +155,7 @@ public class ClientHandler {
                         e.printStackTrace();
                     }
                     server.unsubscribe(this);
+                    WorkWithDbService.log(LOGOUT, this.login);
                 }
             }).start();
         } catch (Exception e) {
@@ -159,11 +167,11 @@ public class ClientHandler {
         return nick;
     }
 
-    public boolean checkBlackList( String nick ) {
+    public boolean checkBlackList(String nick) {
         return blackList.contains(nick);
     }
 
-    public void sendMsg( String msg ) {
+    public void sendMsg(String msg) {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {
