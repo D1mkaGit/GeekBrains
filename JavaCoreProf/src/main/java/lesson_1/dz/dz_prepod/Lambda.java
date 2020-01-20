@@ -1,4 +1,4 @@
-package lesson_1.dz.dz_correct;
+package lesson_1.dz.dz_prepod;
 
 interface Operationable {
     double calculate(double var1, double var2);
