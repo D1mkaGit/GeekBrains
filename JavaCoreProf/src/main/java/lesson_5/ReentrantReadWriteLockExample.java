@@ -1,4 +1,4 @@
-package lesson_5;
+package Lesson_5;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

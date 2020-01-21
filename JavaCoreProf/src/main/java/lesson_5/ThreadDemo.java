@@ -1,4 +1,4 @@
-package lesson_5;
+package Lesson_5;
 
 public class ThreadDemo extends Thread {
     public static void main( String[] args ) throws InterruptedException {

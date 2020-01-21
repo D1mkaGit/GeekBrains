@@ -1,4 +1,4 @@
-package Lesson_5;
+package lesson_5;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
