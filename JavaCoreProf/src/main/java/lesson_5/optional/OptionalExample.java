@@ -1,4 +1,4 @@
-package lesson_5.Optional;
+package lesson_5.optional;
 
 //Optional - новый класс в пакете java.util, является контейнером (оберткой)
 //для значений которая также может безопасно содержать null.

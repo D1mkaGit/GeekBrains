@@ -1,4 +1,4 @@
-package lesson_5.Optional;
+package lesson_5.optional;
 
 import java.util.Optional;
 
