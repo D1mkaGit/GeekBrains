@@ -26,7 +26,8 @@ public class MainClass {
                 new Thread(car).start();
             }
         }).start();
-        while (Thread.activeCount() > 2) r1.lock();
+        while (Thread.activeCount() > 2) r1.lock(); // лочим треды, пока их количество не уменьшится, что будет
+        // означать, что можно идти дальше.
         r1.unlock();
 
 
@@ -34,13 +35,13 @@ public class MainClass {
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
             for (int i = 0; i < cars.length; i++) {
                 final int w = i;
-                new Thread(() -> cars[w].startRace(CARS_COUNT)).start();
+                new Thread(() -> cars[w].startRace()).start();
             }
 
         }).start();
-        while (Thread.activeCount() > 2) r1.lock();
+        while (Thread.activeCount() > 2) r1.lock();// лочим треды, пока их количество не уменьшится, что будет
+        // означать, что можно идти дальше
         r1.unlock();
         new Thread(() -> System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!")).start();
     }
-
 }
