@@ -1,5 +1,8 @@
 package main.java.ru.geekbrains.chat.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +13,8 @@ import java.util.List;
 import static main.java.ru.geekbrains.chat.server.WorkWithDbService.LogEventType.*;
 
 public class ClientHandler {
+
+    private static final Logger logger = LogManager.getLogger(ClientHandler.class);
     List<String> blackList;
     private Server server;
     private Socket socket;
@@ -134,6 +139,7 @@ public class ClientHandler {
                         } else {
                             server.broadcastMsg(this, nick + ": " + str);
                         }
+                        logger.debug("Клиент с ником " + nick + " отправил следующее сообщение: " + str);
                         System.out.println("Client: " + str);
                     }
                 } catch (IOException e) {
