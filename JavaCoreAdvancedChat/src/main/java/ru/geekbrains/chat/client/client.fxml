@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" alignment="center" xmlns="http://javafx.com/javafx/8.0.112-ea"
-      fx:controller="ru.geekbrains.chat.client.Controller">
+      fx:controller="main.java.ru.geekbrains.chat.client.Controller">
     <HBox fx:id="upperPanel">
         <TextField fx:id="loginField" promptText="Логин" HBox.hgrow="ALWAYS"/>
         <PasswordField fx:id="passwordField" onAction="#tryToAuth" promptText="Пароль"/>

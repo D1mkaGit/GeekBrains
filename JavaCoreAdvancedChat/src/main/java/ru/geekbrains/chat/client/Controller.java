@@ -1,4 +1,4 @@
-package ru.geekbrains.chat.client;
+package main.java.ru.geekbrains.chat.client;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

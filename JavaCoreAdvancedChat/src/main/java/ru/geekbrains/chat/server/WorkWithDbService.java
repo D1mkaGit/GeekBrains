@@ -1,4 +1,4 @@
-package ru.geekbrains.chat.server;
+package main.java.ru.geekbrains.chat.server;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class WorkWithDbService {
         }
     }
 
-    public static void addUser(String login, String pass, String nick) {
+    public static void addUser( String login, String pass, String nick ) {
         try {
             String query = "INSERT INTO main (login, password, nickname) VALUES (?, ?, ?);";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -32,7 +32,7 @@ public class WorkWithDbService {
         }
     }
 
-    public static void addUserToBlackListForSpecificUser(String nickWhoRequest, String nickToBlock) {
+    public static void addUserToBlackListForSpecificUser( String nickWhoRequest, String nickToBlock ) {
         try {
             String query = "INSERT INTO blacklist (user_id, blocked_user_id) VALUES ((" +
                     "SELECT id FROM main where nickname = ?), (" +
@@ -46,7 +46,7 @@ public class WorkWithDbService {
         }
     }
 
-    public static void removeUserToBlackListForSpecificUser(String nickWhoRequest, String nickToBlock) {
+    public static void removeUserToBlackListForSpecificUser( String nickWhoRequest, String nickToBlock ) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM blacklist " +
                     "WHERE user_id = (SELECT id FROM main where nickname = ?) " +
@@ -59,7 +59,7 @@ public class WorkWithDbService {
         }
     }
 
-    public static String getBlacklist(String nickWhoRequest) {
+    public static String getBlacklist( String nickWhoRequest ) {
         String blackListString = getBlackList(nickWhoRequest).get(0);
 
         for (int i = 1; i < getBlackList(nickWhoRequest).size(); i++) {
@@ -69,7 +69,7 @@ public class WorkWithDbService {
         return blackListString;
     }
 
-    public static List<String> getBlackList(String nickWhoRequest) {
+    public static List<String> getBlackList( String nickWhoRequest ) {
         List<String> blockedNicks = new ArrayList<>();
         try {
             ResultSet nickNamesFromBD = stmt.executeQuery("SELECT id, nickname from main");
@@ -93,7 +93,7 @@ public class WorkWithDbService {
         return blockedNicks;
     }
 
-    public static String getNickByLoginAndPass(String login, String pass) {
+    public static String getNickByLoginAndPass( String login, String pass ) {
         try {
             ResultSet rs = stmt.executeQuery("SELECT nickname, password FROM main WHERE login = '" + login + "'");
             int myHash = pass.hashCode(); // 137
@@ -110,7 +110,7 @@ public class WorkWithDbService {
         return null;
     }
 
-    public static void log(LogEventType logEventType, String login) {
+    public static void log( LogEventType logEventType, String login ) {
         int logId = getLoginId(login);
         if (logId != 0) {
             try {
@@ -126,7 +126,7 @@ public class WorkWithDbService {
         }
     }
 
-    private static int getLoginId(String login) {
+    private static int getLoginId( String login ) {
         int res = 0;
         try {
             ResultSet rs = stmt.executeQuery("SELECT id FROM main WHERE login = '" + login + "'");
@@ -140,7 +140,7 @@ public class WorkWithDbService {
         return res;
     }
 
-    public static boolean checkIfNickIsAvailableInDb(String nick) {
+    public static boolean checkIfNickIsAvailableInDb( String nick ) {
         try {
             ResultSet result = stmt.executeQuery("SELECT count(*) AS count FROM main where nickname='" + nick + "'");
             int count = result.getInt("count");
@@ -153,7 +153,7 @@ public class WorkWithDbService {
         return false;
     }
 
-    public static boolean checkIfLoginIsAvailableInDb(String login) {
+    public static boolean checkIfLoginIsAvailableInDb( String login ) {
         try {
             ResultSet result = stmt.executeQuery("SELECT count(*) AS count FROM main where login='" + login + "'");
             int count = result.getInt("count");
@@ -181,7 +181,7 @@ public class WorkWithDbService {
 
         private final int eTypeId;
 
-        LogEventType(int eTypeId) {
+        LogEventType( int eTypeId ) {
             this.eTypeId = eTypeId;
         }
     }

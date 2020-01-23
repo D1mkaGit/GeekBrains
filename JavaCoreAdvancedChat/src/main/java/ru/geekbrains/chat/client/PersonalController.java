@@ -1,4 +1,4 @@
-package ru.geekbrains.chat.client;
+package main.java.ru.geekbrains.chat.client;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

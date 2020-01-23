@@ -1,4 +1,4 @@
-package ru.geekbrains.chat.server;
+package main.java.ru.geekbrains.chat.server;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.geekbrains.chat.server.WorkWithDbService.LogEventType.*;
+import static main.java.ru.geekbrains.chat.server.WorkWithDbService.LogEventType.*;
 
 public class ClientHandler {
     List<String> blackList;
@@ -18,7 +18,7 @@ public class ClientHandler {
     private String nick;
     private String login;
 
-    public ClientHandler(Server server, Socket socket) {
+    public ClientHandler( Server server, Socket socket ) {
         try {
             this.socket = socket;
             this.server = server;
@@ -167,11 +167,11 @@ public class ClientHandler {
         return nick;
     }
 
-    public boolean checkBlackList(String nick) {
+    public boolean checkBlackList( String nick ) {
         return blackList.contains(nick);
     }
 
-    public void sendMsg(String msg) {
+    public void sendMsg( String msg ) {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {

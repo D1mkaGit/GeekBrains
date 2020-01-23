@@ -1,4 +1,4 @@
-package ru.geekbrains.chat.server;
+package main.java.ru.geekbrains.chat.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,12 +6,17 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
 
-import static ru.geekbrains.chat.server.WorkWithDbService.getBlackList;
+import static main.java.ru.geekbrains.chat.server.WorkWithDbService.getBlackList;
+
+//1. Добавить на серверную сторону чата логирование, с выводом информации о действиях на сервер:
+// запущен, произошла ошибка, клиент подключился, клиент прислал сообщение/команду.
 
 public class Server {
+
     private Vector<ClientHandler> clients;
 
     public Server() {
+
         clients = new Vector<>();
         ServerSocket server = null;
         Socket socket = null;
