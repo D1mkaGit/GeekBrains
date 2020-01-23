@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 // иначе в методе необходимо выбросить RuntimeException.
 // Написать набор тестов для этого метода (по 3-4 варианта входных данных). Вх: [ 1 2 4 4 2 3 4 1 7 ] -> вых: [ 1 7 ].
 public class ArrayHandler {
-    public int[] workWithArray( int[] intArray ) {
+    public int[] cutArray( int[] intArray ) {
         int[] newIntArray;
         int numberToCut = 4;
         if (IntStream.of(intArray).anyMatch(x -> x == 4)) {
@@ -24,4 +24,13 @@ public class ArrayHandler {
         }
         return newIntArray;
     }
+
+    //3. Написать метод, который проверяет состав массива из чисел 1 и 4.
+    // Если в нем нет хоть одной четверки или единицы, то метод вернет false;
+    // Написать набор тестов для этого метода (по 3-4 варианта входных данных).
+
+    public boolean checkArray( int[] intArray ) {
+        return IntStream.of(intArray).anyMatch(x -> x == 2) && IntStream.of(intArray).anyMatch(x -> x == 4);
+    }
+
 }

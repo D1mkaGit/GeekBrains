@@ -10,13 +10,13 @@ import java.util.Collection;
 import java.util.stream.IntStream;
 
 @RunWith(Parameterized.class)
-public class ArrayHandlerParamsTest {
+public class ArrayHandlerMassCutTest {
 
     private final int[] a;
     private final int[] b;
     private ArrayHandler arrayHandler;
 
-    public ArrayHandlerParamsTest( int[] a, int[] b ) {
+    public ArrayHandlerMassCutTest( int[] a, int[] b ) {
         this.a = a;
         this.b = b;
     }
@@ -50,6 +50,6 @@ public class ArrayHandlerParamsTest {
 
     @Test
     public void workWithArrayMethodTest() {
-        Assert.assertArrayEquals(arrayHandler.workWithArray(a), b); //
+        Assert.assertArrayEquals(arrayHandler.cutArray(a), b); //
     }
 }
