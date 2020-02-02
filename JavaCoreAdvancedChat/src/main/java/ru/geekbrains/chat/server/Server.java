@@ -1,5 +1,8 @@
 package main.java.ru.geekbrains.chat.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +15,7 @@ import static main.java.ru.geekbrains.chat.server.WorkWithDbService.getBlackList
 // запущен, произошла ошибка, клиент подключился, клиент прислал сообщение/команду.
 
 public class Server {
-
+    private static final Logger logger = LogManager.getLogger(Server.class);
     private Vector<ClientHandler> clients;
 
     public Server() {
@@ -22,15 +25,18 @@ public class Server {
         Socket socket = null;
         try {
             WorkWithDbService.connect();
+            logger.debug("Сервер запускается...");
             server = new ServerSocket(8189);
-            System.out.println("Сервер запущен. Ожидаем клиентов...");
+            logger.info("Сервер запущен. Ожидаем клиентов...");
             while (true) {
+                logger.debug("Ждем клиентов...");
                 socket = server.accept();
-                System.out.println("Клиент подключился");
+                logger.info("Клиент подключился");
                 new ClientHandler(this, socket);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             try {
                 socket.close();
@@ -51,10 +57,13 @@ public class Server {
             if (o.getNick().equals(nickTo)) {
                 o.sendMsg("from " + from.getNick() + ": " + msg);
                 from.sendMsg("to " + nickTo + ": " + msg);
+                logger.debug("Клиент с ником " + from.getNick() + " отправил клиенту c ником " + nickTo + " следующее" +
+                        " сообщение: ");
                 return;
             }
         }
         from.sendMsg("Клиент с ником " + nickTo + " не найден в чате");
+        logger.debug("Клиент с ником " + nickTo + " не найден в чате");
     }
 
     public void broadcastMsg( ClientHandler from, String msg ) {
@@ -68,6 +77,7 @@ public class Server {
     public boolean isNickBusy( String nick ) {
         for (ClientHandler o : clients) {
             if (o.getNick().equals(nick)) {
+                logger.debug(nick + " уже занят");
                 return true;
             }
         }
@@ -82,7 +92,9 @@ public class Server {
             sb.append("/clientslist ");
             for (ClientHandler cl : clients) {
                 for (String bl : blackList) {
-                    if (bl.equals(cl.getNick())) sb.append("(b)");
+                    if (bl.equals(cl.getNick())) {
+                        sb.append("(b)");
+                    }
                 }
                 sb.append(cl.getNick()).append(" ");
             }
