@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="cameraRoll" class="Lesson_8.ColorCameraRoll">
+        <!--<constructor-arg type="java.lang.String" value="Yuri"/>-->
+    </bean>
+    <!--<bean id ="cameraRollBlack" class="Lesson_8.BlackAndWhiteCameraRoll"/>-->
+
+    <bean id="camera" class="Lesson_8.Camera">
+        <!--<constructor-arg type="java.lang.String" value="Yuri"/>-->
+
+        <property name="cameraRoll">
+            <ref bean="cameraRoll"/>
+        </property>
+        <!--<constructor-arg type="java.lang.String" ref="cameraImp" />-->
+    </bean>
+
+    <!--<bean id="cppCodeCreator" class="com.geekbrains.spring.CppCodeCreator">-->
+    <!--<constructor-arg ref="animalsClassNameGenerator" />-->
+    <!--</bean>-->
+    <!--<context:component-scan base-package="Lesson_1" />-->
+
+    <!--&lt;!&ndash;<bean id="cameraRoll" class="Lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
+
+    <!--<bean id="camera" class="Lesson_1.CameraImp">-->
+    <!--<property name="cameraRoll">-->
+    <!--&lt;!&ndash;<bean class="Lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
+    <!--<ref bean="cameraRoll"/>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+</beans>
