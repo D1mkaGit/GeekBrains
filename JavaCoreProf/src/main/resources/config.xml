@@ -4,12 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <bean id="cameraRoll" class="Lesson_8.ColorCameraRoll">
+    <bean id="cameraRoll" class="lesson_8.ColorCameraRoll">
         <!--<constructor-arg type="java.lang.String" value="Yuri"/>-->
     </bean>
-    <!--<bean id ="cameraRollBlack" class="Lesson_8.BlackAndWhiteCameraRoll"/>-->
+    <!--<bean id ="cameraRollBlack" class="lesson_8.BlackAndWhiteCameraRoll"/>-->
 
-    <bean id="camera" class="Lesson_8.Camera">
+    <bean id="camera" class="lesson_8.Camera">
         <!--<constructor-arg type="java.lang.String" value="Yuri"/>-->
 
         <property name="cameraRoll">
@@ -23,11 +23,11 @@
     <!--</bean>-->
     <!--<context:component-scan base-package="Lesson_1" />-->
 
-    <!--&lt;!&ndash;<bean id="cameraRoll" class="Lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
+    <!--&lt;!&ndash;<bean id="cameraRoll" class="lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
 
-    <!--<bean id="camera" class="Lesson_1.CameraImp">-->
+    <!--<bean id="camera" class="lesson_1.CameraImp">-->
     <!--<property name="cameraRoll">-->
-    <!--&lt;!&ndash;<bean class="Lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
+    <!--&lt;!&ndash;<bean class="lesson_1.ColorCameraRoll"></bean>&ndash;&gt;-->
     <!--<ref bean="cameraRoll"/>-->
     <!--</property>-->
     <!--</bean>-->
