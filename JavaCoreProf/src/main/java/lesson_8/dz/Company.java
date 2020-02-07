@@ -20,16 +20,8 @@ public class Company {
         return id;
     }
 
-    public void setId( Integer id ) {
-        this.id = id;
-    }
-
     public Integer getParentId() {
         return parentId;
-    }
-
-    public void setParentId( Integer parentId ) {
-        this.parentId = parentId;
     }
 
     public List<Company> getCompanyList() {
@@ -43,19 +35,12 @@ public class Company {
     public void setCompanyList( Integer[][] intMass ) {
         this.companyList = new ArrayList<>();
         for (Integer[] mass : intMass) {
-            setId(mass[0]);
-            setParentId(mass[1]);
-            addCompany();
-            this.companyList.add(addCompany());
+            this.companyList.add(new Company(mass[0], mass[1]));
         }
     }
 
     public void info() {
         System.out.println("Company: " + id + " have parent: " + parentId);
-    }
-
-    public Company addCompany() {
-        return new Company(this.id, this.parentId);
     }
 
     public void arrangeCompanyList() {
@@ -73,7 +58,6 @@ public class Company {
             setCompanyList(clForWork);
         }
     }
-
 
     public void printAllCompaniesInfo() {
         for (Company c : getCompanyList()) {
