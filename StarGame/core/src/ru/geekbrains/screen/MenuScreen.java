@@ -13,9 +13,6 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
-    private float mX;
-    private float mY;
-    private float distance;
 
     @Override
     public void show() {
@@ -52,7 +49,9 @@ public class MenuScreen extends BaseScreen {
         super.touchDown(screenX, screenY, pointer, button);
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
         System.out.println("touch.x = " + touch.x + " touch.y " + touch.y);
-        distance = pos.cpy().sub(touch).len();
+        float distance = pos.cpy().sub(touch).len();
+        float mX;
+        float mY;
 
         if (touch.x > pos.x) mX = touch.x - pos.x;
         else mX = -pos.x + touch.x;
