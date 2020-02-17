@@ -13,6 +13,9 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
+    private float mX;
+    private float mY;
+    private float distance;
 
     @Override
     public void show() {
@@ -28,9 +31,11 @@ public class MenuScreen extends BaseScreen {
         super.render(delta);
         Gdx.gl.glClearColor(0.5f, 0.9f, 0.4f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if ((pos.y + img.getHeight()) < Gdx.graphics.getHeight()) {
+
+        if ((int) pos.x != (int) touch.x) {
             pos.add(v);
         }
+
         batch.begin();
         batch.draw(img, pos.x, pos.y);
         batch.end();
@@ -47,6 +52,15 @@ public class MenuScreen extends BaseScreen {
         super.touchDown(screenX, screenY, pointer, button);
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
         System.out.println("touch.x = " + touch.x + " touch.y " + touch.y);
+        distance = pos.cpy().sub(touch).len();
+
+        if (touch.x > pos.x) mX = touch.x - pos.x;
+        else mX = -pos.x + touch.x;
+
+        if (touch.y > pos.y) mY = touch.y - pos.y;
+        else mY = -pos.y + touch.y;
+
+        v = new Vector2(mX / distance, mY / distance);
         return false;
     }
 
