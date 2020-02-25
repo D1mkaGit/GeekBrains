@@ -14,7 +14,6 @@ public class MatrixUtils {
 
     /**
      * Расчёт матрицы перехода 4x4
-     *
      * @param mat итоговая матрица преобразований
      * @param src исходный квадрат
      * @param dst итоговый квадрат
@@ -27,7 +26,6 @@ public class MatrixUtils {
 
     /**
      * Расчёт матрицы перехода 3x3
-     *
      * @param mat итоговая матрица преобразований
      * @param src исходный квадрат
      * @param dst итоговый квадрат
