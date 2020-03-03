@@ -6,7 +6,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import ru.geekbrains.StarGame;
 
 public class DesktopLauncher {
-	public static void main(String[] arg) {
+    public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 600;
 		config.width = 450;

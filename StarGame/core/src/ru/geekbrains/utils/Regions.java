@@ -6,10 +6,9 @@ public class Regions {
 
     /**
      * Разбивает TextureRegion на фреймы
-     *
      * @param region регион
-     * @param rows   количество строк
-     * @param cols   количество столбцов
+     * @param rows количество строк
+     * @param cols количество столбцов
      * @param frames количество фреймов
      * @return массив регионов
      */
