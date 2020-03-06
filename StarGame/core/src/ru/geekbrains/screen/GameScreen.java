@@ -141,11 +141,8 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
-        Vector2 mainShipV = mainShip.pos;
-        Vector2 enemyV;
         for (Enemy enemy : enemyPool.getActiveObjects()) {
-            enemyV = enemy.pos;
-            if (distance(enemyV, mainShipV) < 0.075) enemy.destroy();
+            if (distance(enemy.pos, mainShip.pos) < 0.075) enemy.destroy();
         }
     }
 
