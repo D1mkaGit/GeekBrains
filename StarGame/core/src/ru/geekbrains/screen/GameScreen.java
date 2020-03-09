@@ -14,6 +14,7 @@ import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
+import ru.geekbrains.sprite.Enemy;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemiesEmitter;
@@ -136,10 +137,17 @@ public class GameScreen extends BaseScreen {
         explosionPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemiesEmitter.generate(delta);
+        checkCollisions();
     }
 
     private void checkCollisions() {
-        //TODO место для ДЗ
+        for (Enemy enemy : enemyPool.getActiveObjects()) {
+            if (distance(enemy.pos, mainShip.pos) < 0.075) enemy.destroy();
+        }
+    }
+
+    private double distance(Vector2 object1, Vector2 object2) {
+        return Math.sqrt(Math.pow((object2.x - object1.x), 2) + Math.pow((object2.y - object1.y), 2));
     }
 
     private void freeAllDestroyed() {
