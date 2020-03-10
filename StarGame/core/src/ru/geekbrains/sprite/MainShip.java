@@ -13,6 +13,7 @@ import ru.geekbrains.pool.ExplosionPool;
 public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
+    private static final int DEFAULT_HP = 10;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -31,7 +32,7 @@ public class MainShip extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.hp = 10;
+        setHpToDefault();
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     }
 
@@ -137,6 +138,18 @@ public class MainShip extends Ship {
                 || bullet.getLeft() > getRight()
                 || bullet.getBottom() > pos.y
                 || bullet.getTop() < getBottom());
+    }
+
+    private void setHpToDefault() {
+        this.hp = DEFAULT_HP;
+    }
+
+    public void recoverShip() {
+        flushDestroy(); // восстанавливаем корабль
+        this.v = new Vector2(); // останавливаем, если быцло движение
+        this.pos.set(worldBounds.pos.setZero()); // ставим по центру
+        setBottom(worldBounds.getBottom() + 0.05f); // опускаем вниз
+        setHpToDefault(); // востанавливаем здоровье
     }
 
     private void moveRight() {
