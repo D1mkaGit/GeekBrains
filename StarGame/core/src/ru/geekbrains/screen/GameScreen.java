@@ -18,8 +18,10 @@ import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.Bullet;
 import ru.geekbrains.sprite.Enemy;
+import ru.geekbrains.sprite.Explosion;
 import ru.geekbrains.sprite.MainShip;
 import ru.geekbrains.sprite.MessageGameOver;
+import ru.geekbrains.sprite.NewGameButton;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemiesEmitter;
 
@@ -51,6 +53,7 @@ public class GameScreen extends BaseScreen {
     private State pervState;
 
     private MessageGameOver messageGameOver;
+    private NewGameButton newGameButton;
 
     @Override
     public void show() {
@@ -73,6 +76,7 @@ public class GameScreen extends BaseScreen {
         music.setLooping(true);
         music.play();
         messageGameOver = new MessageGameOver(atlas);
+        newGameButton = new NewGameButton(atlas);
         state = State.PLAYING;
     }
 
@@ -93,6 +97,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.resize(worldBounds);
         messageGameOver.resize(worldBounds);
+        newGameButton.resize(worldBounds);
     }
 
     @Override
@@ -143,6 +148,7 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer, button);
         }
+        newGameButton.touchDown(touch, pointer, button);
         return false;
     }
 
@@ -151,6 +157,7 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer, button);
         }
+        newGameButton.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -169,6 +176,20 @@ public class GameScreen extends BaseScreen {
 
     private void checkCollisions() {
         if (state != State.PLAYING) {
+            if (newGameButton.isPressed()) {
+                state = State.PLAYING;
+                mainShip.recoverShip();
+                newGameButton.flushPressed();
+                for (Enemy enemy : enemyPool.getActiveObjects()) {
+                    enemy.destroy();
+                }
+                for (Bullet bullet : bulletPool.getActiveObjects()) {
+                    bullet.destroy();
+                }
+                for (Explosion explosion : explosionPool.getActiveObjects()) {
+                    explosion.destroy();
+                }
+            }
             return;
         }
         List<Enemy> enemyList = enemyPool.getActiveObjects();
@@ -221,6 +242,7 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             messageGameOver.draw(batch);
+            newGameButton.draw(batch);
         }
         batch.end();
     }
