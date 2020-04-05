@@ -2,6 +2,7 @@ package lesson_2.dz;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 1. Создать массив большого размера (миллион элементов).
@@ -10,11 +11,16 @@ import java.util.Random;
  * 4. Написать методы, реализующие рассмотренные виды сортировок, и проверить скорость выполнения каждой.
  */
 public class BigArray {
-    private final ArrayList<Integer> arr;
+    private ArrayList<Integer> arr;
+    private ArrayList<Integer> arrTemp;
     private int size = 1000000;
+    private long startTime;
+    private long endTime;
+    private long timeElapsed;
 
     private BigArray() {
         this.arr = new ArrayList<>(size);
+        this.arrTemp = new ArrayList<>();
     }
 
     public static void main(String[] args) {
@@ -42,7 +48,35 @@ public class BigArray {
         bigArr.displayById(500);
 
         // вывод всего массива
-        bigArr.display();
+        //bigArr.display();
+
+        bigArr.setArrTemp(); // сохраняем не отсортированный массив
+
+        // сортировка вставкой + подсчеты
+        bigArr.startTimer();
+        bigArr.sortInsert();
+        bigArr.stopTimer();
+        bigArr.calculateTime();
+
+        bigArr.restoreArray(); // восстанавливаем массив, что-бы были одинаковые условия для одсчета
+        // bigArr.display(3);
+
+        // сортировка с маркером + подсчеты
+        bigArr.startTimer();
+        bigArr.sortSelect();
+        bigArr.stopTimer();
+        bigArr.calculateTime();
+
+        bigArr.restoreArray(); // восстанавливаем массив, что-бы были одинаковые условия для одсчета
+        // bigArr.display(3);
+
+        // сортировка пузырьком + подсчеты
+        bigArr.startTimer();
+        bigArr.sortBubble();
+        bigArr.stopTimer();
+        bigArr.calculateTime();
+
+        //bigArr.display(10);
     }
 
     public int getSize() {
@@ -51,6 +85,12 @@ public class BigArray {
 
     private void display() {
         for (int i = 0; i < this.size; i++) {
+            System.out.println(i + 1 + ": " + this.arr.get(i));
+        }
+    }
+
+    private void display(int numOfElements) {
+        for (int i = 0; i < numOfElements; i++) {
             System.out.println(i + 1 + ": " + this.arr.get(i));
         }
     }
@@ -121,6 +161,7 @@ public class BigArray {
 
     /**
      * Insert values into array
+     *
      * @param value - value to be inserted
      * @param id    - array id, if id less than 0,value will be inserted to the end of array
      */
@@ -140,5 +181,69 @@ public class BigArray {
             this.arr.set(i, this.arr.get(i + 1));
         }
         this.size--;
+    }
+
+    private void sortBubble() {
+        int out, in;
+        for (out = this.size - 1; out >= 1; out--) {
+            for (in = 0; in < out; in++) {
+                if (this.arr.get(in) > this.arr.get(in + 1)) {
+                    change(in, in + 1);
+                }
+            }
+        }
+    }
+
+    private void sortSelect() {
+        int out, in, mark;
+        for (out = 0; out < this.size; out++) {
+            mark = out;
+            for (in = out + 1; in < this.size; in++) {
+                if (this.arr.get(in) < this.arr.get(mark)) {
+                    mark = in;
+                }
+            }
+            change(out, mark);
+        }
+    }
+
+    private void sortInsert(){
+        int in, out;
+        for(out = 1;out < this.size; out++){
+            int temp = this.arr.get(out);
+            in = out;
+            while(in > 0 && this.arr.get(in - 1) >=temp){
+                this.arr.set(in, this.arr.get(in - 1));
+                --in;
+            }
+            this.arr.set(in, temp);
+        }
+    }
+
+    private void startTimer() {
+        this.startTime = System.nanoTime();
+    }
+
+    private void stopTimer() {
+        this.endTime = System.nanoTime();
+    }
+
+    private void calculateTime() {
+        this.timeElapsed = this.endTime - this.startTime;
+        System.out.println("На сортировку ушло " + TimeUnit.SECONDS.convert(this.timeElapsed, TimeUnit.NANOSECONDS) + " секунд");
+    }
+
+    private void change(int a, int b) {
+        int tmp = this.arr.get(a);
+        this.arr.set(a, this.arr.get(b));
+        this.arr.set(b, tmp);
+    }
+
+    private void setArrTemp() {
+        this.arrTemp = (ArrayList<Integer>) this.arr.clone();
+    }
+
+    private void restoreArray() {
+        this.arr = (ArrayList<Integer>) this.arrTemp.clone();
     }
 }
