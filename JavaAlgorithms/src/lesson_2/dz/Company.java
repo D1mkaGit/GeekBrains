@@ -11,7 +11,7 @@ public class Company {
 class Order {
     public static void main(String[] args) {
         int[] listOfCompaniesPid = {0, 0, 1, 3, 4, 0};
-        Company company[] = new Company[listOfCompaniesPid.length];
+        Company[] company = new Company[listOfCompaniesPid.length];
 
         // создаем компании
         for (int i = 0; i < listOfCompaniesPid.length; i++) {
@@ -22,8 +22,8 @@ class Order {
         // заполняем parentId
         for (int i = 0; i < listOfCompaniesPid.length; i++) {
             if (listOfCompaniesPid[i] > 0) {
-                for (int j = 0; j < company.length; j++) {
-                    if (company[j].id == listOfCompaniesPid[i] - 1) {
+                for (Company value : company) {
+                    if (value.id == listOfCompaniesPid[i] - 1) {
                         company[i].parentId = listOfCompaniesPid[i] - 1;
                     }
                 }
@@ -36,7 +36,7 @@ class Order {
             System.out.println(company[i].id);
             int cursor = i;
             for (int j = 0; j < company.length; j++) {
-                if (company[i].id == company[j].parentId) {
+                if (company[i].id.equals(company[j].parentId)) {
                     System.out.println(" " + company[j].id);
                     i = j;
                 }

@@ -16,7 +16,6 @@ public class BigArray {
     private int size = 1000000;
     private long startTime;
     private long endTime;
-    private long timeElapsed;
 
     private BigArray() {
         this.arr = new ArrayList<>(size);
@@ -229,8 +228,8 @@ public class BigArray {
     }
 
     private void calculateTime() {
-        this.timeElapsed = this.endTime - this.startTime;
-        System.out.println("На сортировку ушло " + TimeUnit.SECONDS.convert(this.timeElapsed, TimeUnit.NANOSECONDS) + " секунд");
+        long timeElapsed = this.endTime - this.startTime;
+        System.out.println("На сортировку ушло " + TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.NANOSECONDS) + " секунд");
     }
 
     private void change(int a, int b) {
