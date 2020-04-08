@@ -7,13 +7,13 @@ import static lesson_3.dz.MirroredText.getString;
 public class MainDeque {
     public static void main( String[] args ) {
         String input = null;
-        MyDeque deque = null;
+        MyDeque<String> deque = null;
         while (true) {
             try {
                 System.out.println("Введите текст, для сохранения в deque слева направа:");
                 input = getString();
                 if (!input.isEmpty()) {
-                    deque = new MyDeque(input.length());
+                    deque = new MyDeque<>(input.length());
                     for (int i = 0; i < input.length(); i++) {
                         deque.insertRight(String.valueOf(input.charAt(i)));
                     }

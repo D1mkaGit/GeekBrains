@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 public class MirroredText {
     public static void main( String[] args ) {
         String input = null;
-        MyStack stack = null;
+        MyStack<String> stack = null;
         while (true) {
             try {
                 System.out.println("Введите текст, который нужно отзеркалить:");

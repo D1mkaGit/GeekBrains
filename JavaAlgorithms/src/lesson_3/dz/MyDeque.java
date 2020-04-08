@@ -86,8 +86,7 @@ public class MyDeque<Item> {
             throw new NoSuchElementException();
         }
         tail = prevIndex(tail);
-        Item result = list[tail];
-        return result;
+        return list[tail];
     }
 
     public boolean isEmpty() {
