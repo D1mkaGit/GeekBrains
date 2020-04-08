@@ -6,16 +6,19 @@ public class MyStack<Item> {
     private Item[] list;
     private int size;
     private final int DEFAULT_CAPACITY = 10;
+    private int currentCapacity;
 
     public MyStack( int capacity ) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("bad size");
         }
         list = (Item[]) new Object[capacity];
+        currentCapacity = capacity;
     }
 
     public MyStack() {
         list = (Item[]) new Object[DEFAULT_CAPACITY];
+        currentCapacity = DEFAULT_CAPACITY;
     }
 
     // метод вставки
@@ -25,6 +28,18 @@ public class MyStack<Item> {
         }
         list[size] = item;
         size++;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void EnlargeStack() {
+        EnlargeStack(DEFAULT_CAPACITY);
+    }
+
+    public void EnlargeStack( int capacity ) {
+        reCapacity(currentCapacity + capacity);
     }
 
     // метод удаления

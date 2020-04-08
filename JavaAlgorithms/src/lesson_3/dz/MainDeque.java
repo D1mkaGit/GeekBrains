@@ -10,7 +10,7 @@ public class MainDeque {
         MyDeque deque = null;
         while (true) {
             try {
-                System.out.println("Введите текст, который нужно вставить справа:");
+                System.out.println("Введите текст, для сохранения в deque слева направа:");
                 input = getString();
                 if (!input.isEmpty()) {
                     deque = new MyDeque(input.length());
@@ -23,9 +23,13 @@ public class MainDeque {
             }
             assert input != null;
             if (input.equals("q")) break;
-            System.out.println("Текст в перевернутом виде:");
+            System.out.println("Текст в перевернутом виде (без удаления из deque):");
             for (int i = 0; i < input.length(); i++) {
-                System.out.print(deque.removeRight());
+                System.out.print(deque.getLast());
+            }
+            System.out.println("\nТекст в нормальном виде (с удалением из deque):");
+            for (int i = 0; i < input.length(); i++) {
+                System.out.print(deque.removeLeft());
             }
             System.out.println("\n\nВведите q - если хотите завершить работу программы");
         }

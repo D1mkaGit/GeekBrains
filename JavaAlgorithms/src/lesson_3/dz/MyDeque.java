@@ -1,6 +1,6 @@
 package lesson_3.dz;
 
-import java.util.EmptyStackException;
+import java.util.NoSuchElementException;
 
 public class MyDeque<Item> {
     private Item[] list;
@@ -43,8 +43,7 @@ public class MyDeque<Item> {
     public Item removeLeft() {
         Item value = peekLeft();
         size--;
-        list[head] = null;
-        head = nextIndex(head);
+        list[head - 1] = null;
         return value;
     }
 
@@ -52,30 +51,43 @@ public class MyDeque<Item> {
         Item value = peekRight();
         size--;
         list[tail] = null;
-        tail = prevIndex(tail); // тут нужно что-то сделать, чтобы в конце в ноль не возвращалось значение
         return value;
     }
 
+    public Item getFirst() {
+        return peekLeft();
+    }
+
+    public Item getLast() {
+        return peekRight();
+    }
+
     private int nextIndex( int index ) {
-        return (index + 1) % list.length;
+        return (index + 1);
     }
 
     private int prevIndex( int index ) {
-        return (index - 1) % list.length;
+        return (index - 1);
     }
 
     private Item peekLeft() {
         if (isEmpty()) {
-            throw new EmptyStackException();
+            throw new NoSuchElementException();
         }
-        return list[head];
+        Item result = list[head];
+        if (result == null)
+            return null;
+        head = nextIndex(head);
+        return result;
     }
 
     private Item peekRight() {
         if (isEmpty()) {
-            throw new EmptyStackException();
+            throw new NoSuchElementException();
         }
-        return list[tail];
+        tail = prevIndex(tail);
+        Item result = list[tail];
+        return result;
     }
 
     public boolean isEmpty() {

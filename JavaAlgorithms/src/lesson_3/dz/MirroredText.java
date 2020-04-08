@@ -1,5 +1,7 @@
 package lesson_3.dz;
 
+import lesson_3.MyStack;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,13 +11,13 @@ import java.io.InputStreamReader;
 public class MirroredText {
     public static void main( String[] args ) {
         String input = null;
-        Stack stack = null;
+        MyStack stack = null;
         while (true) {
             try {
                 System.out.println("Введите текст, который нужно отзеркалить:");
                 input = getString();
                 if (!input.isEmpty()) {
-                    stack = new Stack(input.length());
+                    stack = new MyStack<>(input.length());
                     for (int i = 0; i < input.length(); i++) {
                         stack.push(String.valueOf(input.charAt(i)));
                     }
@@ -39,36 +41,3 @@ public class MirroredText {
         return br.readLine();
     }
 }
-
-class Stack {
-    private final int maxSize;
-    private final String[] stack;
-    private int top;
-
-    public Stack( int size ) {
-        this.maxSize = size;
-        this.stack = new String[this.maxSize];
-        this.top = -1;
-    }
-
-    public void push( String i ) {
-        this.stack[++this.top] = i;
-    }
-
-    public String pop() {
-        return this.stack[this.top--];
-    }
-
-    public String peek() {
-        return this.stack[this.top];
-    }
-
-    public boolean isEmpty() {
-        return (this.top == -1);
-    }
-
-    public boolean isFull() {
-        return (this.top == this.maxSize - 1);
-    }
-}
-
