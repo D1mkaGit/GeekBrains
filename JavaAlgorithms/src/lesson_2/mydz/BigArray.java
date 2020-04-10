@@ -1,4 +1,4 @@
-package lesson_2.dz;
+package lesson_2.mydz;
 
 import java.util.ArrayList;
 import java.util.Random;
