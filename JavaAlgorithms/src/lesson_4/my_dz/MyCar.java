@@ -18,12 +18,14 @@ public class MyCar {
         list.insert("BMW");
         list.insert("Volkswagen");
 
-        if (list.isNull()) {
+        if (list.isEmpty()) {
             System.out.println("Список пуст");
         } else {
+            System.out.println("Car List is next:");
             list.display();
             System.out.println("Found: " + list.find("BMW"));
             System.out.println("Deleted: " + list.delete("BMW"));
+            System.out.println("Car List is next:");
             list.display();
         }
 
@@ -34,13 +36,15 @@ public class MyCar {
         carList.insert(new MyCar("BMW", "535", 2018));
         carList.insert(new MyCar("Audi", "RS8", 2019));
 
-        if (carList.isNull()) {
+        if (carList.isEmpty()) {
             System.out.println("Список пуст");
         } else {
+            System.out.println("Car List is next:");
             carList.display();
             MyCar carToDelete = new MyCar("BMW", "535", 2018);
             System.out.println("Found: " + carList.find(carToDelete));
             System.out.println("Deleted: " + carList.delete(carToDelete));
+            System.out.println("Car List is next:");
             carList.display();
         }
     }

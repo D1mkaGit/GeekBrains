@@ -2,12 +2,22 @@ package lesson_4.my_dz;
 
 public class MyLinkedList<Object> {
     private MyLink<Object> first;
+    private MyLink<Object> last;
 
     public MyLinkedList() {
         this.first = null;
+        this.last = null;
     }
 
-    public boolean isNull() {
+    public MyLink<Object> getFirst() {
+        return first;
+    }
+
+    public void setFirst(MyLink<Object> first) {
+        this.first = first;
+    }
+
+    public boolean isEmpty() {
         return (this.first == null);
     }
 
@@ -17,13 +27,31 @@ public class MyLinkedList<Object> {
         first = newLink;
     }
 
+    public void insertToEnd(Object item) {
+        MyLink<Object> newLink = new MyLink<>(item);
+        if (isEmpty()) {
+            first = newLink;
+            last = first;
+        } else {
+            last.setNext(newLink);
+            last = newLink;
+        }
+    }
+
     public void display() {
         MyLink<Object> current = first;
-        System.out.println("Car List is next:");
         while (current != null) {
             current.display();
             current = current.getNext();
         }
+    }
+
+    public Object deleteFirst(){
+        MyLink<Object> temp = first;
+        if(first.getNext()==null)
+            last=null;
+        first=first.getNext();
+        return temp.getItem();
     }
 
     public Object find(Object searchItem) {
