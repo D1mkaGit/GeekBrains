@@ -9,22 +9,6 @@ public class MyTwoSideLinkList<Object> {
         last = null;
     }
 
-    public MyLink<Object> getFirst() {
-        return first;
-    }
-
-    public void setFirst(MyLink<Object> first) {
-        this.first = first;
-    }
-
-    public MyLink<Object> getLast() {
-        return last;
-    }
-
-    public void setLast(MyLink<Object> last) {
-        this.last = last;
-    }
-
     public boolean isEmpty() {
         return (this.first == null);
     }
