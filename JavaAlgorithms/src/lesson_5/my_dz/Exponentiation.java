@@ -8,15 +8,15 @@ public class Exponentiation {
     private boolean isNegative;
     private boolean isFirstRun = true;
 
-    private double resetFirstRunAndIsNegative( double number ) {
+    private double resetFirstRunAndIsNegativeOnReturn( double number ) {
         isFirstRun = true;
         isNegative = false;
         return number;
     }
 
     public double calculate( double number, int exponent ) {
-        if (number == 0) return resetFirstRunAndIsNegative(0);
-        if (exponent == 0) return resetFirstRunAndIsNegative(1);
+        if (number == 0) return resetFirstRunAndIsNegativeOnReturn(0);
+        if (exponent == 0) return resetFirstRunAndIsNegativeOnReturn(1);
         if (exponent < 0) {
             this.isNegative = true;
             int negativeValue = -1;
@@ -25,11 +25,12 @@ public class Exponentiation {
         if (isFirstRun) {
             this.number = number;
             isFirstRun = false;
+            
         }
 
         if (exponent == 1) {
             if (isNegative) this.number = 1 / this.number;
-            return resetFirstRunAndIsNegative(this.number);
+            return resetFirstRunAndIsNegativeOnReturn(this.number);
         }
         this.number *= number;
         return calculate(number, exponent - 1);
