@@ -113,14 +113,14 @@ class Item {
     }
 
     public void setRandomWeight( int maxWeight ) {
-        weight = getRandomNumberInRange(maxWeight);
+        weight = getRandomNumber(maxWeight);
     }
 
     public void setRandomPrice( int maxPrice ) {
-        price = getRandomNumberInRange(maxPrice);
+        price = getRandomNumber(maxPrice);
     }
 
-    private int getRandomNumberInRange( int max ) {
+    private int getRandomNumber( int max ) {
         Random r = new Random();
         return r.nextInt((max - 1) + 1) + 1;
     }
