@@ -2,8 +2,6 @@ package lesson_5.game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,15 +9,18 @@ public class GameWindow extends JFrame {
     private static final int WIN_HEIGHT = 500;
     private static final int WIN_WIDTH = 800;
     private int ROUNDS = 0;
-    private DefaultListModel<String> modelFirstCommand = new DefaultListModel<>();
-    private DefaultListModel<String> modelSecondCommand = new DefaultListModel<>();
-    private ArrayList<Hero> team1 = new ArrayList<>();
-    private ArrayList<Hero> team2 = new ArrayList<>();
-    private Game game;
-    private Random randomHeal = new Random();
-    private Random randomDamage = new Random();
-    private Random randomAddHeel = new Random();
-    private JTextArea textArea;
+    private final DefaultListModel<String> modelFirstCommand = new DefaultListModel<>();
+    private final DefaultListModel<String> modelSecondCommand = new DefaultListModel<>();
+    private final ArrayList<Hero> team1 = new ArrayList<>();
+    private final ArrayList<Hero> team2 = new ArrayList<>();
+    private final Game game;
+    private final Random randomHeal = new Random();
+    private final Random randomDamage = new Random();
+    private final Random randomAddHeel = new Random();
+    private final JTextArea textArea;
+
+    private final ArrayList<String> names = new ArrayList<>();
+
 
     public int getRounds() {
         return ROUNDS;
@@ -33,7 +34,7 @@ public class GameWindow extends JFrame {
         return team2;
     }
 
-    public boolean checkCountCircle(String str) {
+    public boolean checkCountCircle( String str ) {
         int d;
         try {
             d = Integer.parseInt(str);
@@ -53,43 +54,62 @@ public class GameWindow extends JFrame {
         return true;
     }
 
-    public String getName(ArrayList<Hero> team, String name) {
+    public String getName( ArrayList<Hero> team, String name ) {
         int count = 0;
-        for(Hero item: team) {
-            if(item.name.contains(name)) count++;
+        for (Hero item : team) {
+            if (item.name.contains(name)) count++;
         }
         return count == 0 ? name : name + " " + count;
     }
 
-    public String initHero(String typeHero, ArrayList<Hero> team) {
+    public String initHero( String typeHero, ArrayList<Hero> team ) {
         int heal = randomHeal.nextInt(50);
         int damage = randomDamage.nextInt(20);
+
+        names.add("Tigril");
+        names.add("Akali");
+        names.add("Jana");
+        names.add("Plato");
+        names.add("Victor");
+        names.add("Maximus");
+
         String name;
         switch (typeHero) {
             case "Warrior":
                 heal += 200;
                 damage += 50;
-                name = getName(team, "Tigril");
-                team.add(new Warrior(heal, name, damage, 0));
-                return typeHero + ": " + name + " (heal = " + heal + ", damage = " + damage + ")";
+                name = setNameFromArrayList(team);
+                return addHerro(typeHero, team, heal, damage, name, new Warrior(heal, name, damage, 0));
             case "Assasin":
                 heal += 100;
                 damage += 70;
-                name = "Akali";
-                team.add(new Assasin(heal, name, damage, 0));
-                return typeHero + ": " + name + " (heal = " + heal + ", damage = " + damage + ")";
+                name = setNameFromArrayList(team);
+                return addHerro(typeHero, team, heal, damage, name, new Assasin(heal, name, damage, 0));
             case "Doctor":
                 heal += 100;
-                name = "Jana";
+                name = setNameFromArrayList(team);
                 int addHeal = randomAddHeel.nextInt(20) + 40;
-                team.add(new Doctor(heal, name, 0, 60));
-                return typeHero + ": " + name + " (heal = " + heal + ", addHeal = " + addHeal + ")";
-
+                return addHerro(typeHero, team, heal, addHeal, name, new Doctor(heal, name, 0, 60));
         }
         return null;
     }
 
-    public void addMessage(String message) {
+    private String setNameFromArrayList( ArrayList<Hero> team ) {
+        if (names.isEmpty()) return getName(team, "Player");
+        String name;
+        name = getName(team, names.get(0));
+        names.remove(names.get(0));
+        return name;
+    }
+
+    private String addHerro( String typeHero, ArrayList<Hero> team, int heal, int damage, String name, Hero hero ) {
+        team.add(hero);
+        String damageOrHealString = "damage";
+        if (hero.addHeal > 0) damageOrHealString = "addHeal";
+        return typeHero + ": " + name + " (heal = " + heal + ", " + damageOrHealString + " = " + damage + ")";
+    }
+
+    public void addMessage( String message ) {
         textArea.append(message);
         textArea.append("\n");
     }
@@ -100,7 +120,7 @@ public class GameWindow extends JFrame {
 
     public GameWindow() {
 
-        String[] heros = {"Warrior","Assasin","Doctor"};
+        String[] heros = {"Warrior", "Assasin", "Doctor"};
         game = new Game(this);
 
         setTitle("Hero Game");
@@ -122,7 +142,7 @@ public class GameWindow extends JFrame {
         JButton butStart = new JButton("start");
         JButton butClose = new JButton("close");
 
-        textArea = new JTextArea(12,1);
+        textArea = new JTextArea(12, 1);
 
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -155,11 +175,11 @@ public class GameWindow extends JFrame {
         c.gridy = 1;
         c.gridwidth = 2;
         c.insets = new Insets(0, 5, 0, 5);
-        add(new JScrollPane(listLeft),c);
+        add(new JScrollPane(listLeft), c);
 
         //состав второй команды
         c.gridx = 2;
-        add(new JScrollPane(listRight),c);
+        add(new JScrollPane(listRight), c);
 
         //количесво раундов
         c.weighty = 0.01;
@@ -187,47 +207,48 @@ public class GameWindow extends JFrame {
         add(textArea, c);
 
         //Повешаем слушателей на кнопки
-        butLeft.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selected = (String) bookList1.getSelectedItem();
-                if(modelFirstCommand.getSize() < 3) modelFirstCommand.addElement( initHero(selected,team1));
+        butLeft.addActionListener(e -> {
+            String selected = (String) bookList1.getSelectedItem();
+            if (modelFirstCommand.getSize() < 3) {
+                assert selected != null;
+                modelFirstCommand.addElement(initHero(selected, team1));
             }
+            switchSelectedIndex(bookList1);
         });
 
-        butRight.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selected = (String) bookList2.getSelectedItem();
-                if(modelSecondCommand.getSize() < 3) modelSecondCommand.addElement(initHero(selected,team2));
+        butRight.addActionListener(e -> {
+            String selected = (String) bookList2.getSelectedItem();
+            if (modelSecondCommand.getSize() < 3) {
+                assert selected != null;
+                modelSecondCommand.addElement(initHero(selected, team2));
             }
+            switchSelectedIndex(bookList2);
         });
 
-        butStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!checkCountCircle(textField.getText())) return;
-                if(team1.size() != team2.size()) {
-                    System.out.println("В командах должно быть равное количество игроков.");
-                    return;
-                }
-                if(team1.size() == 0) {
-                    System.out.println("Нужно подобрать команды");
-                    return;
-                }
-                game.fight();
+        butStart.addActionListener(e -> {
+            if (!checkCountCircle(textField.getText())) return;
+            if (team1.size() != team2.size()) {
+                System.out.println("В командах должно быть равное количество игроков.");
+                return;
             }
+            if (team1.size() == 0) {
+                System.out.println("Нужно подобрать команды");
+                return;
+            }
+            game.fight();
         });
 
-        butClose.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        butClose.addActionListener(e -> System.exit(0));
 
 
         setVisible(true);
 
+    }
+
+    private void switchSelectedIndex( JComboBox<String> bookList1 ) {
+        int id = bookList1.getSelectedIndex() + 1;
+        if ((bookList1.getItemCount() - 1) == bookList1.getSelectedIndex())
+            id = 0;
+        bookList1.setSelectedIndex(id);
     }
 }
