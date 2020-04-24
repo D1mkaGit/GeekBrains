@@ -1,4 +1,4 @@
-package lesson_8.DZ;
+package lesson_7.DZ;
 
 
 import java.util.Objects;
