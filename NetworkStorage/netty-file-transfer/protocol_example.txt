@@ -1,0 +1,258 @@
+package com.flamexander.netty.example.client.protocol;
+
+import com.flamexander.netty.example.client.Network;
+import com.flamexander.netty.example.common.AbstractMessage;
+import com.flamexander.netty.example.common.FileMessage;
+import com.flamexander.netty.example.common.FileRequest;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ResourceBundle;
+
+public class NettyController implements Initializable {
+    @FXML
+    TextField tfFileName;
+
+    @FXML
+    ListView<String> filesList;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NettyNetwork.getInstance().start();
+            }
+        }).start();
+
+        refreshLocalFilesList();
+    }
+
+    public void pressOnSendData(ActionEvent actionEvent) {
+        NettyNetwork.getInstance().sendData();
+    }
+
+    public void refreshLocalFilesList() {
+        if (Platform.isFxApplicationThread()) {
+            try {
+                filesList.getItems().clear();
+                Files.list(Paths.get("client_storage")).map(p -> p.getFileName().toString()).forEach(o -> filesList.getItems().add(o));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Platform.runLater(() -> {
+                try {
+                    filesList.getItems().clear();
+                    Files.list(Paths.get("client_storage")).map(p -> p.getFileName().toString()).forEach(o -> filesList.getItems().add(o));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+}
+
+
+package com.flamexander.netty.example.client.protocol;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
+import java.net.InetSocketAddress;
+
+public class NettyNetwork {
+    private static NettyNetwork ourInstance = new NettyNetwork();
+
+    public static NettyNetwork getInstance() {
+        return ourInstance;
+    }
+
+    private NettyNetwork() {
+    }
+
+    private Channel currentChannel;
+
+    public Channel getCurrentChannel() {
+        return currentChannel;
+    }
+
+    public void start() {
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap clientBootstrap = new Bootstrap();
+            clientBootstrap.group(group);
+            clientBootstrap.channel(NioSocketChannel.class);
+            clientBootstrap.remoteAddress(new InetSocketAddress("localhost", 8189));
+            clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
+                protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    socketChannel.pipeline().addLast();
+                    currentChannel = socketChannel;
+                }
+            });
+            ChannelFuture channelFuture = clientBootstrap.connect().sync();
+            channelFuture.channel().closeFuture().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                group.shutdownGracefully().sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*
+    byteBuf = allocator.buffer(256);
+for (int i = 0; i < fullChunksCount; i++) {
+	is.read(buf);
+	System.out.println("Sending filechunk: " + Arrays.toString(buf));
+	byteBuf.writeBytes(buf);
+	ctx.writeAndFlush(byteBuf);
+	// byteBuf.clear();
+}
+     */
+
+    public void sendData() {
+        ByteBufAllocator allocator = new PooledByteBufAllocator();
+        ByteBuf buf = allocator.buffer(16);
+
+        for (int i = 65; i < 75; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (buf.isWritable()) {
+                    buf.writeByte(i);
+                } else {
+                    try {
+                        currentChannel.writeAndFlush(buf).await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    buf.clear();
+                    buf.retain();
+                }
+            }
+        }
+
+//        buf.writeByte(15);
+//
+//        buf.writeLong(8L);
+//
+//
+//
+//        for (byte b : "test.txt".getBytes()) {
+//            buf.writeByte(b);
+//        }
+//
+//        currentChannel.writeAndFlush(buf);
+    }
+
+    public boolean isConnectionOpened() {
+        return currentChannel != null && currentChannel.isActive();
+    }
+
+    public void closeConnection() {
+        currentChannel.close();
+    }
+}
+
+
+package com.flamexander.netty.example.server.protocol;
+
+import com.flamexander.netty.example.common.FileMessage;
+import com.flamexander.netty.example.common.FileRequest;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
+
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+
+public class ProtocolHandler extends ChannelInboundHandlerAdapter {
+    private int state = -1;
+    private HashMap<String, Object> map = new HashMap<>();
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ByteBuf buf = (ByteBuf) msg;
+
+        // FileOutputStream fos = new FileOutputStream("1.txt", true);
+        while (buf.readableBytes() > 0) {
+            // fos.write(buf.readByte());
+            System.out.print((char)buf.readByte());
+        }
+        // fos.close();
+//        if (state == -1) {
+//            if (buf.readableBytes() >= 1) {
+//                map.put("type", buf.readByte());
+//                state = 0;
+//            }
+//        }
+//        if (state == 0) {
+//            if (buf.readableBytes() >= 8) {
+//                state = 1;
+//                map.put("fileNameLength", buf.readLong());
+//            }
+//        }
+//        if (state == 1) {
+//            if (buf.readableBytes() >= (Long) map.get("fileNameLength")) {
+//                byte[] fnb = new byte[((Long)map.get("fileNameLength")).intValue()];
+//                buf.readBytes(fnb);
+//                System.out.println(new String(fnb));
+//                state = -1;
+//                map.clear();
+//            }
+//        }
+//        if(state == 2) {
+//            FileOutputStream fos = new FileOutputStream("1.txt");
+//            while (buf.readableBytes() > 0) {
+//                fos.write(buf.readByte());
+//            }
+//        }
+
+
+//        try {
+//            if (msg == null) {
+//                return;
+//            }
+//            if (msg instanceof FileRequest) {
+//                FileRequest fr = (FileRequest) msg;
+//                if (Files.exists(Paths.get("server_storage/" + fr.getFilename()))) {
+//                    FileMessage fm = new FileMessage(Paths.get("server_storage/" + fr.getFilename()));
+//                    ctx.writeAndFlush(fm);
+//                }
+//            }
+//        } finally {
+//            ReferenceCountUtil.release(msg);
+//        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
+}
