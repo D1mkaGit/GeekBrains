@@ -37,7 +37,7 @@ public class Network {
                     .remoteAddress(new InetSocketAddress("localhost", 8189))
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast();
+                            //socketChannel.pipeline().addLast();
                             currentChannel = socketChannel;
                         }
                     });

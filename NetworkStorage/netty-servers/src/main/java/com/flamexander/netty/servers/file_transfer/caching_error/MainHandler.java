@@ -11,12 +11,20 @@ import io.netty.util.ReferenceCountUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
+    private ExecutorService executorService;
+
+    public MainHandler() {
+        this.executorService = Executors.newSingleThreadExecutor();
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FileRequest) {
-            new Thread(() -> {
+            executorService.execute(() -> {
                 try {
                     File file = new File("2.txt");
                     int bufSize = 1024 * 1024 * 10;
@@ -40,7 +48,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }).start();
+            });
         }
     }
 
