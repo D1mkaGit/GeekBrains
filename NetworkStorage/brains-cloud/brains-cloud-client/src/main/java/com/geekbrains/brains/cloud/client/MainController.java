@@ -1,8 +1,8 @@
 package com.geekbrains.brains.cloud.client;
 
-import com.geekbrains.brains.cloud.common.AbstractMessage;
-import com.geekbrains.brains.cloud.common.FileMessage;
-import com.geekbrains.brains.cloud.common.FileRequest;
+import com.geekbrains.brains.cloud.common.ProtoFileSender;
+import com.geekbrains.brains.cloud.common.ProtoHandler;
+import io.netty.channel.Channel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,11 +15,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 
 public class MainController implements Initializable {
     public VBox rootNode;
+
     @FXML
     TextField requestFileName;
 
@@ -28,36 +29,29 @@ public class MainController implements Initializable {
 
     @FXML
     ListView<String> filesList;
+    private Channel currentChannel;
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
-        Network.start();
-        Thread t = new Thread(() -> {
-            try {
-                while (true) {
-                    AbstractMessage am = Network.readObject();
-                    if (am instanceof FileMessage) {
-                        FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get("client_storage/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
-                        refreshLocalFilesList();
-                    }
-                }
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            } finally {
-                Network.stop();
-            }
-        });
-        t.setDaemon(true);
-        t.start();
+        CountDownLatch networkStarter = new CountDownLatch(1);
+        new Thread(() -> ProtoNetwork.getInstance().start(networkStarter)).start();
+        try {
+            networkStarter.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
+        currentChannel.pipeline().addLast(new ProtoHandler());
         refreshLocalFilesList();
     }
 
     public void pressOnDownloadBtn() {
         if (requestFileName.getLength() > 0) {
-            Network.sendMsg(new FileRequest(requestFileName.getText()));
+            ProtoFileSender.sendRequest(requestFileName.getText(), currentChannel);
             showAlert("Вы запросили: " + requestFileName.getText());
             requestFileName.clear();
+            refreshLocalFilesList();
         }
     }
 
@@ -65,7 +59,15 @@ public class MainController implements Initializable {
         if (sendFileName.getLength() > 0) {
             String pathAndFile = "client_storage/" + sendFileName.getText();
             if (Files.exists(Paths.get(pathAndFile))) {
-                Network.sendMsg(new FileMessage(Paths.get(pathAndFile)));
+                ProtoFileSender.sendFile((byte) 26, Paths.get(pathAndFile), currentChannel,
+                        future -> {
+                            if (!future.isSuccess()) {
+                                future.cause().printStackTrace();
+                            }
+                            if (future.isSuccess()) {
+                                System.out.println("Файл успешно передан");
+                            }
+                        });
                 showAlert("Вы отправили на сервер: " + sendFileName.getText());
             } else {
                 showAlert("Файла " + sendFileName.getText() + " не существует");
