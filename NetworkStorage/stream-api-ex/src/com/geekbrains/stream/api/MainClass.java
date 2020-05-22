@@ -33,12 +33,14 @@ public class MainClass {
 //        flatMapEx();
 //        printTheMostFrequentWordInFile(Paths.get("demoCounting.txt"));
 
-        List<String> filesList = Files.list(Paths.get("."))
+        String filesList = Files.list(Paths.get("."))
                 .filter(p -> !Files.isDirectory(p))
                 .map(p -> p.getFileName().toString())
-                .collect(Collectors.toList());
+                .collect(Collectors.joining("|"));
 
         System.out.println(filesList);
+
+      Arrays.stream(filesList.split("|")).forEach(System.out::print);
     }
 
     private static void flatMapEx() {
