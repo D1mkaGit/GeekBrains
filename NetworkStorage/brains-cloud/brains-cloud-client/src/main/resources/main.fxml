@@ -17,6 +17,23 @@
                    promptText="Укажите имя файла из списка ниже, который хотите отправить" HBox.hgrow="ALWAYS"/>
         <Button onAction="#pressOnUploadBtn" text="Отправить" prefWidth="80.0"/>
     </HBox>
-    <ListView fx:id="filesList" VBox.vgrow="ALWAYS"/>
+    <HBox>
+        <VBox>
+            <HBox spacing="5">
+                <Label>Local Files:</Label>
+                <Button onAction="#refreshLocalFilesList" text="REFRESH"
+                        style="-fx-font-size: 6pt; -fx-text-fill:blue;"/>
+            </HBox>
+            <ListView fx:id="filesList" HBox.hgrow="ALWAYS"/>
+        </VBox>
+        <VBox>
+            <HBox spacing="5">
+                <Label>Server Files:</Label>
+                <Button onAction="#refreshServerFilesList" text="REFRESH"
+                        style="-fx-font-size: 6pt; -fx-text-fill:blue;"/>
+            </HBox>
+            <ListView fx:id="serverFilesList" HBox.hgrow="ALWAYS"/>
+        </VBox>
+    </HBox>
 </VBox>
 

@@ -15,8 +15,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
+
+import static com.geekbrains.brains.cloud.common.ProtoFileSender.SRV_TEMP_PATH;
 
 public class MainController implements Initializable {
     public VBox rootNode;
@@ -29,6 +33,9 @@ public class MainController implements Initializable {
 
     @FXML
     ListView<String> filesList;
+
+    @FXML
+    ListView<String> serverFilesList;
     private Channel currentChannel;
 
     @Override
@@ -44,6 +51,7 @@ public class MainController implements Initializable {
         currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
         currentChannel.pipeline().addLast(new ProtoHandler());
         refreshLocalFilesList();
+        refreshServerFilesList();
     }
 
     public void pressOnDownloadBtn() {
@@ -73,6 +81,7 @@ public class MainController implements Initializable {
                 showAlert("Файла " + sendFileName.getText() + " не существует");
             }
             sendFileName.clear();
+            refreshServerFilesList();
         }
     }
 
@@ -92,6 +101,33 @@ public class MainController implements Initializable {
                         .map(p -> p.getFileName().toString())
                         .forEach(o -> filesList.getItems().add(o));
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void refreshServerFilesList() {
+        String serverFilesListContainer = SRV_TEMP_PATH + "_serverFilesList.txt";
+        Platform.runLater(() -> {
+            try {
+                serverFilesList.getItems().clear();
+                Files.deleteIfExists(Paths.get(serverFilesListContainer));
+                ProtoFileSender.sendReqForFilesList(currentChannel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                for (int i = 0; i < 20; i++) {
+                    if (!Files.exists(Paths.get(serverFilesListContainer)))
+                        Thread.sleep(500);
+                    else
+                        break;
+                }
+                String file = Files.lines(Paths.get(serverFilesListContainer)).collect(Collectors.joining("\n"));
+                Arrays.stream(file.split("\\|"))
+                        .forEach(o -> serverFilesList.getItems().add(o));
+
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         });
