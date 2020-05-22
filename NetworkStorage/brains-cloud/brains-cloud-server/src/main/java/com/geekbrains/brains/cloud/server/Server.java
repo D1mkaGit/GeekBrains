@@ -1,5 +1,6 @@
 package com.geekbrains.brains.cloud.server;
 
+import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -25,7 +26,7 @@ public class Server {
                             socketChannel.pipeline().addLast(
 //                                    new ObjectDecoder(50 * 1024 * 1024, ClassResolvers.cacheDisabled(null)),
 //                                    new ObjectEncoder(),
-                                    new MainHandler()
+                                    new ProtoHandler()
                             );
                         }
                     });

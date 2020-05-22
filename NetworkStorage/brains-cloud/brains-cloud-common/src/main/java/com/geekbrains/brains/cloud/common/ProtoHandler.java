@@ -10,10 +10,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static com.geekbrains.brains.cloud.common.ProtoFileSender.SRV_TEMP_PATH;
+
 public class ProtoHandler extends ChannelInboundHandlerAdapter {
     private final byte SIGNAL_BYTE_SERVER_FILE = 25;
     private final byte SIGNAL_BYTE_CLIENT_FILE = 26;
     private final byte SIGNAL_BYTE_REQUEST = 24;
+    private final byte SIGNAL_BYTE_REQUEST_FILE_LIST = 22;
+    private final byte SIGNAL_BYTE_FILE_LIST = 23;
     private State currentState = State.IDLE;
     private int nextLength;
     private long fileLength;
@@ -43,6 +47,14 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
                     receivedFileLength = 0L;
                     System.out.println("STATE: Start file requesting");
                     isRequest = true;
+                } else if (read == SIGNAL_BYTE_REQUEST_FILE_LIST) {
+                    System.out.println("STATE: Start fileList requesting");
+                    ProtoFileSender.sendFilesList("server_storage", ctx.channel());
+                    currentState = State.IDLE;
+                } else if (read == SIGNAL_BYTE_FILE_LIST) {
+                    System.out.println("STATE: Start fileList sending");
+                    receivedFileLength = 0L;
+                    currentState = State.SERVER_FILES_LIST_FILE_NAME_LENGTH;
                 } else {
                     System.out.println("ERROR: Invalid first byte - " + read);
                 }
@@ -110,6 +122,45 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
                     }
                 }
             }
+
+            if (currentState == State.SERVER_FILES_LIST_FILE_NAME_LENGTH) {
+                if (buf.readableBytes() >= 4) {
+                    System.out.println("STATE: Get length for filename with file list");
+                    nextLength = buf.readInt();
+                    buf.discardReadBytes();
+                    currentState = State.SERVER_FILES_LIST_FILE_NAME;
+                }
+            }
+
+            if (currentState == State.SERVER_FILES_LIST_FILE_NAME) {
+                if (buf.readableBytes() >= nextLength) { //для получения листа не важно название файла в котором
+                    // передаем, храним в другом файле
+                    buf.readBytes(new byte[nextLength]);
+                    currentState = State.SERVER_FILES_LIST_FILE_LENGTH;
+                }
+            }
+
+            if (currentState == State.SERVER_FILES_LIST_FILE_LENGTH) {
+                if (buf.readableBytes() >= 8) {
+                    System.out.println("STATE: Get file list length");
+                    fileLength = buf.readLong();
+                    out = new BufferedOutputStream(new FileOutputStream(SRV_TEMP_PATH + "_serverFilesList.txt"));
+                    currentState = State.SERVER_FILES_LIST_FILE;
+                }
+            }
+
+            if (currentState == State.SERVER_FILES_LIST_FILE) {
+                while (buf.readableBytes() > 0) {
+                    out.write(buf.readByte());
+                    receivedFileLength++;
+                    if (fileLength == receivedFileLength) {
+                        currentState = State.IDLE;
+                        System.out.println("File List received");
+                        out.close();
+                        break;
+                    }
+                }
+            }
         }
         if (buf.readableBytes() == 0) {
             buf.release();
@@ -125,6 +176,10 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
 
 
     public enum State {
-        IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE
+        IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE,
+        SERVER_FILES_LIST_FILE_NAME_LENGTH,
+        SERVER_FILES_LIST_FILE_NAME,
+        SERVER_FILES_LIST_FILE_LENGTH,
+        SERVER_FILES_LIST_FILE
     }
 }
