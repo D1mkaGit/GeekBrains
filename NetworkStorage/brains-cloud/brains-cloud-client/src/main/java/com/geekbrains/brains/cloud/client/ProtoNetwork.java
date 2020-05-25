@@ -1,5 +1,6 @@
 package com.geekbrains.brains.cloud.client;
 
+import com.geekbrains.brains.cloud.common.Callback;
 import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -22,6 +23,10 @@ public class ProtoNetwork {
 
     public static ProtoNetwork getInstance() {
         return ourInstance;
+    }
+
+    public void setOnReceivedCallback( Callback onReceivedCallback ) {
+        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedCallback(onReceivedCallback);
     }
 
     public Channel getCurrentChannel() {

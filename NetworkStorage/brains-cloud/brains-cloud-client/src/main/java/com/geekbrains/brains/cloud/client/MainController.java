@@ -36,6 +36,7 @@ public class MainController implements Initializable {
     @FXML
     ListView<String> serverFilesList;
     private Channel currentChannel;
+    private Alert alert;
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
@@ -44,6 +45,13 @@ public class MainController implements Initializable {
         try {
             networkStarter.await();
             currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
+            ProtoNetwork.getInstance().setOnReceivedCallback(() -> {
+                Platform.runLater(() -> {
+                    if (alert.isShowing()) alert.close();
+                });
+                showAlert("Файл: " + requestFileName.getText() + " скачан");
+                refreshLocalFilesList();
+            });
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -55,41 +63,46 @@ public class MainController implements Initializable {
         if (requestFileName.getLength() > 0) {
             ProtoFileSender.sendRequest(requestFileName.getText(), currentChannel);
             showAlert("Вы запросили: " + requestFileName.getText());
-            requestFileName.clear();
-            refreshLocalFilesList();
         }
     }
 
     public void pressOnUploadBtn() throws IOException {
         if (sendFileName.getLength() > 0) {
-            String pathAndFile = "client_storage/" + sendFileName.getText();
+            String fileName = sendFileName.getText();
+            String pathAndFile = "client_storage/" + fileName;
             if (Files.exists(Paths.get(pathAndFile))) {
+                showAlert("Вы отправили на сервер: " + fileName);
                 ProtoFileSender.sendFile((byte) 26, Paths.get(pathAndFile), currentChannel,
                         future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
                             }
                             if (future.isSuccess()) {
-                                System.out.println("Файл успешно передан");
+                                System.out.println("Файл " + fileName + " успешно передан");
+                                Platform.runLater(() -> {
+                                    if (alert.isShowing()) alert.close();
+                                });
+                                showAlert("Сервер получил: " + fileName);
+                                refreshServerFilesList();
                             }
                         });
-                showAlert("Вы отправили на сервер: " + sendFileName.getText());
             } else {
                 showAlert("Файла " + sendFileName.getText() + " не существует");
             }
-            sendFileName.clear();
-            refreshServerFilesList();
         }
     }
 
     private void showAlert( String msg ) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText(msg);
+            alert.showAndWait();
+        });
     }
 
     public void refreshLocalFilesList() {
+        requestFileName.clear();
         Platform.runLater(() -> {
             try {
                 filesList.getItems().clear();
@@ -104,6 +117,7 @@ public class MainController implements Initializable {
     }
 
     public void refreshServerFilesList() {
+        sendFileName.clear();
         String serverFilesListContainer = SRV_TEMP_PATH + "_serverFilesList.txt";
         Platform.runLater(() -> {
             try {

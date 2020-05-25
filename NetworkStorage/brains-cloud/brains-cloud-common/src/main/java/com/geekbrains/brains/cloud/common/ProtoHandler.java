@@ -27,9 +27,14 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
     private boolean isServerFile;
     private String storagePath;
 
+    private Callback onReceivedCallback;
+
+    public void setOnReceivedCallback( Callback onReceivedCallback ) {
+        this.onReceivedCallback = onReceivedCallback;
+    }
+
     @Override
     public void channelRead( ChannelHandlerContext ctx, Object msg ) throws Exception {
-        // if (msg instanceof ProtoFileSender) {
         ByteBuf buf = ((ByteBuf) msg);
         while (buf.readableBytes() > 0) {
             if (currentState == State.IDLE) {
@@ -116,6 +121,7 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
                     receivedFileLength++;
                     if (fileLength == receivedFileLength) {
                         currentState = State.IDLE;
+                        if (isServerFile) onReceivedCallback.callback();
                         System.out.println("File received");
                         out.close();
                         break;
@@ -172,8 +178,6 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
-    //}
-
 
     public enum State {
         IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE,
