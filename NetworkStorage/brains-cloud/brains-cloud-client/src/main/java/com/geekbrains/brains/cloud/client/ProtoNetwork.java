@@ -1,5 +1,6 @@
 package com.geekbrains.brains.cloud.client;
 
+import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -37,6 +38,7 @@ public class ProtoNetwork {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel( SocketChannel socketChannel ) {
                             currentChannel = socketChannel;
+                            currentChannel.pipeline().addLast(new ProtoHandler());
                         }
                     });
             ChannelFuture channelFuture = clientBootstrap.connect().sync();

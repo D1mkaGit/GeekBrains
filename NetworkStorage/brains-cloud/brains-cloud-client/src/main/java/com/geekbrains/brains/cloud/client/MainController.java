@@ -1,7 +1,6 @@
 package com.geekbrains.brains.cloud.client;
 
 import com.geekbrains.brains.cloud.common.ProtoFileSender;
-import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.channel.Channel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -44,12 +43,10 @@ public class MainController implements Initializable {
         new Thread(() -> ProtoNetwork.getInstance().start(networkStarter)).start();
         try {
             networkStarter.await();
+            currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
-        currentChannel.pipeline().addLast(new ProtoHandler());
         refreshLocalFilesList();
         refreshServerFilesList();
     }
