@@ -19,8 +19,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
-import static com.geekbrains.brains.cloud.common.ProtoFileSender.SRV_TEMP_PATH;
-
 public class MainController implements Initializable {
     public VBox rootNode;
 
@@ -37,6 +35,7 @@ public class MainController implements Initializable {
     ListView<String> serverFilesList;
     private Channel currentChannel;
     private Alert alert;
+    private final String serverFilesListContainer = "client_storage/temp/_serverFilesList.txt";
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
@@ -50,13 +49,15 @@ public class MainController implements Initializable {
                     if (alert.isShowing()) alert.close();
                 });
                 showAlert("Файл: " + requestFileName.getText() + " скачан");
+                requestFileName.clear();
                 refreshLocalFilesList();
             });
+            ProtoNetwork.getInstance().setOnReceivedFLCallback(this::refreshServerFilesList);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         refreshLocalFilesList();
-        refreshServerFilesList();
+        sendRefreshServerFilesListRequest();
     }
 
     public void pressOnDownloadBtn() {
@@ -83,7 +84,8 @@ public class MainController implements Initializable {
                                     if (alert.isShowing()) alert.close();
                                 });
                                 showAlert("Сервер получил: " + fileName);
-                                refreshServerFilesList();
+                                sendFileName.clear();
+                                sendRefreshServerFilesListRequest();
                             }
                         });
             } else {
@@ -102,7 +104,6 @@ public class MainController implements Initializable {
     }
 
     public void refreshLocalFilesList() {
-        requestFileName.clear();
         Platform.runLater(() -> {
             try {
                 filesList.getItems().clear();
@@ -116,31 +117,27 @@ public class MainController implements Initializable {
         });
     }
 
-    public void refreshServerFilesList() {
-        sendFileName.clear();
-        String serverFilesListContainer = SRV_TEMP_PATH + "_serverFilesList.txt";
+    private void refreshServerFilesList() {
         Platform.runLater(() -> {
-            try {
-                serverFilesList.getItems().clear();
-                Files.deleteIfExists(Paths.get(serverFilesListContainer));
-                ProtoFileSender.sendReqForFilesList(currentChannel);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                for (int i = 0; i < 20; i++) {
-                    if (!Files.exists(Paths.get(serverFilesListContainer)))
-                        Thread.sleep(500);
-                    else
-                        break;
+            if (Files.exists(Paths.get(serverFilesListContainer))) {
+                try {
+                    Arrays.stream(Files.lines(Paths.get(serverFilesListContainer))
+                            .collect(Collectors.joining("\n")).split("\\|"))
+                            .forEach(o -> serverFilesList.getItems().add(o));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                String file = Files.lines(Paths.get(serverFilesListContainer)).collect(Collectors.joining("\n"));
-                Arrays.stream(file.split("\\|"))
-                        .forEach(o -> serverFilesList.getItems().add(o));
-
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
             }
         });
+    }
+
+    public void sendRefreshServerFilesListRequest() {
+        Platform.runLater(() -> serverFilesList.getItems().clear());
+        try {
+            Files.deleteIfExists(Paths.get(serverFilesListContainer));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ProtoFileSender.sendReqForFilesList(currentChannel);
     }
 }

@@ -29,6 +29,10 @@ public class ProtoNetwork {
         currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedCallback(onReceivedCallback);
     }
 
+    public void setOnReceivedFLCallback( Callback onReceivedFLCallback ) {
+        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedFLCallback(onReceivedFLCallback);
+    }
+
     public Channel getCurrentChannel() {
         return currentChannel;
     }
