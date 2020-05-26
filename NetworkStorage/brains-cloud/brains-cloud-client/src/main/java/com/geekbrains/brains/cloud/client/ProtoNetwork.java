@@ -1,5 +1,7 @@
 package com.geekbrains.brains.cloud.client;
 
+import com.geekbrains.brains.cloud.common.Callback;
+import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -23,6 +25,14 @@ public class ProtoNetwork {
         return ourInstance;
     }
 
+    public void setOnReceivedCallback( Callback onReceivedCallback ) {
+        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedCallback(onReceivedCallback);
+    }
+
+    public void setOnReceivedFLCallback( Callback onReceivedFLCallback ) {
+        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedFLCallback(onReceivedFLCallback);
+    }
+
     public Channel getCurrentChannel() {
         return currentChannel;
     }
@@ -37,6 +47,7 @@ public class ProtoNetwork {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel( SocketChannel socketChannel ) {
                             currentChannel = socketChannel;
+                            currentChannel.pipeline().addLast(new ProtoHandler());
                         }
                     });
             ChannelFuture channelFuture = clientBootstrap.connect().sync();

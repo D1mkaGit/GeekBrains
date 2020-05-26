@@ -1,7 +1,6 @@
 package com.geekbrains.brains.cloud.client;
 
 import com.geekbrains.brains.cloud.common.ProtoFileSender;
-import com.geekbrains.brains.cloud.common.ProtoHandler;
 import io.netty.channel.Channel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,8 +19,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
-import static com.geekbrains.brains.cloud.common.ProtoFileSender.SRV_TEMP_PATH;
-
 public class MainController implements Initializable {
     public VBox rootNode;
 
@@ -37,6 +34,8 @@ public class MainController implements Initializable {
     @FXML
     ListView<String> serverFilesList;
     private Channel currentChannel;
+    private Alert alert;
+    private final String serverFilesListContainer = "client_storage/temp/_serverFilesList.txt";
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
@@ -44,52 +43,64 @@ public class MainController implements Initializable {
         new Thread(() -> ProtoNetwork.getInstance().start(networkStarter)).start();
         try {
             networkStarter.await();
+            currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
+            ProtoNetwork.getInstance().setOnReceivedCallback(() -> {
+                Platform.runLater(() -> {
+                    if (alert.isShowing()) alert.close();
+                });
+                showAlert("Файл: " + requestFileName.getText() + " скачан");
+                requestFileName.clear();
+                refreshLocalFilesList();
+            });
+            ProtoNetwork.getInstance().setOnReceivedFLCallback(this::refreshServerFilesList);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
-        currentChannel.pipeline().addLast(new ProtoHandler());
         refreshLocalFilesList();
-        refreshServerFilesList();
+        sendRefreshServerFilesListRequest();
     }
 
     public void pressOnDownloadBtn() {
         if (requestFileName.getLength() > 0) {
             ProtoFileSender.sendRequest(requestFileName.getText(), currentChannel);
             showAlert("Вы запросили: " + requestFileName.getText());
-            requestFileName.clear();
-            refreshLocalFilesList();
         }
     }
 
     public void pressOnUploadBtn() throws IOException {
         if (sendFileName.getLength() > 0) {
-            String pathAndFile = "client_storage/" + sendFileName.getText();
+            String fileName = sendFileName.getText();
+            String pathAndFile = "client_storage/" + fileName;
             if (Files.exists(Paths.get(pathAndFile))) {
+                showAlert("Вы отправили на сервер: " + fileName);
                 ProtoFileSender.sendFile((byte) 26, Paths.get(pathAndFile), currentChannel,
                         future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
                             }
                             if (future.isSuccess()) {
-                                System.out.println("Файл успешно передан");
+                                System.out.println("Файл " + fileName + " успешно передан");
+                                Platform.runLater(() -> {
+                                    if (alert.isShowing()) alert.close();
+                                });
+                                showAlert("Сервер получил: " + fileName);
+                                sendFileName.clear();
+                                sendRefreshServerFilesListRequest();
                             }
                         });
-                showAlert("Вы отправили на сервер: " + sendFileName.getText());
             } else {
                 showAlert("Файла " + sendFileName.getText() + " не существует");
             }
-            sendFileName.clear();
-            refreshServerFilesList();
         }
     }
 
     private void showAlert( String msg ) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText(msg);
+            alert.showAndWait();
+        });
     }
 
     public void refreshLocalFilesList() {
@@ -106,30 +117,27 @@ public class MainController implements Initializable {
         });
     }
 
-    public void refreshServerFilesList() {
-        String serverFilesListContainer = SRV_TEMP_PATH + "_serverFilesList.txt";
+    private void refreshServerFilesList() {
         Platform.runLater(() -> {
-            try {
-                serverFilesList.getItems().clear();
-                Files.deleteIfExists(Paths.get(serverFilesListContainer));
-                ProtoFileSender.sendReqForFilesList(currentChannel);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                for (int i = 0; i < 20; i++) {
-                    if (!Files.exists(Paths.get(serverFilesListContainer)))
-                        Thread.sleep(500);
-                    else
-                        break;
+            if (Files.exists(Paths.get(serverFilesListContainer))) {
+                try {
+                    Arrays.stream(Files.lines(Paths.get(serverFilesListContainer))
+                            .collect(Collectors.joining("\n")).split("\\|"))
+                            .forEach(o -> serverFilesList.getItems().add(o));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                String file = Files.lines(Paths.get(serverFilesListContainer)).collect(Collectors.joining("\n"));
-                Arrays.stream(file.split("\\|"))
-                        .forEach(o -> serverFilesList.getItems().add(o));
-
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
             }
         });
+    }
+
+    public void sendRefreshServerFilesListRequest() {
+        Platform.runLater(() -> serverFilesList.getItems().clear());
+        try {
+            Files.deleteIfExists(Paths.get(serverFilesListContainer));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ProtoFileSender.sendReqForFilesList(currentChannel);
     }
 }

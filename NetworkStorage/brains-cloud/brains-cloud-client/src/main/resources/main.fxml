@@ -29,7 +29,7 @@
         <VBox>
             <HBox spacing="5">
                 <Label>Server Files:</Label>
-                <Button onAction="#refreshServerFilesList" text="REFRESH"
+                <Button onAction="#sendRefreshServerFilesListRequest" text="REFRESH"
                         style="-fx-font-size: 6pt; -fx-text-fill:blue;"/>
             </HBox>
             <ListView fx:id="serverFilesList" HBox.hgrow="ALWAYS"/>
