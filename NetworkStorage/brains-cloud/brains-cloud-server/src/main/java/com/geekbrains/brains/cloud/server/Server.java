@@ -23,7 +23,8 @@ public class Server {
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel( SocketChannel socketChannel ) {
-                            socketChannel.pipeline().addLast(new ProtoHandler());
+                            socketChannel.pipeline().addLast(new ProtoHandler("server_storage",
+                                    new ServerCommandReceiver()));
                         }
                     });
             ChannelFuture future = b.bind(8189).sync();

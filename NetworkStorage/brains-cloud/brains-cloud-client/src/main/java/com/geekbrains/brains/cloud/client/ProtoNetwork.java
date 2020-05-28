@@ -25,16 +25,16 @@ public class ProtoNetwork {
         return ourInstance;
     }
 
+    public Channel getCurrentChannel() {
+        return currentChannel;
+    }
+
     public void setOnReceivedCallback( Callback onReceivedCallback ) {
         currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedCallback(onReceivedCallback);
     }
 
     public void setOnReceivedFLCallback( Callback onReceivedFLCallback ) {
         currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedFLCallback(onReceivedFLCallback);
-    }
-
-    public Channel getCurrentChannel() {
-        return currentChannel;
     }
 
     public void start( CountDownLatch countDownLatch ) {
@@ -46,8 +46,8 @@ public class ProtoNetwork {
                     .remoteAddress(new InetSocketAddress("localhost", 8189))
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel( SocketChannel socketChannel ) {
+                            socketChannel.pipeline().addLast(new ProtoHandler("client_storage", new ClientCommandReceiver()));
                             currentChannel = socketChannel;
-                            currentChannel.pipeline().addLast(new ProtoHandler());
                         }
                     });
             ChannelFuture channelFuture = clientBootstrap.connect().sync();
