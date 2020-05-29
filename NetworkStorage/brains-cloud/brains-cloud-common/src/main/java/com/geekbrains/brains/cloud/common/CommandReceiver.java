@@ -26,7 +26,7 @@ public abstract class CommandReceiver {
         }
         if (currentState == State.COMMAND) {
             while (buf.readableBytes() > 0) {
-                cmd.append((char) buf.readByte()); // todo а как же кириллица?
+                cmd.append((char) buf.readByte()); // todo а как же кириллица? // поборем эту проблему позже позже
                 receivedLength++;
                 if (receivedLength == commandTypeLength) {
                     parseCommand(ctx, cmd.toString());

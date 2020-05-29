@@ -8,13 +8,14 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
     private final FileReceiver fileReceiver;
     private final CommandReceiver commandReceiver;
     private Status currentStatus;
+    private Callback onReceivedCallback;
+    private Callback onReceivedFLCallback;
+
     private final Runnable finishOperation = () -> {
         System.out.println("Операция завершена");
         if (onReceivedCallback != null) onReceivedCallback.callback();
         currentStatus = Status.IDLE;
     };
-    private Callback onReceivedCallback;
-    private Callback onReceivedFLCallback;
 
     public void setOnReceivedCallback( Callback onReceivedCallback ) {
         this.onReceivedCallback = onReceivedCallback;
@@ -51,7 +52,7 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
                 }
             }
             if (currentStatus == Status.FILE) {
-                fileReceiver.receive(ctx, buf, finishOperation);
+                fileReceiver.receive(buf, finishOperation);
             }
             if (currentStatus == Status.COMMAND) {
                 commandReceiver.receive(ctx, buf, finishCommand);

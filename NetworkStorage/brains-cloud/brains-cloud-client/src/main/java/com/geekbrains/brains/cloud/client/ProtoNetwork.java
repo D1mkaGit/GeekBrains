@@ -63,8 +63,4 @@ public class ProtoNetwork {
             }
         }
     }
-
-    public void stop() {
-        currentChannel.close();
-    }
 }

@@ -16,13 +16,14 @@ import java.util.stream.Collectors;
 public class ServerCommandReceiver extends CommandReceiver {
     @Override
     public void parseCommand( ChannelHandlerContext ctx, String cmd ) throws Exception {
+        String storageFolderName = "server_storage";
         if (cmd.startsWith("/request ")) {
             String fileToClientName = cmd.split("\\s")[1];
-            ProtoFileSender.sendFile(Paths.get("server_storage", fileToClientName), ctx.channel(), null);
+            ProtoFileSender.sendFile(Paths.get(storageFolderName, fileToClientName), ctx.channel(), null);
         }
 
         if (cmd.startsWith("/list ")) {
-            String filesList = Files.list(Paths.get("server_storage"))
+            String filesList = Files.list(Paths.get(storageFolderName))
                     .filter(p -> !Files.isDirectory(p))
                     .map(p -> p.getFileName().toString())
                     .collect(Collectors.joining("|"));
@@ -34,5 +35,15 @@ public class ServerCommandReceiver extends CommandReceiver {
             buf.writeBytes(cmdNameBytes);
             ctx.channel().writeAndFlush(buf);
         }
+
+        if (cmd.startsWith("/delete ")) {
+            String fileToDeleteName = cmd.split("\\s")[1];
+            if (Files.exists(Paths.get(storageFolderName, fileToDeleteName))) {
+                Files.deleteIfExists(Paths.get(fileToDeleteName));
+            } else {
+                System.out.println("Запрошенного файла (" + fileToDeleteName + ") на удаление не нашлось на сервере" +
+                        "(" + storageFolderName + ")");
+            }
+        } // todo придумать, как это к файлам прикрутить в FX
     }
 }

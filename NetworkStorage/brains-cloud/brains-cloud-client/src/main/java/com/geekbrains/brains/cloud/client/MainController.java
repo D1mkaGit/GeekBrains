@@ -130,12 +130,10 @@ public class MainController implements Initializable {
         buf.writeBytes(cmdNameBytes);
         currentChannel.writeAndFlush(buf);
 
-        ProtoNetwork.getInstance().setOnReceivedFLCallback(() -> {
-            Platform.runLater(() -> {
-                serverFilesList.getItems().clear();
-                Arrays.stream(serverFilesListString.split("\\|"))
-                        .forEach(o -> serverFilesList.getItems().add(o));
-            });
-        });
+        ProtoNetwork.getInstance().setOnReceivedFLCallback(() -> Platform.runLater(() -> {
+            serverFilesList.getItems().clear();
+            Arrays.stream(serverFilesListString.split("\\|"))
+                    .forEach(o -> serverFilesList.getItems().add(o));
+        }));
     }
 }

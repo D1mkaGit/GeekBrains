@@ -1,7 +1,6 @@
 package com.geekbrains.brains.cloud.common;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -25,7 +24,7 @@ public class FileReceiver {
         System.out.println("STATE: Start file receiving");
     }
 
-    public void receive( ChannelHandlerContext ctx, ByteBuf buf, Runnable finishOperation ) throws Exception {
+    public void receive( ByteBuf buf, Runnable finishOperation ) throws Exception {
         if (currentState == State.NAME_LENGTH) {
             if (buf.readableBytes() >= 4) {
                 System.out.println("STATE: Get filename length");
