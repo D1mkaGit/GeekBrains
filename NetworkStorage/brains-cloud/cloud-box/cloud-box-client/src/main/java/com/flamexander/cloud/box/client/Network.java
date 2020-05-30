@@ -1,7 +1,6 @@
-package com.geekbrains.brains.cloud.client;
+package com.flamexander.cloud.box.client;
 
-import com.geekbrains.brains.cloud.common.Callback;
-import com.geekbrains.brains.cloud.common.ProtoHandler;
+import com.flamexander.cloud.box.common.ProtoHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -14,30 +13,23 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
-public class ProtoNetwork {
-    private static final ProtoNetwork ourInstance = new ProtoNetwork();
-    private Channel currentChannel;
+public class Network {
+    private static Network ourInstance = new Network();
 
-    private ProtoNetwork() {
-    }
-
-    public static ProtoNetwork getInstance() {
+    public static Network getInstance() {
         return ourInstance;
     }
+
+    private Network() {
+    }
+
+    private Channel currentChannel;
 
     public Channel getCurrentChannel() {
         return currentChannel;
     }
 
-    public void setOnReceivedCallback( Callback onReceivedCallback ) {
-        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedCallback(onReceivedCallback);
-    }
-
-    public void setOnReceivedFLCallback( Callback onReceivedFLCallback ) {
-        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedFLCallback(onReceivedFLCallback);
-    }
-
-    public void start( CountDownLatch countDownLatch ) {
+    public void start(CountDownLatch connectionOpened) {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap clientBootstrap = new Bootstrap();
@@ -45,13 +37,13 @@ public class ProtoNetwork {
                     .channel(NioSocketChannel.class)
                     .remoteAddress(new InetSocketAddress("localhost", 8189))
                     .handler(new ChannelInitializer<SocketChannel>() {
-                        protected void initChannel( SocketChannel socketChannel ) {
+                        protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(new ProtoHandler("client_storage", new ClientCommandReceiver()));
                             currentChannel = socketChannel;
                         }
                     });
             ChannelFuture channelFuture = clientBootstrap.connect().sync();
-            countDownLatch.countDown();
+            connectionOpened.countDown();
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,5 +54,9 @@ public class ProtoNetwork {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void stop() {
+        currentChannel.close();
     }
 }

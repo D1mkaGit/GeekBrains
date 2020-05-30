@@ -1,4 +1,4 @@
-package com.geekbrains.brains.cloud.common;
+package com.flamexander.cloud.box.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ProtoFileSender {
-    public static void sendFile( Path path, Channel channel, ChannelFutureListener finishListener ) throws IOException {
+    public static void sendFile(Path path, Channel channel, ChannelFutureListener finishListener) throws IOException {
         FileRegion region = new DefaultFileRegion(path.toFile(), 0, Files.size(path));
         byte[] filenameBytes = path.getFileName().toString().getBytes(StandardCharsets.UTF_8);
         // 1 + 4 + filenameBytes.length + 8 -> SIGNAL_BYTE FILENAME_LENGTH(int) + FILENAME + FILE_LENGTH(long)
