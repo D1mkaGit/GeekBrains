@@ -2,38 +2,54 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:id="rootNode" alignment="CENTER" prefHeight="400.0"
-      prefWidth="450.0"
+<VBox fx:id="rootNode" alignment="CENTER" prefHeight="400.0" prefWidth="535.0"
       style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);"
-      xmlns="http://javafx.com/javafx"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.geekbrains.brains.cloud.client.MainController">
     <HBox>
         <TextField fx:id="requestFileName" focusTraversable="false"
                    promptText="Укажите имя файла на сервере, который хотите скачать" HBox.hgrow="ALWAYS"/>
-        <Button onAction="#pressOnDownloadBtn" text="Скачать" prefWidth="80.0"/>
+        <Button onAction="#pressOnDownloadBtn" prefWidth="80.0" text="Скачать"/>
     </HBox>
     <HBox>
         <TextField fx:id="sendFileName" focusTraversable="false"
                    promptText="Укажите имя файла из списка ниже, который хотите отправить" HBox.hgrow="ALWAYS"/>
-        <Button onAction="#pressOnUploadBtn" text="Отправить" prefWidth="80.0"/>
+        <Button onAction="#pressOnUploadBtn" prefWidth="80.0" text="Отправить"/>
     </HBox>
     <HBox>
         <VBox>
-            <HBox spacing="5">
-                <Label>Local Files:</Label>
-                <Button onAction="#refreshLocalFilesList" text="REFRESH"
-                        style="-fx-font-size: 6pt; -fx-text-fill:blue;"/>
+            <HBox alignment="CENTER_LEFT">
+                <VBox>
+                    <HBox spacing="5">
+                        <Label text=" Файлы на клиенте:"/>
+                        <Button onAction="#refreshLocalFilesList" style="-fx-font-size: 6pt; -fx-text-fill:blue;"
+                                text="ОБНОВИТЬ"/>
+                    </HBox>
+                    <ListView fx:id="filesList" HBox.hgrow="ALWAYS"/>
+                    <HBox>
+                        <Button onAction="#deleteSelectedLocally" text="удалить"/>
+                        <Button onAction="#editNameSelectedLocally" text="переименовать"/>
+                    </HBox>
+                </VBox>
+                <Button contentDisplay="CENTER" onAction="#sendToServer" style="-fx-font-size: 6pt;" text="&gt;"/>
             </HBox>
-            <ListView fx:id="filesList" HBox.hgrow="ALWAYS"/>
         </VBox>
         <VBox>
-            <HBox spacing="5">
-                <Label>Server Files:</Label>
-                <Button onAction="#sendRefreshServerFilesListRequest" text="REFRESH"
-                        style="-fx-font-size: 6pt; -fx-text-fill:blue;"/>
+            <HBox alignment="CENTER_LEFT">
+                <Button onAction="#sendToClient" style="-fx-font-size: 6pt;" text="&lt;"/>
+                <VBox>
+                    <HBox spacing="5">
+                        <Label text=" Файлы на сервере:"/>
+                        <Button onAction="#sendRefreshServerFilesListRequest"
+                                style="-fx-font-size: 6pt; -fx-text-fill:blue;" text="ОБНОВИТЬ"/>
+                    </HBox>
+                    <ListView fx:id="serverFilesList" HBox.hgrow="ALWAYS"/>
+                    <HBox>
+                        <Button onAction="#deleteSelectedOnServer" text="удалить"/>
+                        <Button onAction="#editNameSelectedLocally" text="переименовать"/>
+                    </HBox>
+                </VBox>
             </HBox>
-            <ListView fx:id="serverFilesList" HBox.hgrow="ALWAYS"/>
         </VBox>
     </HBox>
 </VBox>
-

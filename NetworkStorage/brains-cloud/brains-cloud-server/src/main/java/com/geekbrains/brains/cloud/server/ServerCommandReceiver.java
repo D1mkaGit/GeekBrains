@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
@@ -38,8 +39,10 @@ public class ServerCommandReceiver extends CommandReceiver {
 
         if (cmd.startsWith("/delete ")) {
             String fileToDeleteName = cmd.split("\\s")[1];
-            if (Files.exists(Paths.get(storageFolderName, fileToDeleteName))) {
-                Files.deleteIfExists(Paths.get(fileToDeleteName));
+            Path fileWithPath = Paths.get(storageFolderName, fileToDeleteName);
+            if (Files.exists(fileWithPath)) {
+                System.out.println(fileToDeleteName + " удален");
+                System.out.println(Files.deleteIfExists(fileWithPath));
             } else {
                 System.out.println("Запрошенного файла (" + fileToDeleteName + ") на удаление не нашлось на сервере" +
                         "(" + storageFolderName + ")");

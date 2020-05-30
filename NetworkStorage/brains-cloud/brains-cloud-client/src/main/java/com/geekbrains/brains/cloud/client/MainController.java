@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -37,9 +38,11 @@ public class MainController implements Initializable {
 
     @FXML
     ListView<String> serverFilesList;
+
     static String serverFilesListString;
     private Channel currentChannel;
     private Alert alert;
+    private final String client_storage_location = "client_storage";
 
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
@@ -76,7 +79,7 @@ public class MainController implements Initializable {
     public void pressOnUploadBtn() throws IOException {
         if (sendFileName.getLength() > 0) {
             String fileName = sendFileName.getText();
-            Path filePath = Paths.get("client_storage", fileName);
+            Path filePath = Paths.get(client_storage_location, fileName);
             if (Files.exists(filePath)) {
                 showAlert("Вы отправили на сервер: " + fileName);
 
@@ -112,7 +115,7 @@ public class MainController implements Initializable {
         Platform.runLater(() -> {
             try {
                 filesList.getItems().clear();
-                Files.list(Paths.get("client_storage"))
+                Files.list(Paths.get(client_storage_location))
                         .filter(p -> !Files.isDirectory(p))
                         .map(p -> p.getFileName().toString())
                         .forEach(o -> filesList.getItems().add(o));
@@ -135,5 +138,82 @@ public class MainController implements Initializable {
             Arrays.stream(serverFilesListString.split("\\|"))
                     .forEach(o -> serverFilesList.getItems().add(o));
         }));
+    }
+
+    public void sendToServer() {
+//        TODO придумать как это хозяйство запустить параллельно, если запрошен большой файл, то он лочит загрузку
+//         следующего, просто запустить содержимое метода в треде не выходит
+        String selectedFile = filesList.getSelectionModel().getSelectedItem();
+        Path filePath = Paths.get(client_storage_location, selectedFile);
+        if (selectedFile != null) {
+            try {
+                ProtoFileSender.sendFile(filePath, currentChannel, future -> {
+                    if (!future.isSuccess()) {
+                        System.out.println("Не удалось отправить файл на сервер");
+                        future.cause().printStackTrace();
+                    }
+                    if (future.isSuccess()) {
+                        System.out.println("Файл успешно передан");
+                        sendRefreshServerFilesListRequest();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendToClient() {
+
+        String selectedFile = serverFilesList.getSelectionModel().getSelectedItem();
+        if (selectedFile != null) {
+            byte[] filenameBytes = ("/request " + selectedFile).getBytes(StandardCharsets.UTF_8);
+            ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + filenameBytes.length);
+            buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
+            buf.writeInt(filenameBytes.length);
+            buf.writeBytes(filenameBytes);
+
+            currentChannel.writeAndFlush(buf);
+        }
+    }
+
+    public void deleteSelectedLocally() {
+        String selectedFile = filesList.getSelectionModel().getSelectedItem();
+        if (selectedFile != null) {
+            try {
+                System.out.println("Удаляем " + selectedFile + " в локальном сторедже");
+                Files.delete(Paths.get(client_storage_location, selectedFile));
+                refreshLocalFilesList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteSelectedOnServer() {
+        String selectedFile = serverFilesList.getSelectionModel().getSelectedItem();
+        if (selectedFile != null) {
+            byte[] filenameBytes = ("/delete " + selectedFile).getBytes(StandardCharsets.UTF_8);
+            ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + filenameBytes.length);
+            buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
+            buf.writeInt(filenameBytes.length);
+            buf.writeBytes(filenameBytes);
+            currentChannel.writeAndFlush(buf);
+
+            sendRefreshServerFilesListRequest();
+        }
+    }
+
+    public void editNameSelectedLocally( ActionEvent actionEvent ) {
+        String selectedFile = filesList.getSelectionModel().getSelectedItem();
+//        TODO придумать, как редактировать локальные файлы, а так-же это сделать для файлов на сервере
+        if (selectedFile != null) {
+//            File oldfile = (client_storage_location, selectedFile);
+//            if (oldfile.renameTo(newfile)) {
+//                System.out.println("Rename succesful");
+//            } else {
+//                System.out.println("Rename failed");
+//            }
+        }
     }
 }
