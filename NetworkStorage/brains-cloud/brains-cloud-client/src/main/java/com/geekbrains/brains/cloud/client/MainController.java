@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -28,6 +30,16 @@ public class MainController implements Initializable {
     public VBox rootNode;
 
     @FXML
+    HBox upperPanel;
+    @FXML
+    TextField loginField;
+    @FXML
+    PasswordField passwordField;
+
+    @FXML
+    HBox mainPanel;
+
+    @FXML
     TextField requestFileName;
 
     @FXML
@@ -40,37 +52,77 @@ public class MainController implements Initializable {
     ListView<String> serverFilesList;
 
     static String serverFilesListString;
+    static String loggedInUserName;
     private Channel currentChannel;
     private Alert alert;
     private final String client_storage_location = "client_storage";
 
+    static boolean isAuthorized;
+
+    public void setAuthorized( boolean isAuthorized ) {
+        MainController.isAuthorized = isAuthorized;
+        if (!isAuthorized) {
+            upperPanel.setVisible(true);
+            upperPanel.setManaged(true);
+            mainPanel.setVisible(false);
+            mainPanel.setManaged(false);
+        } else {
+            upperPanel.setVisible(false);
+            upperPanel.setManaged(false);
+            mainPanel.setVisible(true);
+            mainPanel.setManaged(true);
+//            client_storage_location += "/" + loggedInUserName;
+//            File directory = new File(client_storage_location);
+//            if (! directory.exists()){
+//                directory.mkdir();
+//            }
+        }
+    }
+
+    public void tryToAuth() {
+        if (loginField.getLength() > 0 && passwordField.getLength() > 0) {
+            sendCommand("/auth " + loginField.getText() + "|" + passwordField.getText().hashCode(),
+                    CloudBoxCommandsList.LOGIN_SIGNAL_BYTE);
+        }
+    }
+
+
     @Override
     public void initialize( URL location, ResourceBundle resources ) {
+        setAuthorized(false);
         CountDownLatch networkStarter = new CountDownLatch(1);
         new Thread(() -> ProtoNetwork.getInstance().start(networkStarter)).start();
         try {
             networkStarter.await();
             currentChannel = ProtoNetwork.getInstance().getCurrentChannel();
             ProtoNetwork.getInstance().setOnReceivedCallback(() -> {
-                showAlert("Файл: " + requestFileName.getText() + " скачан");
-                requestFileName.clear();
+                //showAlert("Файл: " + requestFileName.getText() + " скачан");
                 refreshLocalFilesList();
+            });
+            ProtoNetwork.getInstance().setOnReceivedFLCallback(() -> Platform.runLater(() -> {
+                if (serverFilesListString != null) {
+                    serverFilesList.getItems().clear();
+                    Arrays.stream(serverFilesListString.split("\\|"))
+                            .forEach(o -> serverFilesList.getItems().add(o));
+                }
+            }));
+            ProtoNetwork.getInstance().setOnReceivedLoginCallback(() -> {
+                loginField.clear();
+                passwordField.clear();
+                if (isAuthorized) {
+                    setAuthorized(true);
+                    refreshLocalFilesList();
+                    sendRefreshServerFilesListRequest();
+                } else showAlert("Не верный логин или пароль");
             });
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        refreshLocalFilesList();
-        sendRefreshServerFilesListRequest();
     }
 
     public void pressOnDownloadBtn() {
         if (requestFileName.getLength() > 0) {
-            byte[] filenameBytes = ("/request " + requestFileName.getText()).getBytes(StandardCharsets.UTF_8);
-            ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + filenameBytes.length);
-            buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
-            buf.writeInt(filenameBytes.length);
-            buf.writeBytes(filenameBytes);
-            currentChannel.writeAndFlush(buf);
+            sendCommand("/request " + requestFileName.getText(), CloudBoxCommandsList.CMD_SIGNAL_BYTE);
 
             showAlert("Вы запросили: " + requestFileName.getText());
         }
@@ -126,18 +178,8 @@ public class MainController implements Initializable {
     }
 
     public void sendRefreshServerFilesListRequest() {
-        byte[] cmdNameBytes = ("/list ").getBytes(StandardCharsets.UTF_8);
-        ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + cmdNameBytes.length);
-        buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
-        buf.writeInt(cmdNameBytes.length);
-        buf.writeBytes(cmdNameBytes);
-        currentChannel.writeAndFlush(buf);
+        sendCommand("/list " + loggedInUserName, CloudBoxCommandsList.CMD_SIGNAL_BYTE);
 
-        ProtoNetwork.getInstance().setOnReceivedFLCallback(() -> Platform.runLater(() -> {
-            serverFilesList.getItems().clear();
-            Arrays.stream(serverFilesListString.split("\\|"))
-                    .forEach(o -> serverFilesList.getItems().add(o));
-        }));
     }
 
     public void sendToServer() {
@@ -164,16 +206,9 @@ public class MainController implements Initializable {
     }
 
     public void sendToClient() {
-
         String selectedFile = serverFilesList.getSelectionModel().getSelectedItem();
         if (selectedFile != null) {
-            byte[] filenameBytes = ("/request " + selectedFile).getBytes(StandardCharsets.UTF_8);
-            ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + filenameBytes.length);
-            buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
-            buf.writeInt(filenameBytes.length);
-            buf.writeBytes(filenameBytes);
-
-            currentChannel.writeAndFlush(buf);
+            sendCommand("/request " + selectedFile, CloudBoxCommandsList.CMD_SIGNAL_BYTE);
         }
     }
 
@@ -193,13 +228,7 @@ public class MainController implements Initializable {
     public void deleteSelectedOnServer() {
         String selectedFile = serverFilesList.getSelectionModel().getSelectedItem();
         if (selectedFile != null) {
-            byte[] filenameBytes = ("/delete " + selectedFile).getBytes(StandardCharsets.UTF_8);
-            ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + filenameBytes.length);
-            buf.writeByte(CloudBoxCommandsList.CMD_SIGNAL_BYTE);
-            buf.writeInt(filenameBytes.length);
-            buf.writeBytes(filenameBytes);
-            currentChannel.writeAndFlush(buf);
-
+            sendCommand("/delete " + selectedFile, CloudBoxCommandsList.CMD_SIGNAL_BYTE);
             sendRefreshServerFilesListRequest();
         }
     }
@@ -208,6 +237,8 @@ public class MainController implements Initializable {
         String selectedFile = filesList.getSelectionModel().getSelectedItem();
 //        TODO придумать, как редактировать локальные файлы, а так-же это сделать для файлов на сервере
         if (selectedFile != null) {
+
+
 //            File oldfile = (client_storage_location, selectedFile);
 //            if (oldfile.renameTo(newfile)) {
 //                System.out.println("Rename succesful");
@@ -215,5 +246,14 @@ public class MainController implements Initializable {
 //                System.out.println("Rename failed");
 //            }
         }
+    }
+
+    private void sendCommand( String s, byte cmdSignalByte ) {
+        byte[] cmdNameBytes = (s).getBytes(StandardCharsets.UTF_8);
+        ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + cmdNameBytes.length);
+        buf.writeByte(cmdSignalByte);
+        buf.writeInt(cmdNameBytes.length);
+        buf.writeBytes(cmdNameBytes);
+        currentChannel.writeAndFlush(buf);
     }
 }

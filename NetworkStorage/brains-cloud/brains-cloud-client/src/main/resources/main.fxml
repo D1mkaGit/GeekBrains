@@ -2,21 +2,26 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox fx:id="rootNode" alignment="CENTER" prefHeight="400.0" prefWidth="535.0"
+<VBox fx:id="rootNode" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="535.0"
       style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);"
       xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.geekbrains.brains.cloud.client.MainController">
-    <HBox>
-        <TextField fx:id="requestFileName" focusTraversable="false"
-                   promptText="Укажите имя файла на сервере, который хотите скачать" HBox.hgrow="ALWAYS"/>
-        <Button onAction="#pressOnDownloadBtn" prefWidth="80.0" text="Скачать"/>
+    <HBox fx:id="upperPanel">
+        <TextField fx:id="loginField" promptText="Логин" prefWidth="200.0" HBox.hgrow="ALWAYS"/>
+        <PasswordField fx:id="passwordField" onAction="#tryToAuth" prefWidth="200.0" promptText="Пароль"/>
+        <Button onAction="#tryToAuth" text="Авторизоваться"/>
+        <!--        <Button onAction="#openRegistration" text="Зрегистрироваться"/>-->
     </HBox>
-    <HBox>
-        <TextField fx:id="sendFileName" focusTraversable="false"
-                   promptText="Укажите имя файла из списка ниже, который хотите отправить" HBox.hgrow="ALWAYS"/>
-        <Button onAction="#pressOnUploadBtn" prefWidth="80.0" text="Отправить"/>
-    </HBox>
-    <HBox>
+    <!--    TODO: вместо этих полей поставить загружалку файлов, как лоакально с компа, так и на сервер-->
+    <!--    <HBox>-->
+    <!--        <TextField fx:id="requestFileName" focusTraversable="false" promptText="Укажите имя файла на сервере, который хотите скачать" HBox.hgrow="ALWAYS" />-->
+    <!--        <Button onAction="#pressOnDownloadBtn" prefWidth="80.0" text="Скачать" />-->
+    <!--    </HBox>-->
+    <!--    <HBox>-->
+    <!--        <TextField fx:id="sendFileName" focusTraversable="false" promptText="Укажите имя файла из списка ниже, который хотите отправить" HBox.hgrow="ALWAYS" />-->
+    <!--        <Button onAction="#pressOnUploadBtn" prefWidth="80.0" text="Отправить" />-->
+    <!--    </HBox>-->
+    <HBox fx:id="mainPanel">
         <VBox>
             <HBox alignment="CENTER_LEFT">
                 <VBox>
