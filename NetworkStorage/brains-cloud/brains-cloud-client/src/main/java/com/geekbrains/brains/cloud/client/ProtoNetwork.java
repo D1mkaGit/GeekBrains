@@ -37,6 +37,10 @@ public class ProtoNetwork {
         currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedFLCallback(onReceivedFLCallback);
     }
 
+    public void setOnReceivedLoginCallback( Callback onReceivedLoginCallback ) {
+        currentChannel.pipeline().get(ProtoHandler.class).setOnReceivedLoginCallback(onReceivedLoginCallback);
+    }
+
     public void start( CountDownLatch countDownLatch ) {
         EventLoopGroup group = new NioEventLoopGroup();
         try {

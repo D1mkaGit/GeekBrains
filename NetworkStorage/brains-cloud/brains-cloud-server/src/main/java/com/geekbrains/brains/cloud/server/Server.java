@@ -9,6 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+
 public class Server {
     public static void main( String[] args ) throws Exception {
         new Server().run();
@@ -18,6 +19,7 @@ public class Server {
         EventLoopGroup mainGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
+            DbService.connect();
             ServerBootstrap b = new ServerBootstrap();
             b.group(mainGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
