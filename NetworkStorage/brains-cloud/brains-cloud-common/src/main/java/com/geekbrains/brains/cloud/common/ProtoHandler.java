@@ -31,7 +31,6 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
         currentStatus = Status.IDLE;
     };
 
-    // todo расапилить эти колбэки, иначе, если их вместе использовать они уходят в рекурсию
     private final Runnable finishCommand = () -> {
         System.out.println("Команда выполнена");
         if (onReceivedFLCallback != null) onReceivedFLCallback.callback();
