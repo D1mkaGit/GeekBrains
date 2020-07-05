@@ -1,0 +1,235 @@
+CREATE SCHEMA `social_network` ;
+
+CREATE TABLE `social_network`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `social_network`.`items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `item` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `social_network`.`user_items` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `action_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_users_idx` (`user_id` ASC) VISIBLE,
+  INDEX `idx_items_idx` (`action_id` ASC) VISIBLE,
+  CONSTRAINT `idx_users`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `social_network`.`users` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idx_items`
+    FOREIGN KEY (`action_id`)
+    REFERENCES `social_network`.`items` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION);
+
+
+INSERT INTO `social_network`.`items` (`id`, `item`) VALUES ('1', 'profile');
+
+CREATE TABLE `social_network`.`actions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `action` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+INSERT INTO `social_network`.`actions` (`id`, `action`) VALUES ('1', 'like');
+
+CREATE TABLE `social_network`.`user_actions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `action_id` INT NOT NULL,
+  `target_user_item_id` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `social_network`.`user_actions` 
+ADD INDEX `idx_user_id_idx` (`user_id` ASC) VISIBLE,
+ADD INDEX `idx_action_id_idx` (`action_id` ASC) VISIBLE,
+ADD INDEX `idx_target_user_item_id_idx` (`target_user_item_id` ASC) VISIBLE;
+;
+ALTER TABLE `social_network`.`user_actions` 
+ADD CONSTRAINT `idx_user_id`
+  FOREIGN KEY (`user_id`)
+  REFERENCES `social_network`.`users` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `idx_action_id`
+  FOREIGN KEY (`action_id`)
+  REFERENCES `social_network`.`actions` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `idx_target_user_item_id`
+  FOREIGN KEY (`target_user_item_id`)
+  REFERENCES `social_network`.`user_items` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+
+-- добавляем юзеров
+INSERT INTO `social_network`.`users` (`name`) VALUES ('A');
+INSERT INTO `social_network`.`users` (`name`) VALUES ('B');
+INSERT INTO `social_network`.`users` (`name`) VALUES ('C');
+
+-- добавляем им профайлы (абстрактные, без данных)
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`) VALUES ('1', '1');
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`) VALUES ('2', '1');
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`) VALUES ('3', '1');
+
+-- взаимные лайки профайлов, между двумя пользователями (А и B)
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('1', '1', '2');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('2', '1', '1');
+
+-- безответные лайки пользователя двум другим
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '1');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '2');
+
+SELECT DISTINCT
+    u.id AS userID,
+    u.name AS userName,
+    (SELECT 
+            COUNT(*)
+        FROM
+            social_network.user_actions
+        WHERE
+            action_id = 1
+                AND target_user_item_id = (SELECT 
+                    id
+                FROM
+                    social_network.user_items
+                WHERE
+                    user_id = userID)) AS gainedLikes,
+    (SELECT 
+            COUNT(*)
+        FROM
+            social_network.user_actions
+        WHERE
+            action_id = 1 AND user_id = userID) AS setLikes,
+    (SELECT 
+            COUNT(*)
+        FROM
+            social_network.user_actions AS g_l
+                JOIN
+            social_network.user_actions AS s_l ON g_l.target_user_item_id = (SELECT 
+                    id
+                FROM
+                    social_network.user_items
+                WHERE
+                    user_id = s_l.user_id)
+                AND s_l.target_user_item_id = (SELECT 
+                    id
+                FROM
+                    social_network.user_items
+                WHERE
+                    user_id = g_l.user_id)
+        WHERE
+            g_l.action_id = 1
+                AND g_l.user_id = userID) AS mutualLikes
+FROM
+    social_network.users AS u;
+
+
+
+-- Задача 2. Для структуры из задачи 1 выведите список всех пользователей, 
+-- которые поставили лайк пользователям A и B (id задайте произвольно), 
+-- но при этом не поставили лайк пользователю C.
+
+-- Добавляем пользователя и ставим им лайки A и B
+INSERT INTO `social_network`.`users` (`name`) VALUES ('D');
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`) VALUES ('4', '1');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('4', '1', '1');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('4', '1', '2');
+
+SELECT DISTINCT
+    u.name AS userName
+FROM
+    social_network.users AS u
+        JOIN
+    social_network.user_actions AS like1 ON u.id = like1.user_id
+        JOIN
+    social_network.user_actions AS like2 ON u.id = like2.user_id
+		JOIN
+    social_network.user_actions AS notlike3 ON u.id = like2.user_id
+WHERE
+    like1.target_user_item_id = (SELECT 
+            id
+        FROM
+            social_network.user_items
+        WHERE
+            user_id = (1))
+        AND like2.target_user_item_id = (SELECT 
+            id
+        FROM
+            social_network.user_items
+        WHERE
+            user_id = (2))
+		AND notlike3.target_user_item_id != (SELECT 
+            id
+        FROM
+            social_network.user_items
+        WHERE
+            user_id = (3));
+
+
+-- Задача 3. Добавим сущности «Фотография» и «Комментарии к фотографии». 
+-- Нужно создать функционал для пользователей, который позволяет ставить лайки не только пользователям,
+-- но и фото или комментариям к фото. Учитывайте следующие ограничения:
+-- - пользователь не может дважды лайкнуть одну и ту же сущность;
+-- - пользователь имеет право отозвать лайк;
+-- - необходимо иметь возможность считать число полученных сущностью лайков и выводить список пользователей, поставивших лайки;
+-- - в будущем могут появиться новые виды сущностей, которые можно лайкать.
+
+-- Добавим сущности «Фотография»
+INSERT INTO `social_network`.`items` (`id`, `item`) VALUES ('2', 'photo');
+ALTER TABLE `social_network`.`user_items` 
+ADD COLUMN `item_img_url` VARCHAR(255) NULL AFTER `item_id`;
+
+-- Добавляем коментарий (как сущьность в целом) 
+INSERT INTO `social_network`.`actions` (`id`, `action`) VALUES ('2', 'comment');
+INSERT INTO `social_network`.`items` (`id`, `item`) VALUES ('3', 'comment');
+ALTER TABLE `social_network`.`user_items` 
+ADD COLUMN `item_text` TEXT NULL DEFAULT NULL AFTER `item_img_url`;
+
+-- Добавляем картинку (для первого юзера)
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`, `item_img_url`) 
+VALUES ('1', '2', 'http://img1.joyreactor.cc/pics/post/anon-%D0%9A%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B0-2191131.jpeg');
+
+-- Добавляем коментарий от второго юзера (на картинку первого юзера)
+INSERT INTO `social_network`.`user_items` (`user_id`, `item_id`, `item_text`) VALUES ('2', '3', 'Прикольная фотка');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('2', '2', '6');
+
+-- Третий пользователь ставит like фотке и коментарию
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '5');
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '6');
+ 
+-- пользователь не может дважды лайкнуть одну и ту же сущность
+-- данный функционал будет работать не в базе, в буду будет идти проверка, 
+-- после чего если значение не вернется, будет идти инсерт
+SELECT count(*) FROM `social_network`.`user_actions` WHERE `user_id` = 3 AND `action_id` = 1 AND `target_user_item_id` = 5;
+-- if (not_null)
+DELETE FROM `social_network`.`user_actions` WHERE  `user_id` = 3 AND `action_id` = 1 AND `target_user_item_id` = 5;
+-- else --(в противном случае ставим лайк)
+INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '5');
+
+
+-- пользователь имеет право отозвать лайк;
+-- данный функционал будет работать по принципу описанному выше
+-- при нажатии на кнопку лайк, будет делатьс проверка, если like от текущего юзера текущей сущности стоит,
+-- то убираем его, если не стоит то выставляем
+
+-- необходимо иметь возможность считать число полученных сущностью лайков;
+-- используя таблицу user_actions и поля target_user_item_id (сущнолсть) и action_id (действие like),
+-- получаем количество лайков на выбраную сущьность 
+SELECT count(*) as entityLikes FROM user_actions WHERE target_user_item_id = 2 AND action_id = 1;
+
+-- необходимо выводить список пользователей, поставивших лайки;
+-- в примере получаем список пользователей, кто поставили лайк профайлу второго пользователя 
+-- (выбрал его, т.к. у него лайков больше всех :))
+SELECT u.name FROM USERS as u
+JOIN user_actions AS u_a ON u.id = u_a.user_id
+WHERE target_user_item_id = 2 AND action_id = 1;
+
+-- в будущем могут появиться новые виды сущностей, которые можно лайкать.
+-- сущности будут добавляться по аналогии с кментариями и фотографиями, тогда их можно будет лайкать и коментить
