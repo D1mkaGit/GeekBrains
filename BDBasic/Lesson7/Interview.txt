@@ -1,3 +1,13 @@
+-- Задача 1. У вас есть социальная сеть, где пользователи (id, имя) могут ставить друг другу лайки. 
+-- Создайте необходимые таблицы для хранения данной информации. 
+-- Создайте запрос, который выведет информацию:
+-- - id пользователя;
+-- - имя;
+-- - лайков получено;
+-- - лайков поставлено;
+-- - взаимные лайки.
+
+-- Создайте необходимые таблицы для хранения данной информации. 
 CREATE SCHEMA `social_network` ;
 
 CREATE TABLE `social_network`.`users` (
@@ -86,6 +96,8 @@ INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_use
 INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '1');
 INSERT INTO `social_network`.`user_actions` (`user_id`, `action_id`, `target_user_item_id`) VALUES ('3', '1', '2');
 
+
+-- Создайте запрос, который выведет информацию:
 SELECT DISTINCT
     u.id AS userID,
     u.name AS userName,
