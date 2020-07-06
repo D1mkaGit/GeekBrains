@@ -245,3 +245,12 @@ WHERE target_user_item_id = 2 AND action_id = 1;
 
 -- в будущем могут появиться новые виды сущностей, которые можно лайкать.
 -- сущности будут добавляться по аналогии с кментариями и фотографиями, тогда их можно будет лайкать и коментить
+
+
+-- Доработка, забыл соеденить items c user_items (сделал на уроке диаграмму и увидел), доделал, добавил в merge request
+ALTER TABLE `social_network`.`user_items` 
+ADD CONSTRAINT `idx_items`
+  FOREIGN KEY (`item_id`)
+  REFERENCES `social_network`.`items` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
