@@ -4,16 +4,15 @@ package com.geekbrains.brains.cloud.server;
 import com.geekbrains.brains.cloud.common.CloudBoxCommandsList;
 import com.geekbrains.brains.cloud.common.CommandReceiver;
 import com.geekbrains.brains.cloud.common.ProtoFileSender;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
+import static com.geekbrains.brains.cloud.common.CommonCommandSender.sendCommand;
+import static com.geekbrains.brains.cloud.common.CommonCommandSender.sendFileListCmd;
+import static com.geekbrains.brains.cloud.common.CommonFileRename.renameFileInLocation;
 import static com.geekbrains.brains.cloud.server.DbService.LogEventType.INCORRECT_LOGIN;
 import static com.geekbrains.brains.cloud.server.DbService.LogEventType.LOGIN;
 
@@ -27,24 +26,28 @@ public class ServerCommandReceiver extends CommandReceiver {
         }
 
         if (cmd.startsWith("/list ")) {
-            String filesList = Files.list(Paths.get(storageFolderName))
-                    .filter(p -> !Files.isDirectory(p))
-                    .map(p -> p.getFileName().toString())
-                    .collect(Collectors.joining("|"));
-
-            sendCommand(ctx, "/filesList " + filesList, CloudBoxCommandsList.CMD_SIGNAL_BYTE);
+            sendFileListCmd(ctx, storageFolderName);
         }
 
         if (cmd.startsWith("/delete ")) {
             String fileToDeleteName = cmd.split("\\s")[1];
             Path fileWithPath = Paths.get(storageFolderName, fileToDeleteName);
             if (Files.exists(fileWithPath)) {
-                System.out.println(fileToDeleteName + " удален");
-                System.out.println(Files.deleteIfExists(fileWithPath));
+                System.out.println(fileToDeleteName + " пытается удалиться удален");
+                if (Files.deleteIfExists(fileWithPath))
+                    sendFileListCmd(ctx, storageFolderName);
             } else {
                 System.out.println("Запрошенного файла (" + fileToDeleteName + ") на удаление не нашлось на сервере" +
                         "(" + storageFolderName + ")");
             }
+        }
+
+        if (cmd.startsWith("/rename ")) {
+            String cmdToSplit = cmd.split("\\s")[1];
+            String oldFileToRename = cmdToSplit.split("\\|")[0];
+            String newFileToRename = cmdToSplit.split("\\|")[1];
+            renameFileInLocation(storageFolderName, oldFileToRename, newFileToRename);
+            sendFileListCmd(ctx, storageFolderName);
         }
 
         if (cmd.startsWith("/auth ")) {
@@ -59,23 +62,15 @@ public class ServerCommandReceiver extends CommandReceiver {
             System.out.println(userName);
             if (userName != null) {
                 System.out.println("Отправляем команду успешного логина");
-                sendCommand(ctx, "/authok " + userName, CloudBoxCommandsList.LOGIN_SIGNAL_BYTE);
+                sendCommand(ctx.channel(), "/authok " + userName, CloudBoxCommandsList.LOGIN_SIGNAL_BYTE);
+                sendFileListCmd(ctx, storageFolderName);
                 DbService.log(LOGIN, loginName);
             } else {
                 System.out.println("Отправляем команду неудачного логина");
-                sendCommand(ctx, "/authofail ", CloudBoxCommandsList.LOGIN_SIGNAL_BYTE);
+                sendCommand(ctx.channel(), "/authofail ", CloudBoxCommandsList.LOGIN_SIGNAL_BYTE);
                 DbService.log(INCORRECT_LOGIN, loginName);
             }
 
         }
-    }
-
-    private void sendCommand( ChannelHandlerContext ctx, String s, byte cmdSignalByte ) {
-        byte[] cmdNameBytes = (s).getBytes(StandardCharsets.UTF_8);
-        ByteBuf buf = ByteBufAllocator.DEFAULT.directBuffer(1 + 4 + cmdNameBytes.length);
-        buf.writeByte(cmdSignalByte);
-        buf.writeInt(cmdNameBytes.length);
-        buf.writeBytes(cmdNameBytes);
-        ctx.channel().writeAndFlush(buf);
     }
 }

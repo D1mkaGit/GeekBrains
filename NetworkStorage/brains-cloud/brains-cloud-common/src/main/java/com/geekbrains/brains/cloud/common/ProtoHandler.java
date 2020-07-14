@@ -31,7 +31,6 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
         currentStatus = Status.IDLE;
     };
 
-    // todo расапилить эти колбэки, иначе, если их вместе использовать они уходят в рекурсию
     private final Runnable finishCommand = () -> {
         System.out.println("Команда выполнена");
         if (onReceivedFLCallback != null) onReceivedFLCallback.callback();
@@ -69,7 +68,7 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
                 }
             }
             if (currentStatus == Status.FILE) {
-                fileReceiver.receive(buf, finishOperation);
+                fileReceiver.receive(ctx, buf, finishOperation);
             }
             if (currentStatus == Status.COMMAND) {
                 commandReceiver.receive(ctx, buf, finishCommand);

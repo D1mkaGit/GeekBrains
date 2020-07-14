@@ -1,10 +1,13 @@
 package com.geekbrains.brains.cloud.common;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+
+import static com.geekbrains.brains.cloud.common.CommonCommandSender.sendFileListCmd;
 
 public class FileReceiver {
     private final String rootDir;
@@ -24,7 +27,7 @@ public class FileReceiver {
         System.out.println("STATE: Start file receiving");
     }
 
-    public void receive( ByteBuf buf, Runnable finishOperation ) throws Exception {
+    public void receive( ChannelHandlerContext ctx, ByteBuf buf, Runnable finishOperation ) throws Exception {
         if (currentState == State.NAME_LENGTH) {
             if (buf.readableBytes() >= 4) {
                 System.out.println("STATE: Get filename length");
@@ -55,10 +58,12 @@ public class FileReceiver {
             while (buf.readableBytes() > 0) {
                 out.write(buf.readByte());
                 receivedFileLength++;
+                // todo повесить тут лоадер, дщля больших файлов, пока не переделаю на отдельный конекшены для пересылки
                 if (fileLength == receivedFileLength) {
                     currentState = State.IDLE;
                     System.out.println("File received");
                     out.close();
+                    if (rootDir.contains("server")) sendFileListCmd(ctx, rootDir);
                     finishOperation.run();
                     return;
                 }
