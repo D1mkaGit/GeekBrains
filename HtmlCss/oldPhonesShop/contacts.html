@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Контакты</title>
-    <ul>
+    <ul class="menu">
         <li><a href="index.html">Главная</a></li>
         <li><a href="catalog/index.html">Каталог</a></li>
         <li>Контакты</li>
@@ -13,23 +14,30 @@
     <hr>
 </head>
 
-<body>
+<body class="contacts">
     <h1>Напишите нам</h1>
-    <form action="">
+    <form class="contact_form" action="" method="post" name="contact_form">
         <fieldset>
-            <legend>Контактные данные</legend>
-            <p><label>Имя: </label>
-                <input type="text" maxlength="64" size="30" placeholder="Ваше Имя"></p>
-            <p><label>Email: </label>
-                <input type="email" maxlength="129" size="30" placeholder="Email"></p>
-            <p><label>Тема: </label>
-                <input type="text" maxlength="128" size="30" placeholder="Тема"></p>
-            <p><label>Сообщение: </label><br>
-                <textarea name="" id="" cols="40" rows="10" size="1024"
-                    placeholder="Напишите ваше сообщение тут"></textarea></p>
-            <p>
-                <input type="submit" value="Отправить">
-                <input type="reset" value="Очистить"></p>
+            <ul>
+                <li>
+                    <label for="name">Имя:</label>
+                    <input type="text" name="name" placeholder="Ваше Имя" required /></li>
+                <li>
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" placeholder="Email" required />
+                </li>
+                <li>
+                    <label for="theme">Тема сообщения:</label>
+                    <input type="text" name="theme" placeholder="Тема" required /></li>
+                <li>
+                    <textarea name="message" cols="40" rows="6" placeholder="Напишите ваше сообщение тут"
+                        required></textarea>
+                </li>
+                <li>
+                    <input type="submit" value="Отправить">
+                    <input type="reset" value="Очистить">
+                </li>
+            </ul>
         </fieldset>
     </form>
 
