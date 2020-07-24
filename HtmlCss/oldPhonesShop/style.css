@@ -86,7 +86,7 @@ ul li {
 }
 
 .detailed_description img:hover,
-.catalog img:hover{
+.catalog img:hover {
     border: 1px solid transparent;
 }
 
