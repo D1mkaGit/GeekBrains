@@ -1,48 +1,95 @@
-body {
-    background-color: #f8f8f8;
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    height: 120px;
+    /*background-color: #ccc;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: url("img/old1200.jpg") no-repeat;
+}
+
+.menu {
+    font-family: sans-serif;
+    list-style-type: none;
+    font-weight: bold;
+    color: black;
+    /* Убираем маркеры */
+    display: flex;
+    margin-right: 30px;
+}
+
+.menu__link {
+    font-family: sans-serif;
+    font-size: 14px;
+    /* color: blue; */
+    color: blanchedalmond;
+    font-weight: normal;
+    border: 1px solid blanchedalmond;
+    padding: 8px 16px;
+    display: block;
+}
+
+.menu__link:hover {
+    color: black;
+}
+
+.logo {
+    margin-left: 40px;
+}
+
+.logo__link {
+    display: block;
+    width: 80px;
+    height: 60px;
+    border: 3px solid blanchedalmond; 
+    border-radius: 10px;
+    background: url("img/oldPhoneSmall.png") no-repeat;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-top: 64px;
+    padding-bottom: 32px;
+}
+
+.product {
+    width: 350px;
+    height: 200px;
+    /*border: 1px solid #000;*/
+    margin-bottom: 32px;
+}
+
+.product img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    /*width: 330px;*/
+    width: 100%;
+    /* Ширина изображений */
+    height: 100%;
+    /* Высота изображении */
+    object-fit: cover;
+}
+
+.product:hover img {
+    border: 1px solid transparent;
 }
 
 p {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 14px;
     color: black;
-}
-
-.menu li {
-    font-family: sans-serif;
-    list-style-type: none;
-    font-weight: bold;
-    color: black;
-    /* Убираем маркеры */
-}
-
-.menu li a {
-    font-family: sans-serif;
-    font-size: 14px;
-    color: blue;
-    font-weight: normal;
-}
-
-.menu a:hover {
-    color: black;
-}
-
-.menu {
-    margin-left: 0;
-    /* Отступ слева в браузере IE и Opera */
-    padding-left: 0;
-    /* Отступ слева в браузере Firefox, Safari, Chrome */
-}
-
-#logo {
-    text-indent: -9999px;
-}
-
-#logo a {
-    display: block;
-    width: 80px;
-    height: 60px;
-    background: url("img/oldPhoneSmall.png") no-repeat;
 }
 
 /* стили каталога */
@@ -102,7 +149,14 @@ ul li {
     color: blue;
 }
 
+.contacts h1 {
+    padding-top: 16px;
 
+}
+
+.contacts ul {
+    list-style-type: none;
+}
 
 /* форма контактов*/
 
@@ -207,8 +261,20 @@ th:last-child {
     border-right: none;
 }
 
+.footer {
+    background: url("img/footer.jpg") no-repeat;
+    height: 145px;
+    /*background-color: #eee;*/
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    /*padding-top: 10px;*/
+    padding-right: 16px;
 
+
+}
 
 .footer::after {
+    color: blanchedalmond;
     content: "\00a9  Все права защищены";
 }
