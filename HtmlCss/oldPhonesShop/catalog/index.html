@@ -6,29 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
     <title>Каталог товаров</title>
-    <div class="header">
-        <div id="logo"><a href="../index.html">Logo here</a></div>
-        <ul class="menu">
-            <li><a href="../index.html">Главная</a></li>
-            <li>Каталог</li>
-            <li><a href="../contacts.html">Контакты</a></li>
-        </ul>
-        <hr>
-    </div>
 </head>
-
-<body class="catalog">
-    <h1>Каталог товаров:</h1>
-    <hr>
-    <p><a href="nokia3310.html">
-            <img src="../img/Nokia-3310.jpg" alt="nokia 3310"><br>nokia 3310</a></p>
-    <hr>
-    <p><a href="nokia5110.html">
-            <img src="../img/Nokia-5110.jpg" alt="nokia 5110"><br>nokia 5110</a></p>
-
-    <div class="footer">
-        <hr>
+<div class="container">
+    <div class="header">
+        <div class="logo"><a class="logo__link" href="index.html"></a></div>
+        <ul class="menu">
+            <li><a class="menu__link" href="../index.html">Главная</a></li>
+            <li><a class="menu__link" href="#">Каталог</a></li>
+            <li><a class="menu__link" href="../contacts.html">Контакты</a></li>
+        </ul>
     </div>
-</body>
+    <h1>Каталог товаров:</h1>
+    <div class="content">
+        <a href="nokia3310.html">
+            <div class="product"><img src="../img/Nokia-3310.jpg" alt="nokia 3310"></div>
+        </a>
+        <a href="nokia5110.html">
+            <div class="product"><img src="../img/Nokia-5110.jpg" alt="nokia 5110"></div>
+        </a>
+    </div>
+    <div class="footer"> </div>
+</div>
 
 </html>
