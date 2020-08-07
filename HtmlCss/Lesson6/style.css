@@ -6,10 +6,17 @@
 
 body {
     font-family: 'Roboto', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
     text-decoration: none;
+}
+
+.top-content {
+    flex-grow: 1;
 }
 
 .container {
@@ -18,7 +25,7 @@ a {
 }
 
 .top {
-    height: 768px;
+    min-height: 768px;
     background: linear-gradient(0deg, #EBF3FB 8.84%, rgba(152, 195, 232, 0) 31.12%);
 }
 
@@ -90,6 +97,10 @@ a {
     margin-top: 71px;
 }
 
+.button:hover {
+    background: steelblue;
+}
+
 .heading {
     font-weight: 300;
     font-size: 36px;
@@ -139,6 +150,11 @@ a {
     display: inline-block;
 }
 
+a.item__link:hover {
+    text-decoration: underline;
+    color: steelblue;
+}
+
 .project__item {
     border-radius: 10px;
     position: relative;
@@ -148,6 +164,7 @@ a {
 .project__box {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .project__item_mini {
@@ -182,7 +199,7 @@ a {
 .footer {
     height: 657px;
     background: #316099;
-    width: 1336px;
+    width: 100%;
     margin: 0 auto;
     margin-top: 80px;
 
@@ -238,15 +255,13 @@ a {
 .footer_contacts {
     display: flex;
     justify-content: space-between;
-    margin: 32px auto;
+    margin: 64px auto;
 }
 
 
 .f_contacts_item {
     display: flex;
     align-items: top;
-    margin-top: 32px;
-    margin-bottom: 32px;
     width: 359px;
 }
 
@@ -256,10 +271,226 @@ a {
     padding-right: 19px;
 }
 
+a.text_f_contact:hover {
+    text-decoration: underline;
+}
+
 .footer_bottom_block_content {
     margin: auto 113px;
 }
 
 .text_copy {
     opacity: 0.4;
+}
+
+.mobileOnly {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    .container {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .top__content {
+        background-position: right 296px;
+    }
+
+    .button {
+        margin-bottom: 190px;
+    }
+
+    .what-we-do__content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item {
+        margin-bottom: 32px;
+    }
+
+    .button__footer {
+        margin-top: 164px;
+        margin-bottom: 115px;
+        width: 133.04px;
+        height: 31.48px;
+        padding: unset;
+        line-height: 32px;
+    }
+
+    .hr_block {
+        width: 63%;
+    }
+
+    .footer {
+        height: 724px;
+    }
+
+    .footer_contacts {
+        flex-direction: column;
+        margin: 32px auto 64px;
+    }
+
+    .footer_top_block {
+        height: 321px;
+    }
+
+    .f_contacts_item {
+        width: 535px;
+        margin-top: 32px;
+    }
+
+    .footer_bottom_block {
+        margin-right: 113px;
+    }
+
+    .text_f_contact {
+        padding-right: 36px;
+
+    }
+}
+
+@media (max-width :767px) {
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .top {
+        min-height: 376px;
+    }
+
+    .top__content {
+        background-image: none;
+        text-align: center;
+        padding-bottom: 40px;
+    }
+
+    .top__heading {
+        font-weight: 300;
+        font-size: 32px;
+        line-height: 37px;
+        text-align: center;
+        width: 100%;
+        margin-top: 28px;
+    }
+
+    .text_width {
+        width: 100%;
+        text-align: center;
+    }
+
+    .button {
+        font-size: 12px;
+        line-height: 26px;
+        text-align: center;
+        padding: 0 12px;
+        margin: 32px auto 0;
+    }
+
+    .heading {
+        font-size: 24px;
+        line-height: 28px;
+    }
+
+    .text_project {
+        width: 100%;
+    }
+
+    .project__item {
+        margin-bottom: 16px;
+    }
+
+    .project__item_mini {
+        width: 100%;
+    }
+
+    .project__text_mini {
+        font-size: 16px;
+        line-height: 19px;
+        top: 16px;
+        left: 16px;
+    }
+
+    .project__text {
+        font-size: 16px;
+        line-height: 19px;
+        text-align: right;
+        top: 16px;
+        right: 16px;
+    }
+
+    .item {
+        width: 100%;
+    }
+
+    .footer {
+        margin-top: 48px;
+        height: unset;
+    }
+
+    .footer__heading {
+        font-size: 24px;
+        line-height: 28px;
+        text-align: center;
+        width: 60%;
+        letter-spacing: unset;
+        margin-top: 18px;
+        margin: 16px auto 18px;
+    }
+
+    .footer_top_block {
+        flex-direction: column;
+        margin: auto 16px;
+        height: 310px;
+    }
+
+    .hr_block {
+        width: 100%;
+        text-align: center;
+    }
+
+    .text_footer {
+        margin-bottom: 32px;
+    }
+
+    .button__footer {
+        margin-top: unset;
+    margin-bottom: 41px;
+    }
+
+    .footer_bottom_block {
+        margin-right: unset;
+    }
+
+    .footer_bottom_block_content {
+        margin: auto 16px;
+    }
+
+    .footer_contacts {
+        margin: 32px auto;
+    }
+
+    .f_contacts_item {
+        width: unset;
+        margin-top: unset;
+    }
+
+    .text_f_contact{
+        padding-right: 23px;
+        padding-bottom: 17px;
+        line-height: 19px
+    }
+
+    .text_copy{
+        text-align: center;
+    }
+
+    .desktopAndTablet {
+        display: none;
+    }
+
+    .mobileOnly {display: unset;}
+
 }
