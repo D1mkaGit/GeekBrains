@@ -12,6 +12,7 @@
 
     <modules>
         <module>lesson-1-network-chat</module>
+        <module>lesson-1-dz</module>
     </modules>
 
     <build>
