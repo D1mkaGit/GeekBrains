@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
 
-import static ru.geekbrains.chat.server.WorkWithDbService.getBlackList;
+import static ru.geekbrains.chat.server.UserRepository.getBlackList;
 
 //1. Добавить на серверную сторону чата логирование, с выводом информации о действиях на сервер:
 // запущен, произошла ошибка, клиент подключился, клиент прислал сообщение/команду.
@@ -18,7 +18,7 @@ import static ru.geekbrains.chat.server.WorkWithDbService.getBlackList;
 @Component
 public class Server {
     private static final Logger logger = LogManager.getLogger(Server.class);
-    private Vector<ClientHandler> clients;
+    private final Vector<ClientHandler> clients;
 
     public Server() {
 
@@ -26,7 +26,6 @@ public class Server {
         ServerSocket server = null;
         Socket socket = null;
         try {
-            WorkWithDbService.connect();
             logger.debug("Сервер запускается...");
             server = new ServerSocket(8189);
             logger.info("Сервер запущен. Ожидаем клиентов...");
@@ -50,7 +49,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            WorkWithDbService.disconnect();
+            UserRepository.disconnect();
         }
     }
 

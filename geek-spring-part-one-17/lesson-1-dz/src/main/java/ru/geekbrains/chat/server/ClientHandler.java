@@ -10,14 +10,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.geekbrains.chat.server.WorkWithDbService.LogEventType.*;
+import static ru.geekbrains.chat.server.UserRepository.LogEventType.*;
 
 public class ClientHandler {
 
     private static final Logger logger = LogManager.getLogger(ClientHandler.class);
     List<String> blackList;
-    private Server server;
-    private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
     private String nick;
@@ -25,8 +23,6 @@ public class ClientHandler {
 
     public ClientHandler( Server server, Socket socket ) {
         try {
-            this.socket = socket;
-            this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
             this.blackList = new ArrayList<>();
@@ -37,21 +33,21 @@ public class ClientHandler {
                         if (str.startsWith("/auth")) { // /auth login72 pass72
                             String[] tokens = str.split(" ");
                             login = tokens[1];
-                            String newNick = WorkWithDbService.getNickByLoginAndPass(login, tokens[2]);
+                            String newNick = UserRepository.getNickByLoginAndPass(login, tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickBusy(newNick)) {
                                     sendMsg("/authok");
-                                    WorkWithDbService.log(LOGIN, login);
+                                    UserRepository.log(LOGIN, login);
                                     nick = newNick;
                                     server.subscribe(this);
-                                    blackList = WorkWithDbService.getBlackList(nick);
+                                    blackList = UserRepository.getBlackList(nick);
                                     break;
                                 } else {
-                                    WorkWithDbService.log(INCORRECT_LOGIN, login);
+                                    UserRepository.log(INCORRECT_LOGIN, login);
                                     sendMsg("Учетная запись уже используется");
                                 }
                             } else {
-                                WorkWithDbService.log(INCORRECT_LOGIN, login);
+                                UserRepository.log(INCORRECT_LOGIN, login);
                                 sendMsg("Неверный логин/пароль");
                             }
                         }
@@ -60,13 +56,13 @@ public class ClientHandler {
                             String login = tokens[2];
                             String nick = tokens[1];
                             String pass = tokens[3];
-                            if (WorkWithDbService.checkIfLoginIsAvailableInDb(login) &&// проверка на
+                            if (UserRepository.checkIfLoginIsAvailableInDb(login) &&// проверка на
                                     // существующий акаунт
-                                    WorkWithDbService.checkIfNickIsAvailableInDb(nick)) {// проверка на
+                                    UserRepository.checkIfNickIsAvailableInDb(nick)) {// проверка на
                                 // существующий ник
                                 // тогда регаем пользователя
                                 sendMsg("/regOk");
-                                WorkWithDbService.addUser(login, pass, nick);
+                                UserRepository.addUser(login, pass, nick);
                             } else {
                                 sendMsg("/regExists");
                                 //System.out.println("Существующий Логин или Псевдоним, попробуйте указать другие данные");
@@ -100,7 +96,7 @@ public class ClientHandler {
                                             }
                                         }
                                         if (!alreadyBlocked) {
-                                            WorkWithDbService.addUserToBlackListForSpecificUser(nick,
+                                            UserRepository.addUserToBlackListForSpecificUser(nick,
                                                     blackListNick);
                                             blackList.add(blackListNick);
                                             sendMsg("Вы добавили пользователя " + blackListNick + " в черный список");
@@ -114,7 +110,7 @@ public class ClientHandler {
                             if (str.equals("/getblacklist")) { // /blacklist nick3
                                 if (blackList.isEmpty()) sendMsg("У вас нет черного списка");
                                 else
-                                    sendMsg("У вас в черном списке следующие пользователи: " + WorkWithDbService.getBlacklist(nick));
+                                    sendMsg("У вас в черном списке следующие пользователи: " + UserRepository.getBlacklist(nick));
                             }
                             if (str.startsWith("/unblock ")) { // /blacklist nick3
                                 String[] tokens = str.split(" ");
@@ -123,7 +119,7 @@ public class ClientHandler {
                                     boolean isBlocked = false;
                                     for (int i = 0; i < blackList.size(); i++) {
                                         if (blackList.get(i).equals(blackListNick)) {
-                                            WorkWithDbService.removeUserToBlackListForSpecificUser(nick,
+                                            UserRepository.removeUserToBlackListForSpecificUser(nick,
                                                     blackListNick);
                                             blackList.remove(blackListNick);
                                             sendMsg("Вы удалили из чернорго списка пользователя под ником: " + blackListNick);
@@ -161,7 +157,7 @@ public class ClientHandler {
                         e.printStackTrace();
                     }
                     server.unsubscribe(this);
-                    WorkWithDbService.log(LOGOUT, this.login);
+                    UserRepository.log(LOGOUT, this.login);
                 }
             }).start();
         } catch (Exception e) {

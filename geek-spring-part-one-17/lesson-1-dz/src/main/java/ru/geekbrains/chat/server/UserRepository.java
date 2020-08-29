@@ -1,22 +1,27 @@
 package ru.geekbrains.chat.server;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WorkWithDbService {
+@Repository
+public class UserRepository {
     private static Connection connection;
     private static Statement stmt;
 
-    public static void connect() {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:users.db");
-            stmt = connection.createStatement();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Autowired
+    public UserRepository(DataSource dataSource) throws SQLException {
+        this(dataSource.getConnection());
+    }
+
+    public UserRepository(Connection connection) throws SQLException {
+        UserRepository.connection = connection;
+        stmt = connection.createStatement();
     }
 
     public static void addUser( String login, String pass, String nick ) {
@@ -174,7 +179,7 @@ public class WorkWithDbService {
         }
     }
 
-    enum LogEventType {
+    public enum LogEventType {
         LOGIN(0),
         LOGOUT(1),
         INCORRECT_LOGIN(2);
