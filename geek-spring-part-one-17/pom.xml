@@ -11,6 +11,7 @@
 
     <modules>
         <module>lesson-1-network-chat</module>
+        <module>lesson-1-dz</module>
         <module>lesson-2-spring-mvc</module>
     </modules>
 
