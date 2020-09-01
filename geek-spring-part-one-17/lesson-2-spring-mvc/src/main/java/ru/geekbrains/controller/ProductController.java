@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persistance.Product;
 import ru.geekbrains.persistance.ProductRepository;
 
-import java.util.List;
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/products")
@@ -18,7 +18,7 @@ public class ProductController {
 
     @GetMapping
     public String allProducts(Model model) {
-        List<Product> allProducts = productRepository.getAllProducts();
+        Collection<Product> allProducts = productRepository.getAllProducts();
         model.addAttribute("products", allProducts);
         return "products";
     }
