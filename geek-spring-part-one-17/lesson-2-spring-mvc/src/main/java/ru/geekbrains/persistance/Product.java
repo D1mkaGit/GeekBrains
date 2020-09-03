@@ -21,7 +21,7 @@ public class Product {
         this.cost = new BigDecimal(cost);
     }
 
-    public Product addEmptyProduct(){
+    public Product createEmptyProduct(){
         this.id = 0;
         this.title ="";
         this.cost = new BigDecimal("0");
