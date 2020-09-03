@@ -8,16 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class ProductRepository {
-    private Map<Integer, Product> productList;
+    private ConcurrentHashMap<Integer, Product> productList;
+    private AtomicInteger counter;
 
     @Autowired
     public ProductRepository() {
-        productList = new HashMap<>();
+        productList = new ConcurrentHashMap<>();
+        counter = new AtomicInteger(0);
         setupDefaultProductList();
     }
 
@@ -37,11 +39,12 @@ public class ProductRepository {
     }
 
     public void addProduct(String title, String price) {
-        productList.put(getNextId(),new Product(getNextId(), title, price));
+        int nextId = getNextId();
+        productList.put(nextId, new Product(nextId, title, price));
     }
 
     public int getNextId() {
-       return productList.size();
+        return counter.getAndIncrement();
     }
 
     public void updateProduct(Product product) {

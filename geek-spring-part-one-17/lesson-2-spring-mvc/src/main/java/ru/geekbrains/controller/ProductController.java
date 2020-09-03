@@ -38,13 +38,13 @@ public class ProductController {
 
     @GetMapping("/add")
     public String openAddProduct(Model model) {
-        model.addAttribute("product", new Product(productRepository.getNextId(), "", "0"));
+        model.addAttribute("product", new Product().addEmptyProduct());
         return "addProduct";
     }
 
     @PostMapping("/addProduct")
     public String addNewProduct(Product product) {
-        productRepository.addProduct(product.getTitle(), product.getCost());
+        productRepository.addProduct(product.getTitle(), product.getCost().toString());
         return "redirect:/products";
     }
 

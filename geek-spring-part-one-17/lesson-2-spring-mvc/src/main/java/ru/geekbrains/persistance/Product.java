@@ -12,10 +12,20 @@ public class Product {
     private String title;
     private BigDecimal cost;
 
+    public Product() {
+    }
+
     public Product(int id, String title, String cost) {
         this.id = id;
         this.title = title;
         this.cost = new BigDecimal(cost);
+    }
+
+    public Product addEmptyProduct(){
+        this.id = 0;
+        this.title ="";
+        this.cost = new BigDecimal("0");
+        return this;
     }
 
     public int getId() {
@@ -26,7 +36,7 @@ public class Product {
         return title;
     }
 
-    public String getCost() {
-        return cost.toPlainString();
+    public BigDecimal getCost() {
+        return cost;
     }
 }
