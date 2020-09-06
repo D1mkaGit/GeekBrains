@@ -14,14 +14,11 @@ public class Customer {
     @Column
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "customer_orders",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "goods_id")
+    @OneToMany(
+            mappedBy = "customer",
+            cascade = CascadeType.ALL
     )
-    private List<Goods> customerOrders;
-
+    private List<Order> customerOrders;
 
     public Customer() {
     }
@@ -48,15 +45,11 @@ public class Customer {
         this.name = name;
     }
 
-    public List<Goods> getCustomerOrders() {
+    public List<Order> getCustomerOrders() {
         return customerOrders;
     }
 
-    public void setCustomerOrders(List<Goods> customerOrders) {
+    public void setCustomerOrders(List<Order> customerOrders) {
         this.customerOrders = customerOrders;
-    }
-
-    public void setCustomerOrder(Goods customerOrder) {
-        this.customerOrders.add(customerOrder);
     }
 }

@@ -20,5 +20,6 @@
 
         <mapping class="ru.geekbrains.dz.Customer"/>
         <mapping class="ru.geekbrains.dz.Goods"/>
+        <mapping class="ru.geekbrains.dz.Order"/>
     </session-factory>
 </hibernate-configuration>

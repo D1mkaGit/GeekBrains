@@ -18,13 +18,11 @@ public class Goods {
     @Column
     private String cost;
 
-    @ManyToMany
-    @JoinTable(
-            name = "customer_orders",
-            joinColumns = @JoinColumn(name = "goods_id"),
-            inverseJoinColumns = @JoinColumn(name = "customer_id")
+    @OneToMany(
+            mappedBy = "goods",
+            cascade = CascadeType.ALL
     )
-    private List<Customer> goodsBuyers;
+    private List<Order> goodsOrders;
 
     public Goods() {
     }
@@ -33,14 +31,7 @@ public class Goods {
         this.id = id;
         this.name = name;
         this.cost = cost;
-        this.goodsBuyers = new ArrayList<>();
-    }
-
-    public Goods(Integer id, String name, String cost, List<Customer> goodsBuyers) {
-        this.id = id;
-        this.name = name;
-        this.cost = cost;
-        this.goodsBuyers = goodsBuyers;
+        this.goodsOrders = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -67,16 +58,12 @@ public class Goods {
         this.cost = cost;
     }
 
-    public List<Customer> getGoodsBuyers() {
-        return goodsBuyers;
+    public List<Order> getGoodsOrders() {
+        return goodsOrders;
     }
 
-    public void setGoodsBuyers(List<Customer> goodsBuyers) {
-        this.goodsBuyers = goodsBuyers;
-    }
-
-    public void setGoodsBuyer(Customer goodsBuyer) {
-        this.goodsBuyers.add(goodsBuyer);
+    public void setGoodsOrders(List<Order> orders) {
+        this.goodsOrders = orders;
     }
 
     @Override
