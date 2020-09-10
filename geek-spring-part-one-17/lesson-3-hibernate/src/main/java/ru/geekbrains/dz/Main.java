@@ -18,7 +18,7 @@ public class Main {
 
         List<Customer> customers = em.createQuery("SELECT c FROM Customer c", Customer.class).getResultList();
         List<Goods> goods = em.createQuery("SELECT g FROM Goods g", Goods.class).getResultList();
-        List<Order> orders;
+        List<OrderItem> orderItems;
 
         em.getTransaction().begin();
         if (customers.isEmpty()) { // заполняем дефолтовых кастомеров если пусто
@@ -57,7 +57,7 @@ public class Main {
         goods = em.createQuery("SELECT c FROM Goods c", Goods.class).getResultList();
 
         em.getTransaction().begin();
-        System.out.println("Customers make orders...");
+        System.out.println("Customers make orderItems...");
         makeOrder(em, customers.get(0), goods.get(1));
         makeOrder(em, customers.get(1), goods.get(2));
         makeOrder(em, customers.get(2), goods.get(0));
@@ -66,7 +66,7 @@ public class Main {
 
         Scanner in = new Scanner(System.in);
         printListOfCustomers(customers);
-        System.out.println("Please type name of one of the customers to show orders (if you want to skip showing type /x): ");
+        System.out.println("Please type name of one of the customers to show orderItems (if you want to skip showing type /x): ");
         String customerNameToShow = in.nextLine();
         Customer customerToShow = null;
         boolean haveOrders = false;
@@ -75,10 +75,10 @@ public class Main {
             for (Customer c : customers) {
                 if (customerNameToShow.equals(c.getName())) {
                     customerToShow = c;
-                    orders = em.createQuery("SELECT o FROM Order o", Order.class).getResultList();
-                    for (Order order : orders) {
-                        if (order.getCustomer().equals(customerToShow)) {
-                            System.out.println(customerNameToShow + " have been ordered " + order.getGoods().getName() + " for " + order.getCustomer_price() + " eur");
+                    orderItems = em.createQuery("SELECT o FROM OrderItem o", OrderItem.class).getResultList();
+                    for (OrderItem orderItem : orderItems) {
+                        if (orderItem.getCustomer().equals(customerToShow)) {
+                            System.out.println(customerNameToShow + " have been ordered " + orderItem.getGoods().getName() + " for " + orderItem.getCustomer_price() + " eur");
                             haveOrders = true;
                         }
                     }
@@ -89,17 +89,17 @@ public class Main {
             System.out.println("Incorrect customer name please try again (if you want skip deletion type /x): ");
             customerNameToShow = in.nextLine();
         }
-        if (!haveOrders && !customerNameToShow.equalsIgnoreCase("/x")) System.out.println(customerNameToShow + " have no orders.");
+        if (!haveOrders && !customerNameToShow.equalsIgnoreCase("/x")) System.out.println(customerNameToShow + " have no orderItems.");
         pauseCmd(in);
 
         System.out.println("Clients list by goods...");
         // берем последние данные по ордерам из базы
-        orders = em.createQuery("SELECT o FROM Order o", Order.class).getResultList();
+        orderItems = em.createQuery("SELECT o FROM OrderItem o", OrderItem.class).getResultList();
 
         List<String> orderedGoods = new ArrayList<>();
-        for (Order order : orders) {
-            int goodsIdInOrder = order.getGoods().getId();
-            int customerIdInOrder = order.getCustomer().getId();
+        for (OrderItem orderItem : orderItems) {
+            int goodsIdInOrder = orderItem.getGoods().getId();
+            int customerIdInOrder = orderItem.getCustomer().getId();
             String gName = null;
             String cName = null;
 
@@ -114,7 +114,7 @@ public class Main {
                     cName = customer.getName();
             }
             if (gName != null) {
-                System.out.println(gName + " has been ordered by: " + cName + " and cost was " + order.getCustomer_price() + " eur");
+                System.out.println(gName + " has been ordered by: " + cName + " and cost was " + orderItem.getCustomer_price() + " eur");
             }
         }
         for (Goods g : goods) {
@@ -122,7 +122,7 @@ public class Main {
         }
 
         printListOfGoods(goods);
-        System.out.println("Please type name of one of the goods to show orders (if you want to skip showing type /x): ");
+        System.out.println("Please type name of one of the goods to show orderItems (if you want to skip showing type /x): ");
         String goodsNameToShow = in.nextLine();
         Goods goodsToShow = null;
         boolean haveClientOrders = false;
@@ -131,10 +131,10 @@ public class Main {
             for (Goods g : goods) {
                 if (goodsNameToShow.equals(g.getName())) {
                     goodsToShow = g;
-                    orders = em.createQuery("SELECT o FROM Order o", Order.class).getResultList();
-                    for (Order order : orders) {
-                        if (order.getGoods().equals(goodsToShow)) {
-                            System.out.println(goodsNameToShow + " have been ordered  by " + order.getCustomer().getName() + " for " + order.getCustomer_price() + " eur");
+                    orderItems = em.createQuery("SELECT o FROM OrderItem o", OrderItem.class).getResultList();
+                    for (OrderItem orderItem : orderItems) {
+                        if (orderItem.getGoods().equals(goodsToShow)) {
+                            System.out.println(goodsNameToShow + " have been ordered  by " + orderItem.getCustomer().getName() + " for " + orderItem.getCustomer_price() + " eur");
                             haveClientOrders = true;
                         }
                     }
@@ -245,7 +245,7 @@ public class Main {
     }
 
     private static void makeOrder(EntityManager em, Customer c, Goods g) {
-        Order o = new Order(null, g, c, g.getCost());
+        OrderItem o = new OrderItem(null, g, c, g.getCost());
         em.persist(o);
         System.out.println("Customer " + c.getName() + " is ordering " + g.getName() + " for " + g.getCost() + " eur.");
     }

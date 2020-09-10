@@ -18,7 +18,7 @@ public class Customer {
             mappedBy = "customer",
             cascade = CascadeType.ALL
     )
-    private List<Order> customerOrders;
+    private List<OrderItem> customerOrderItems;
 
     public Customer() {
     }
@@ -26,7 +26,7 @@ public class Customer {
     public Customer(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.customerOrders = new ArrayList<>();
+        this.customerOrderItems = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -45,11 +45,11 @@ public class Customer {
         this.name = name;
     }
 
-    public List<Order> getCustomerOrders() {
-        return customerOrders;
+    public List<OrderItem> getCustomerOrders() {
+        return customerOrderItems;
     }
 
-    public void setCustomerOrders(List<Order> customerOrders) {
-        this.customerOrders = customerOrders;
+    public void setCustomerOrders(List<OrderItem> customerOrderItems) {
+        this.customerOrderItems = customerOrderItems;
     }
 }

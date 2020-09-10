@@ -22,7 +22,7 @@ public class Goods {
             mappedBy = "goods",
             cascade = CascadeType.ALL
     )
-    private List<Order> goodsOrders;
+    private List<OrderItem> goodsOrderItems;
 
     public Goods() {
     }
@@ -31,7 +31,7 @@ public class Goods {
         this.id = id;
         this.name = name;
         this.cost = cost;
-        this.goodsOrders = new ArrayList<>();
+        this.goodsOrderItems = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -58,12 +58,12 @@ public class Goods {
         this.cost = cost;
     }
 
-    public List<Order> getGoodsOrders() {
-        return goodsOrders;
+    public List<OrderItem> getGoodsOrders() {
+        return goodsOrderItems;
     }
 
-    public void setGoodsOrders(List<Order> orders) {
-        this.goodsOrders = orders;
+    public void setGoodsOrders(List<OrderItem> orderItems) {
+        this.goodsOrderItems = orderItems;
     }
 
     @Override

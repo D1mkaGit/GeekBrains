@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "customer_orders")
-public class Order {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,10 +20,10 @@ public class Order {
     @Column
     private String customer_price;
 
-    public Order() {
+    public OrderItem() {
     }
 
-    public Order(Integer id, Goods goods, Customer customer, String customer_price) {
+    public OrderItem(Integer id, Goods goods, Customer customer, String customer_price) {
         this.id = id;
         this.goods = goods;
         this.customer = customer;
