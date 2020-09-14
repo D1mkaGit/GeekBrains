@@ -38,6 +38,19 @@
             <a class="btn btn-primary" th:href="@{/products/add}">Add Product</a>
         </div>
 
+        <div class="col-12 mt-3">
+            <form>
+                <label>Min. price: </label>
+                <input type="text" name="minP" id="minP" th:value="${param.minP}"/>
+                <label>Max. price: </label>
+                <input type="text" name="maxP" id="maxP" th:value="${param.maxP}"/>
+                <button class="btn btn-primary" type="submit">Filter</button>
+                <label>Page number (from: <span th:text="${numOfPages}"></span>): </label>
+                <input type="text" name="pageN" id="pageN" th:value="${page}">
+                <button class="btn btn-primary" type="submit">GO</button>
+            </form>
+        </div>
+
         <div class="col-12">
             <table class="table table-bordered my-2">
                 <thead>
@@ -54,8 +67,10 @@
                     <td th:text="${product.title}">MacBook Air 13" CZ</td>
                     <td th:text="${product.cost}">$1000</td>
                     <td>
-                        <a class="btn btn-success" th:href="@{/products/{id}(id = ${product.id})}"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-danger" th:href="@{/products/remove/{id}(id = ${product.id})}"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-success" th:href="@{/products/{id}(id = ${product.id})}"><i
+                                class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger" th:href="@{/products/remove/{id}(id = ${product.id})}"><i
+                                class="far fa-trash-alt"></i></a>
                     </td>
                 </tr>
                 </tbody>
