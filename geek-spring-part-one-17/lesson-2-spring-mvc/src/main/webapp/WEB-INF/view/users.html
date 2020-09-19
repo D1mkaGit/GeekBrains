@@ -56,7 +56,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${usersPage}">
                     <th scope="row" th:text="${user.id}">1</th>
                     <td th:text="${user.login}">User login</td>
                     <td>
@@ -68,6 +68,36 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="col-12">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item"
+                        th:classappend="${usersPage.number == 0} ? 'disabled'">
+                         <span class="page-link"
+                               th:unless="${usersPage.number > 0}">Previous</span>
+                        <a class="page-link"
+                           th:if="${usersPage.number > 0}"
+                           th:href="@{user(page=${usersPage.number}, size=${usersPage.size})}">Previous</a>
+                    </li>
+                    <li th:each="num: ${#numbers.sequence(1, usersPage.totalPages)}"
+                        class="page-item"
+                        th:classappend="${num == usersPage.number + 1} ? 'active'">
+                        <a class="page-link"
+                           th:text="${num}"
+                           th:href="@{user(page=${num}, size=${usersPage.size})}">1</a> <!-- добавить сюда параметры через запятую в href-->
+                    </li>
+                    <li class="page-item"
+                        th:classappend="${usersPage.number + 1 == totalPages} ? 'disabled'">
+                        <span class="page-link"
+                              th:unless="${usersPage.number < totalPages}">Next</span>
+                        <a class="page-link"
+                           th:if="${usersPage.number < totalPages}"
+                           th:href="@{user(page=${usersPage.number + 2}, size=${usersPage.size})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
