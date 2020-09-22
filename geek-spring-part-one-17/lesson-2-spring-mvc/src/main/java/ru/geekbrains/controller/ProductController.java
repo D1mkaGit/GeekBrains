@@ -1,19 +1,30 @@
 package ru.geekbrains.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.ArrayUtils;
 import ru.geekbrains.persist.entity.Product;
 import ru.geekbrains.persist.repo.ProductRepository;
+import ru.geekbrains.persist.repo.ProductSpecification;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
 @RequestMapping("/products")
 public class ProductController {
+
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private ProductRepository productRepository;
@@ -22,34 +33,46 @@ public class ProductController {
     public String allProducts(Model model,
                               @RequestParam(value = "minP", required = false) BigDecimal minP,
                               @RequestParam(value = "maxP", required = false) BigDecimal maxP,
-                              @RequestParam(value = "pageN", required = false, defaultValue = "1") Integer pageN) {
-        Page<Product> allProducts;
-        int realPageNumber = 0;
+                              @RequestParam("page") Optional<Integer> page,
+                              @RequestParam("size") Optional<Integer> size,
+                              @RequestParam("sort") Optional<String> sort,
+                              @RequestParam(value = "desc", required = false, defaultValue = "false") boolean desc
+    ) {
+        logger.info("Filtering by min price: {} max price: {}", minP, maxP);
+
+        String currentSort = sort.orElse("id");
+        String[] sortItems = {"id", "title", "cost"};
+
+        if (!ArrayUtils.contains(sortItems, currentSort)) currentSort = "id";
+
         int productsCountPerPage = 5;
-        int numOfPages;
+        int currentPage = page.orElse(1);
 
-        if (pageN != null && pageN > 0) realPageNumber = pageN - 1;
-        else pageN = 1;
+        Specification<Product> spec = ProductSpecification.trueLiteral();
 
-        if (minP != null && maxP != null) {
-            allProducts = productRepository.findByCostBetween(minP, maxP, PageRequest.of(realPageNumber, productsCountPerPage));
-        } else {
-            if (minP != null && !minP.equals("")) {
-                allProducts = productRepository.findByCostGreaterThan(minP, PageRequest.of(realPageNumber, productsCountPerPage));
-            } else if (maxP != null && !maxP.equals("")) {
-                allProducts = productRepository.findByCostLessThan(maxP, PageRequest.of(realPageNumber, productsCountPerPage));
-            } else {
-                allProducts = productRepository.findAll(PageRequest.of(realPageNumber, productsCountPerPage));
-            }
+        Sort.Direction sortDirection = ASC;
+        if (desc) sortDirection = DESC;
+
+            PageRequest pageRequest = PageRequest.of(currentPage - 1, size.orElse(productsCountPerPage), Sort.by(sortDirection, currentSort));
+
+        if (minP != null && !minP.equals("")) {
+            spec = spec.and(ProductSpecification.minPrice(minP));
         }
-        numOfPages = (int) Math.ceil((float) allProducts.getTotalElements() / productsCountPerPage);
 
-        // TODO придумать как перекидывать на последнюю стнаицу, т.к. получаем количество стнаиц только после филтрации,
-        //  а для отрисовки результатов, фильтра, количество страниц уже должно быть известно
+        if (maxP != null && !maxP.equals("")) {
+            spec = spec.and(ProductSpecification.maxPrice(maxP));
+        }
 
-        model.addAttribute("page", pageN);
-        model.addAttribute("numOfPages", numOfPages);
-        model.addAttribute("products", allProducts);
+        int totalPages = productRepository.findAll(spec, pageRequest).getTotalPages();
+        if (totalPages < 1) totalPages = 1; // если тотал пэйджес будет 0, пойдут баги
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+            pageRequest = PageRequest.of(currentPage - 1, size.orElse(productsCountPerPage), Sort.by(sortDirection, currentSort)); // поправка текущей страницы в реквесте
+        }
+
+        model.addAttribute("productsPage", productRepository.findAll(spec, pageRequest));
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", currentPage);
         return "products";
     }
 

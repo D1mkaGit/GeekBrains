@@ -44,10 +44,10 @@
                 <input type="text" name="minP" id="minP" th:value="${param.minP}"/>
                 <label>Max. price: </label>
                 <input type="text" name="maxP" id="maxP" th:value="${param.maxP}"/>
+                <input type="hidden" name="page"
+                       th:value="${currentPage > totalPages} ? ${totalPages} : ${currentPage}"/>
+                <input type="hidden" name="size" th:value="${param.size}"/>
                 <button class="btn btn-primary" type="submit">Filter</button>
-                <label>Page number (from: <span th:text="${numOfPages}"></span>): </label>
-                <input type="text" name="pageN" id="pageN" th:value="${page}">
-                <button class="btn btn-primary" type="submit">GO</button>
             </form>
         </div>
 
@@ -55,14 +55,35 @@
             <table class="table table-bordered my-2">
                 <thead>
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
+                    <th scope="col">Id
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='id', desc='false')}">
+                            &#9650; <!--вверх-->
+                        </a>
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='id', desc='true')}">
+                            &#9660; <!--вниз-->
+                        </a>
+                    </th>
+                    <th scope="col">Name
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='title', desc='false')}">
+                            &#9650; <!--вверх-->
+                        </a>
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='title', desc='true')}">
+                            &#9660; <!--вниз-->
+                        </a>
+                    </th>
+                    <th scope="col">Price
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='cost', desc='false')}">
+                            &#9650; <!--вверх-->
+                        </a>
+                        <a th:href="@{products(page=${currentPage}, size=${param.size}, minP=${param.minP}, maxP=${param.maxP}, sort='cost', desc='true')}">
+                            &#9660; <!--вниз-->
+                        </a>
+                    </th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product : ${products}">
+                <tr th:each="product : ${productsPage.content}">
                     <th scope="row" th:text="${product.id}">1</th>
                     <td th:text="${product.title}">MacBook Air 13" CZ</td>
                     <td th:text="${product.cost}">$1000</td>
@@ -75,6 +96,36 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="col-12">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item"
+                        th:classappend="${productsPage.number == 0} ? 'disabled'">
+                         <span class="page-link"
+                               th:unless="${productsPage.number > 0}">Previous</span>
+                        <a class="page-link"
+                           th:if="${productsPage.number > 0}"
+                           th:href="@{products(page=${productsPage.number}, size=${productsPage.size}, minP=${param.minP}, maxP=${param.maxP}, sort=${param.sort}, desc=${param.desc})}">Previous</a>
+                    </li>
+                    <li th:each="num: ${#numbers.sequence(1, totalPages)}"
+                        class="page-item"
+                        th:classappend="${num == productsPage.number + 1} ? 'active'">
+                        <a class="page-link"
+                           th:text="${num}"
+                           th:href="@{products(page=${num}, size=${productsPage.size}, minP=${param.minP}, maxP=${param.maxP}, sort=${param.sort}, desc=${param.desc})}">1</a>
+                    </li>
+                    <li class="page-item"
+                        th:classappend="${productsPage.number + 1 == totalPages} ? 'disabled'">
+                        <span class="page-link"
+                              th:unless="${productsPage.number < totalPages}">Next</span>
+                        <a class="page-link"
+                           th:if="${productsPage.number < totalPages}"
+                           th:href="@{products(page=${productsPage.number + 2}, size=${productsPage.size}, minP=${param.minP}, maxP=${param.maxP}, sort=${param.sort}, desc=${param.desc})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
