@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column
     @NotBlank
@@ -26,7 +26,7 @@ public class User {
     @Transient
     private String matchingPassword;
 
-    public User(int id, String login, String password) {
+    public User(Integer id, String login, String password) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -36,11 +36,11 @@ public class User {
 
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

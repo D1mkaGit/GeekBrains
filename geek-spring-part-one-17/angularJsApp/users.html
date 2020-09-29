@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12">
+            <a class="btn btn-primary" ng-href="#!/user/new">Add User</a>
+        </div>
+        <div class="col-12">
+            <table class="table table-bordered my-2">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr hidden>
+                    <td class="text-content" colspan="5">No data</td>
+                </tr>
+                <tr ng-repeat="user in users">
+                    <th scope="row">{{user.id}}</th>
+                    <th>{{user.login}}</th>
+                    <td>
+                        <a class="btn btn-success" ng-href="#!/user/{{user.id}}/edit"><i class="fas fa-edit"></i> </a>
+                        <a class="btn btn-danger" href="#"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
