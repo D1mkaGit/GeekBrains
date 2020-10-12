@@ -26,3 +26,7 @@ Content-Type: application/json
   "email": null,
   "password": "123"
 }
+
+###
+
+DELETE http://localhost:8080/mvc-app/api/v1/user/10/id

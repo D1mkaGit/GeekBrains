@@ -1,0 +1,30 @@
+GET http://localhost:8080/mvc-app/api/v1/product/all
+
+###
+
+GET http://localhost:8080/mvc-app/api/v1/product/21/id
+
+###
+
+POST http://localhost:8080/mvc-app/api/v1/product
+Content-Type: application/json
+
+{
+  "title": "XIAOMI MI BAND 5",
+  "cost": 35.00
+}
+
+###
+
+PUT http://localhost:8080/mvc-app/api/v1/product
+Content-Type: application/json
+
+{
+  "id": 22,
+  "title": "XIAOMI MI BAND 5 pluss",
+  "cost": 36.00
+}
+
+###
+
+DELETE http://localhost:8080/mvc-app/api/v1/product/21/id

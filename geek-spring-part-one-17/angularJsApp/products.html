@@ -1,14 +1,15 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <a class="btn btn-primary" ng-href="#!/user/new">Add User</a>
+            <a class="btn btn-primary" ng-href="#!/product/new">Add Product</a>
         </div>
         <div class="col-12">
             <table class="table table-bordered my-2">
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Login</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -16,12 +17,13 @@
                 <tr hidden>
                     <td class="text-content" colspan="5">No data</td>
                 </tr>
-                <tr ng-repeat="user in users">
-                    <th scope="row">{{user.id}}</th>
-                    <th>{{user.login}}</th>
+                <tr ng-repeat="product in products">
+                    <th scope="row">{{product.id}}</th>
+                    <th>{{product.title}}</th>
+                    <th>{{product.cost}}</th>
                     <td>
-                        <a class="btn btn-success" ng-href="#!/user/{{user.id}}/edit"><i class="fas fa-edit"></i> </a>
-                        <button class="btn btn-danger" ng-click="deleteUser(user)"><i class="far fa-trash-alt"></i></button>
+                        <a class="btn btn-success" ng-href="#!/product/{{product.id}}/edit"><i class="fas fa-edit"></i> </a>
+                        <button class="btn btn-danger" ng-click="deleteProduct(product)"><i class="far fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>

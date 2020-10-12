@@ -16,7 +16,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column
     @NotBlank
@@ -29,17 +29,17 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String title, BigDecimal cost) {
+    public Product(Integer id, String title, BigDecimal cost) {
         this.id = id;
         this.title = title;
         this.cost = cost;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

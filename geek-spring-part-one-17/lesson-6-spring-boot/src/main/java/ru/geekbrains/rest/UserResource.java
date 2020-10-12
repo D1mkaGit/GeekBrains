@@ -10,6 +10,7 @@ import ru.geekbrains.persist.repo.UserRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:63342")
 @RequestMapping("/api/v1/user")
 @RestController
@@ -53,10 +54,11 @@ public class UserResource {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> illegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<String> illegalArgumentExceptionHandler(IllegalArgumentException ex) {
         return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    //TODO: обработать ошибку при попытке создания дубликата имени
     @ExceptionHandler
     public ResponseEntity<String> sqlIntegrityConstraintViolationExceptionHandler(SQLIntegrityConstraintViolationException ex) {
         return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
