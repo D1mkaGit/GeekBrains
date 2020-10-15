@@ -1,5 +1,6 @@
 package ru.geekbrains.rest;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import ru.geekbrains.persist.repo.UserRepository;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+@Tag(name = "User resource API", description = "API to operate User resource ...")
 @CrossOrigin(origins = "http://localhost:63342")
 @RequestMapping("/api/v1/user")
 @RestController
