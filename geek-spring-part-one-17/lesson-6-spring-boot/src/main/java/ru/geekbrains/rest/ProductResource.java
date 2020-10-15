@@ -1,5 +1,6 @@
 package ru.geekbrains.rest;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import ru.geekbrains.persist.repo.ProductRepository;
 
 import java.util.List;
 
+@Tag(name = "Product resource API", description = "API to operate Product resource ...")
 @CrossOrigin(origins = "http://localhost:63342")
 @RequestMapping("/api/v1/product")
 @RestController

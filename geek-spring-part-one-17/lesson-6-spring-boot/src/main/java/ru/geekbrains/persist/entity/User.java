@@ -20,8 +20,8 @@ public class User {
     @Email
     private String email;
 
-    @Column
-    private String password;
+    @Column(length = 512)
+    private String password; // char[]
 
     @Transient
     private String matchingPassword;
