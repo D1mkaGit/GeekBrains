@@ -100,5 +100,4 @@ public class ProductController {
         productRepository.deleteById(id);
         return "redirect:/products";
     }
-
 }

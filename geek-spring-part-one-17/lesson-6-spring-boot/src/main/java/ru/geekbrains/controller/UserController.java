@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.entity.User;
+import ru.geekbrains.persist.repo.RoleRepository;
 import ru.geekbrains.persist.repo.UserRepository;
 import ru.geekbrains.persist.repo.UserSpecification;
 
@@ -28,6 +29,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @GetMapping
     public String allUsers(Model model,
@@ -60,6 +64,7 @@ public class UserController {
     public String editUser(@PathVariable("id") Integer id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User"));
         model.addAttribute("user", user);
+        model.addAttribute("roles", roleRepository.findAll());
         return "user";
     }
 
@@ -67,6 +72,7 @@ public class UserController {
     public String newUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
+        model.addAttribute("roles", roleRepository.findAll());
         return "user";
     }
 

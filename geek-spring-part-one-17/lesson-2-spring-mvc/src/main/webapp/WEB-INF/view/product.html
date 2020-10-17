@@ -38,12 +38,12 @@
             <form th:action="@{/products/update}" method="post" th:object="${product}">
                 <input th:type="hidden" th:field="*{id}">
                 <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control" th:field="*{title}" placeholder="Enter title">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" class="form-control" th:field="*{title}" placeholder="Enter title">
                 </div>
                 <div class="form-group">
-                    <label>Price</label>
-                    <input type="number" class="form-control" th:field="*{cost}" placeholder="Enter price">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price"  class="form-control" th:field="*{cost}" placeholder="Enter price">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
