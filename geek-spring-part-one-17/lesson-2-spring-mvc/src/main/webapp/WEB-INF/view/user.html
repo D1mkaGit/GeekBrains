@@ -38,14 +38,14 @@
             <form th:action="@{/user/update}" method="post" th:object="${user}">
                 <input type="hidden" th:field="*{id}">
                 <div class="form-group">
-                    <label>Login</label>
-                    <input type="text" class="form-control" th:field="*{login}" placeholder="Enter login">
+                    <label for="login">Login</label>
+                    <input type="text" id="login" class="form-control" th:field="*{login}" placeholder="Enter login">
                     <small id="loginError" class="form-text text-error"
                            th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error</small>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" th:field="*{password}" placeholder="Enter password">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Enter password">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

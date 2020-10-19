@@ -35,11 +35,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository){
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new UserAuthService(userRepository);
     }
 
-// authConfigure перестает работать с этим конфигуратором
+    // authConfigure перестает работать с этим конфигуратором
 //    @Configuration
 //    @Order(1)
     public static class ApiSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
@@ -72,10 +72,13 @@ public class SecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
-                    .antMatchers("/").anonymous()
                     .antMatchers("/user/**").hasRole("ADMIN")
+                    .antMatchers("/user/new/**").hasRole("SA")
+                    .antMatchers("/products/**").hasAnyRole("ADMIN", "MANAGER")
                     .and()
-                    .formLogin();
+                    .formLogin().loginPage("/login")
+                    .and()
+                    .logout().logoutUrl("/logout").logoutSuccessUrl("/");
         }
     }
 }

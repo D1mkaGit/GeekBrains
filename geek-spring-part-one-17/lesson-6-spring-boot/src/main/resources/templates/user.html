@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <!-- Required meta tags -->
@@ -28,7 +29,21 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">List</a>
             </li>
+            <li sec:authorize="isAuthenticated()" class="nav-link active"> |</li>
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/user}">Users</a></li>
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <a sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" class="nav-link" th:href="@{/products}">Products</a>
+            </li>
         </ul>
+
+        <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0"
+              th:action="@{/logout}"
+              method="post">
+            <button class="btn btn-outline-success my-2 my-sm-0">
+                Logout <span sec:authentication="principal.username"></span>
+            </button>
+        </form>
     </div>
 </nav>
 
@@ -38,14 +53,24 @@
             <form th:action="@{/user/update}" method="post" th:object="${user}">
                 <input type="hidden" th:field="*{id}">
                 <div class="form-group">
-                    <label>Login</label>
-                    <input type="text" class="form-control" th:field="*{login}" placeholder="Enter login">
+                    <label for="login">Login</label>
+                    <input type="text" id="login" class="form-control" th:field="*{login}" placeholder="Enter login">
                     <small id="loginError" class="form-text text-error"
                            th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error</small>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" th:field="*{password}" placeholder="Enter password">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label>Roles:</label>
+                    <div class="form-check" th:each="role : ${roles}">
+
+                        <input class="form-check-input" type="checkbox" th:value="${role.id}" th:field="*{roles}">
+                        <label class="form-check-label" th:text="${role.name}">
+                            Default checkbox
+                        </label>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
