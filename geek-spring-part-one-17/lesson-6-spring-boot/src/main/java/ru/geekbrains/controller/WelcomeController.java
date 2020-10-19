@@ -12,4 +12,11 @@ public class WelcomeController {
     public  String welcomePage(){
         return "welcome";
     }
+
+
+    @GetMapping("/login")
+    public String showMyLoginPage() {
+        return "myLogin";
+    }
+
 }

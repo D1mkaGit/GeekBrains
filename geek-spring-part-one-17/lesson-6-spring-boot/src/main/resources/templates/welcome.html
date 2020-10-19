@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <!-- Required meta tags -->
@@ -28,13 +29,44 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">List</a>
             </li>
+            <li sec:authorize="isAuthenticated()" class="nav-link active" > | </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/user}">Users</a></li>
+            <li sec:authorize="isAuthenticated()" class="nav-item active">
+                <a sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" class="nav-link" th:href="@{/products}">Products</a>
+            </li>
         </ul>
+
+        <form sec:authorize="isAnonymous()" class="form-inline my-2 my-lg-0"
+              th:action="@{/login}"
+              method="get">
+            <button class="btn btn-outline-success my-2 my-sm-0">
+                Login
+            </button>
+        </form>
+        <form sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0"
+              th:action="@{/logout}"
+              method="post">
+            <button class="btn btn-outline-success my-2 my-sm-0">
+                Logout <span sec:authentication="principal.username"></span>
+            </button>
+        </form>
     </div>
 </nav>
 
 <div class="container">
     <div class="row py-2">
-        <p>Welcome!</p>
+        <h1>Welcome page</h1>
+        <div sec:authorize="isAuthenticated()" class="col-12 mt-3">
+            Authenticated username: <span sec:authentication="principal.username"></span>
+            Authenticated user roles: <span sec:authentication="principal.authorities"></span>
+        </div>
+
+        <!--<div sec:authorize="hasAnyRole('ADMIN', 'USER')">-->
+        <div sec:authorize="hasRole('ADMIN')" class="col-12 mt-3">
+            This content will only be visible to ADMIN users.
+        </div>
+
     </div>
 </div>
 

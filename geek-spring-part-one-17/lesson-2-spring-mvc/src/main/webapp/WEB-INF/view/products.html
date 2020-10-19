@@ -40,9 +40,9 @@
 
         <div class="col-12 mt-3">
             <form>
-                <label>Min. price: </label>
+                <label for="minP">Min. price: </label>
                 <input type="text" name="minP" id="minP" th:value="${param.minP}"/>
-                <label>Max. price: </label>
+                <label for="maxP">Max. price: </label>
                 <input type="text" name="maxP" id="maxP" th:value="${param.maxP}"/>
                 <input type="hidden" name="page"
                        th:value="${currentPage > totalPages} ? ${totalPages} : ${currentPage}"/>
