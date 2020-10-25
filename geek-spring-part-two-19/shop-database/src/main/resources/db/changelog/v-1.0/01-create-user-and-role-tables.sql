@@ -9,7 +9,7 @@ GO
        id bigint not null auto_increment,
         age integer,
         email varchar(255),
-        name varchar(32) not null,
+        username varchar(32) not null,
         password varchar(128) not null,
         primary key (id)
     ) engine=InnoDB;

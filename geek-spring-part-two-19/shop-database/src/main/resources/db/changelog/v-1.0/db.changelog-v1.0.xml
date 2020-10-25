@@ -35,4 +35,23 @@
         <rollback/>
     </changeSet>
 
+    <changeSet id="4" author="dd">
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="01-adding-fname-lname-columns-into-user-table.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback>
+            <sqlFile dbms="mysql"
+                     encoding="utf8"
+                     endDelimiter="\nGO"
+                     path="01-removing-fname-lname-columns-from-user-table.sql"
+                     relativeToChangelogFile="true"
+                     splitStatements="true"
+                     stripComments="true"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
