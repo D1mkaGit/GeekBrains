@@ -7,6 +7,5 @@ import ru.geekbrains.model.Brand;
 
 
 @Repository
-public interface BrandRepository extends JpaRepository<Brand, Integer>, JpaSpecificationExecutor<Brand> {
-    Brand findOneByName(String name);
+public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecificationExecutor<Brand> {
 }

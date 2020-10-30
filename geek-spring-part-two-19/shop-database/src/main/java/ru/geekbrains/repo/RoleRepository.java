@@ -7,6 +7,5 @@ import ru.geekbrains.model.Role;
 
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Integer>, JpaSpecificationExecutor<Role> {
-    Role findOneByName(String name);
+public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 }

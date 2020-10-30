@@ -1,117 +1,70 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/fontawesome-all.min.css}">
-    <link rel="stylesheet" th:href="@{/css/bootadmin.min.css}">
+<head th:replace="fragments/header :: head"></head>
 
-    <title>BootAdmin</title>
-</head>
 <body class="bg-light">
 
-<header th:insert="fragments/general.html :: navbar"> </header>
+<div th:replace="fragments/header :: header"></div>
 
 <div class="d-flex">
-    <div th:replace="fragments/general.html :: menu"></div>
+    <div th:replace="fragments/menu :: menu"></div>
+
     <div class="content p-4">
         <h2 class="mb-4">Users</h2>
 
         <div class="card mb-4">
+
             <div class="card-body">
+                <form class="form-group" th:action="@{/user/create}">
+                    <button type="submit" class="btn btn-primary">Create new</button>
+                </form>
 
-                <div class="container">
-                    <div class="row py-2">
-
-                        <div sec:authorize="hasRole('SA')" class="col-12">
-                            <a class="btn btn-primary" th:href="@{/user/new}">Add User</a>
-                        </div>
-
-                        <div class="col-12 mt-3">
-                            <form>
-                                <label for="name">Name</label>
-                                <input type="text" name="name" id="name" th:value="${param.name}"/>
-                                <button class="btn btn-primary" type="submit">Filter</button>
+                <table id="users" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="usr : ${users}">
+                        <td th:text="${usr.id}"></td>
+                        <td th:text="${usr.username}">Admin</td>
+                        <td th:text="${usr.email}"></td>
+                        <td th:text="${usr.firstName}"></td>
+                        <td th:text="${usr.lastName}"></td>
+                        <td>
+                            <a th:href="@{/user/{id}/edit(id=${usr.id})}" class="btn btn-icon btn-pill btn-primary" data-toggle="tooltip" title="Edit">
+                                <i class="fa fa-fw fa-edit"></i>
+                            </a>
+                            <form th:action="@{/user/{id}/delete(id=${usr.id})}" th:method="delete" class="d-inline">
+                                <button class="btn btn-icon btn-pill btn-danger" data-toggle="tooltip" title="Delete">
+                                    <i class="fa fa-fw fa-trash"></i>
+                                </button>
                             </form>
-                        </div>
-
-                        <div class="col-12">
-                            <table class="table table-bordered my-2">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Login</th>
-                                    <th scope="col">Roles</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="user : ${usersPage}">
-                                    <th scope="row" th:text="${user.id}">1</th>
-                                    <td th:text="${user.username}">User login</td>
-                                    <td>
-                                        <ul class="mr-auto">
-                                            <li class="nav-item active" th:each="role : ${user.roles}" th:text="${role.name}">
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i class="fas fa-edit"></i></a>
-                                        <form class="d-inline" th:action="@{/user/{id}/delete(id = ${user.id})}" th:method="delete">
-                                            <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="col-12">
-                            <nav aria-label="...">
-                                <ul class="pagination">
-                                    <li class="page-item"
-                                        th:classappend="${usersPage.number == 0} ? 'disabled'">
-                         <span class="page-link"
-                               th:unless="${usersPage.number > 0}">Previous</span>
-                                        <a class="page-link"
-                                           th:if="${usersPage.number > 0}"
-                                           th:href="@{user(page=${usersPage.number}, size=${usersPage.size})}">Previous</a>
-                                    </li>
-                                    <li th:each="num: ${#numbers.sequence(1, usersPage.totalPages)}"
-                                        class="page-item"
-                                        th:classappend="${num == usersPage.number + 1} ? 'active'">
-                                        <a class="page-link"
-                                           th:text="${num}"
-                                           th:href="@{user(page=${num}, size=${usersPage.size})}">1</a>
-                                        <!-- добавить сюда параметры через запятую в href-->
-                                    </li>
-                                    <li class="page-item"
-                                        th:classappend="${usersPage.number + 1 == totalPages} ? 'disabled'">
-                        <span class="page-link"
-                              th:unless="${usersPage.number < totalPages}">Next</span>
-                                        <a class="page-link"
-                                           th:if="${usersPage.number < totalPages}"
-                                           th:href="@{user(page=${usersPage.number + 2}, size=${usersPage.size})}">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
             </div>
         </div>
     </div>
 </div>
 
-<script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.bundle.min.js"></script>
-<script src="/js/bootadmin.min.js"></script>
+<script th:replace="fragments/footer :: scripts"></script>
+<script th:src="@{/js/datatables.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#users').DataTable();
+    });
+</script>
 
 </body>
 </html>

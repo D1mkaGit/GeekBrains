@@ -3,67 +3,72 @@ package ru.geekbrains.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.util.ArrayUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.geekbrains.model.Brand;
 import ru.geekbrains.repo.BrandRepository;
-import ru.geekbrains.repo.BrandSpecification;
 
-import java.util.Optional;
-
-import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-@RequestMapping("/brands")
 public class BrandController {
+
     private final static Logger logger = LoggerFactory.getLogger(BrandController.class);
 
+    private final BrandRepository brandRepository;
+
     @Autowired
-    private BrandRepository brandRepository;
+    public BrandController(BrandRepository brandRepository) {
+        this.brandRepository = brandRepository;
+    }
 
 
-    @GetMapping
-    public String allBrands(Model model,
-                              @RequestParam("page") Optional<Integer> page,
-                              @RequestParam("size") Optional<Integer> size,
-                              @RequestParam("sort") Optional<String> sort,
-                              @RequestParam(value = "desc", required = false, defaultValue = "false") boolean desc
-    ) {
-        String currentSort = sort.orElse("id");
-        String[] sortItems = {"id", "name"};
-
-        if (!ArrayUtils.contains(sortItems, currentSort)) currentSort = "id";
-
-        int brandsCountPerPage = 5;
-        int currentPage = page.orElse(1);
-
-        Specification<Brand> spec = BrandSpecification.trueLiteral();
-
-        Sort.Direction sortDirection = ASC;
-        if (desc) sortDirection = DESC;
-
-        PageRequest pageRequest = PageRequest.of(currentPage - 1, size.orElse(brandsCountPerPage), Sort.by(sortDirection, currentSort));
-
-
-        int totalPages = brandRepository.findAll(spec, pageRequest).getTotalPages();
-        if (totalPages < 1) totalPages = 1; // если тотал пэйджес будет 0, пойдут баги
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-            pageRequest = PageRequest.of(currentPage - 1, size.orElse(brandsCountPerPage), Sort.by(sortDirection, currentSort)); // поправка текущей страницы в реквесте
-        }
-
-        model.addAttribute("brandsPage", brandRepository.findAll(spec, pageRequest));
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", currentPage);
+    @GetMapping("/brands")
+    public String adminCategoriesPage(Model model) {
+        model.addAttribute("activePage", "Brands");
+        model.addAttribute("brands", brandRepository.findAll());
         return "brands";
+    }
+
+    @GetMapping("/brand/create")
+    public String adminBrandCreatePage(Model model) {
+        model.addAttribute("create", true);
+        model.addAttribute("activePage", "Brands");
+        model.addAttribute("brand", new Brand());
+        return "brand_form";
+    }
+
+    @GetMapping("/brand/{id}/edit")
+    public String adminEditBrand(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("edit", true);
+        model.addAttribute("activePage", "Brands");
+        model.addAttribute("brand", brandRepository.findById(id).orElseThrow(NotFoundException::new));
+        return "brand_form";
+    }
+
+    @DeleteMapping("/brand/{id}/delete")
+    public String adminDeleteBrand(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("activePage", "Brands");
+        brandRepository.deleteById(id);
+        return "redirect:/brands";
+    }
+
+    @PostMapping("/brand")
+    public String adminUpsertBrand(Model model, RedirectAttributes redirectAttributes, Brand brand) {
+        model.addAttribute("activePage", "Brands");
+
+        try {
+            brandRepository.save(brand);
+        } catch (Exception ex) {
+            logger.error("Problem with creating or updating brand", ex);
+            redirectAttributes.addFlashAttribute("error", true);
+            if (brand.getId() == null) {
+                return "redirect:/brand/create";
+            }
+            return "redirect:/brand/" + brand.getId() + "/edit";
+        }
+        return "redirect:/brands";
     }
 
 }

@@ -1,12 +1,15 @@
 package ru.geekbrains.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -32,38 +35,16 @@ public class User {
     @Column
     private Integer age;
 
+    @ToString.Exclude // нужно для lombok, иначе падает редактирование с ошибкой, что не может user.toString() и role.toString() сделать
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
-    public User() {
-    }
-
-    public User(String userName, String password, String firstName, String lastName, String email) {
-        this.username = userName;
+    public User(Long id, String username, String password) {
+        this.id = id;
+        this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
     }
-
-    public User(String userName, String password, String firstName, String lastName, String email,
-                Collection<Role> roles) {
-        this.username = userName;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", username='" + username + '\'' + ", password='" + "*********" + '\''
-                + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\''
-                + ", roles=" + roles + '}';
-    }
-
 }

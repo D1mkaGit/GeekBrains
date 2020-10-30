@@ -3,67 +3,75 @@ package ru.geekbrains.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.util.ArrayUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.geekbrains.model.Role;
 import ru.geekbrains.repo.RoleRepository;
-import ru.geekbrains.repo.RoleSpecification;
 
-import java.util.Optional;
-
-import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Controller
-@RequestMapping("/roles")
 public class RoleController {
+
     private final static Logger logger = LoggerFactory.getLogger(RoleController.class);
 
+    private final RoleRepository roleRepository;
+
     @Autowired
-    private RoleRepository roleRepository;
+    public RoleController(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
 
-    @GetMapping
-    public String allRoles(Model model,
-                              @RequestParam("page") Optional<Integer> page,
-                              @RequestParam("size") Optional<Integer> size,
-                              @RequestParam("sort") Optional<String> sort,
-                              @RequestParam(value = "desc", required = false, defaultValue = "false") boolean desc
-    ) {
-        String currentSort = sort.orElse("id");
-        String[] sortItems = {"id", "name"};
-
-        if (!ArrayUtils.contains(sortItems, currentSort)) currentSort = "id";
-
-        int rolesCountPerPage = 5;
-        int currentPage = page.orElse(1);
-
-        Specification<Role> spec = RoleSpecification.trueLiteral();
-
-        Sort.Direction sortDirection = ASC;
-        if (desc) sortDirection = DESC;
-
-        PageRequest pageRequest = PageRequest.of(currentPage - 1, size.orElse(rolesCountPerPage), Sort.by(sortDirection, currentSort));
-
-
-        int totalPages = roleRepository.findAll(spec, pageRequest).getTotalPages();
-        if (totalPages < 1) totalPages = 1; // если тотал пэйджес будет 0, пойдут баги
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-            pageRequest = PageRequest.of(currentPage - 1, size.orElse(rolesCountPerPage), Sort.by(sortDirection, currentSort)); // поправка текущей страницы в реквесте
-        }
-
-        model.addAttribute("rolesPage", roleRepository.findAll(spec, pageRequest));
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", currentPage);
+    @GetMapping("/roles")
+    public String adminRolesPage(Model model) {
+        model.addAttribute("activePage", "Roles");
+        model.addAttribute("roles", roleRepository.findAll());
         return "roles";
+    }
+
+    @GetMapping("/role/create")
+    public String adminRoleCreatePage(Model model) {
+        model.addAttribute("create", true);
+        model.addAttribute("activePage", "Roles");
+        model.addAttribute("role", new Role());
+        return "role_form";
+    }
+
+    @GetMapping("/role/{id}/edit")
+    public String adminEditRole(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("edit", true);
+        model.addAttribute("activePage", "Roles");
+        model.addAttribute("role", roleRepository.findById(id).orElseThrow(NotFoundException::new));
+        return "role_form";
+    }
+
+    @DeleteMapping("/role/{id}/delete")
+    public String adminDeleteRole(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("activePage", "Roles");
+        roleRepository.deleteById(id);
+        return "redirect:/roles";
+    }
+
+    @PostMapping("/role")
+    public String adminUpsertRole(Model model, RedirectAttributes redirectAttributes, Role role) {
+        model.addAttribute("activePage", "Roles");
+
+        try {
+            roleRepository.save(role);
+        } catch (Exception ex) {
+            logger.error("Problem with creating or updating role", ex);
+            redirectAttributes.addFlashAttribute("error", true);
+            if (role.getId() == null) {
+                return "redirect:/role/create";
+            }
+            return "redirect:/role/" + role.getId() + "/edit";
+        }
+        return "redirect:/roles";
     }
 
 }
