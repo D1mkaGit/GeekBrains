@@ -20,11 +20,11 @@ public class ProductController {
 
     private final static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    private ProductService productService;
+    private final ProductService productService;
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    private BrandRepository brandRepository;
+    private final BrandRepository brandRepository;
 
     @Autowired
     public ProductController(ProductService productService, CategoryRepository categoryRepository,

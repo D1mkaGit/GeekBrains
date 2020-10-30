@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class ShopAdminUiApplication {
 
 	@Component
-	public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
+	public static class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 	}
 
 	@Bean

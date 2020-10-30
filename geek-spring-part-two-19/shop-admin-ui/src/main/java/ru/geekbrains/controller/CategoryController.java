@@ -18,7 +18,7 @@ public class CategoryController {
 
     private final static Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public CategoryController(CategoryRepository categoryRepository) {
