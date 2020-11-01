@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="21" author="dd">
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="01-delete-old-unused-default-product-brand-category.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback/>
+    </changeSet>
+
+<!--    <changeSet id="23" author="dd">-->
+<!--        <sqlFile dbms="mysql"-->
+<!--                 encoding="utf8"-->
+<!--                 endDelimiter="\nGO"-->
+<!--                 path="01-insert-default-picture-data-for-default-products.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="true"-->
+<!--                 stripComments="true"/>-->
+<!--        <rollback/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="24" author="dd">-->
+<!--        <sqlFile dbms="mysql"-->
+<!--                 encoding="utf8"-->
+<!--                 endDelimiter="\nGO"-->
+<!--                 path="01-insert-default-picture-data-for-default-products-part2.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="true"-->
+<!--                 stripComments="true"/>-->
+<!--        <rollback/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="25" author="dd">-->
+<!--        <sqlFile dbms="mysql"-->
+<!--                 encoding="utf8"-->
+<!--                 endDelimiter="\nGO"-->
+<!--                 path="01-insert-default-picture-data-for-default-products-part3.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="true"-->
+<!--                 stripComments="true"/>-->
+<!--        <rollback/>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="26" author="dd">-->
+<!--        <sqlFile dbms="mysql"-->
+<!--                 encoding="utf8"-->
+<!--                 endDelimiter="\nGO"-->
+<!--                 path="01-insert-default-picture-data-for-default-products-part4.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="true"-->
+<!--                 stripComments="true"/>-->
+<!--        <rollback/>-->
+<!--    </changeSet>-->
+
+    <changeSet id="27" author="dd">
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="01-insert-new-default-brand-category-product.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback/>
+    </changeSet>
+
+<!--    <changeSet id="28" author="dd">-->
+<!--        <sqlFile dbms="mysql"-->
+<!--                 encoding="utf8"-->
+<!--                 path="01-pictures_data_new.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="true"-->
+<!--                 stripComments="true"/>-->
+<!--        <rollback/>-->
+<!--    </changeSet>-->
+
+
+</databaseChangeLog>
