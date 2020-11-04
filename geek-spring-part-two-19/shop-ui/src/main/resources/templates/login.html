@@ -43,7 +43,7 @@
             <div class="col-lg-6">
                 <div class="login_form_inner">
                     <h3>Log in to enter</h3>
-                    <form class="row login_form" th:action="@{/login}" id="contactForm">
+                    <form class="row login_form" th:action="@{/authenticateTheUser}" method="post" id="contactForm">
                         <div class="col-md-12 form-group">
                             <div>
                                 <div th:if="${param.error} != null">
@@ -59,11 +59,11 @@
                             </div>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Username"
+                            <input type="text" class="form-control" id="name" name="username" placeholder="Username"
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="password" name="password" placeholder="Password"
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password"
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
                         </div>
                         <div class="col-md-12 form-group">
