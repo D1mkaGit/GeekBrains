@@ -1,9 +1,9 @@
 package ru.geekbrains.controller.repr;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.geekbrains.model.Brand;
-import ru.geekbrains.model.Category;
-import ru.geekbrains.model.Product;
+import ru.geekbrains.persist.model.Brand;
+import ru.geekbrains.persist.model.Category;
+import ru.geekbrains.persist.model.Product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

@@ -1,9 +1,7 @@
 package ru.geekbrains.controller.repr;
 
-import org.springframework.web.multipart.MultipartFile;
-import ru.geekbrains.model.Brand;
-import ru.geekbrains.model.Category;
-import ru.geekbrains.model.Product;
+import ru.geekbrains.persist.model.Picture;
+import ru.geekbrains.persist.model.Product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,13 +17,11 @@ public class ProductRepr implements Serializable {
 
     private BigDecimal price;
 
-    private Category category;
+    private String category;
 
-    private Brand brand;
+    private String brand;
 
-    private List<PictureRepr> pictures;
-
-    private MultipartFile[] newPictures;
+    private List<Long> pictureIds;
 
     public ProductRepr() {
     }
@@ -34,11 +30,10 @@ public class ProductRepr implements Serializable {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
-        this.category = product.getCategory();
-        this.brand = product.getBrand();
-        this.pictures = product.getPictures().stream()
-                .map(PictureRepr::new)
-                .collect(Collectors.toList());
+        this.category = product.getCategory().getName();
+        this.brand = product.getBrand().getName();
+        this.pictureIds = product.getPictures().stream()
+                .map(Picture::getId).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -65,36 +60,28 @@ public class ProductRepr implements Serializable {
         this.price = price;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    public Brand getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(Brand brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
-    public List<PictureRepr> getPictures() {
-        return pictures;
+    public List<Long> getPictureIds() {
+        return pictureIds;
     }
 
-    public void setPictures(List<PictureRepr> pictures) {
-        this.pictures = pictures;
-    }
-
-    public MultipartFile[] getNewPictures() {
-        return newPictures;
-    }
-
-    public void setNewPictures(MultipartFile[] newPictures) {
-        this.newPictures = newPictures;
+    public void setPictureIds(List<Long> pictureIds) {
+        this.pictureIds = pictureIds;
     }
 
     @Override

@@ -2,11 +2,10 @@ package ru.geekbrains.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.controller.repr.ProductRepr;
-import ru.geekbrains.repo.ProductRepository;
+import ru.geekbrains.persist.repo.ProductRepository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,7 +19,6 @@ public class ProductServiceImpl implements ProductService, Serializable {
 
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }

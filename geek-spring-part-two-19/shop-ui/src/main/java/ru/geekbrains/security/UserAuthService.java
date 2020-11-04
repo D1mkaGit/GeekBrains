@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.geekbrains.model.Role;
-import ru.geekbrains.repo.UserRepository;
+import ru.geekbrains.persist.model.Role;
+import ru.geekbrains.persist.repo.UserRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

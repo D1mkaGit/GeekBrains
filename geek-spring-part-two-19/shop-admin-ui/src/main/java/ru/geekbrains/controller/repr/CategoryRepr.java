@@ -1,6 +1,6 @@
 package ru.geekbrains.controller.repr;
 
-import ru.geekbrains.model.Category;
+import ru.geekbrains.persist.model.Category;
 
 import java.io.Serializable;
 

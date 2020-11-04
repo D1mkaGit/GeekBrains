@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.geekbrains.controller.NotFoundException;
 import ru.geekbrains.controller.repr.ProductRepr;
-import ru.geekbrains.model.Picture;
-import ru.geekbrains.model.PictureData;
-import ru.geekbrains.model.Product;
-import ru.geekbrains.repo.ProductRepository;
+import ru.geekbrains.exceptions.NotFoundException;
+import ru.geekbrains.persist.model.Picture;
+import ru.geekbrains.persist.model.Product;
+import ru.geekbrains.persist.repo.ProductRepository;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,9 +26,13 @@ public class ProductServiceImpl implements ProductService, Serializable {
 
     private final ProductRepository productRepository;
 
+    private final PictureService pictureService;
+
+
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, PictureService pictureService) {
         this.productRepository = productRepository;
+        this.pictureService = pictureService;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class ProductServiceImpl implements ProductService, Serializable {
                 product.getPictures().add(new Picture(
                         newPicture.getOriginalFilename(),
                         newPicture.getContentType(),
-                        new PictureData(newPicture.getBytes())));
+                        pictureService.createPictureData(newPicture.getBytes())));
             }
         }
         productRepository.save(product);

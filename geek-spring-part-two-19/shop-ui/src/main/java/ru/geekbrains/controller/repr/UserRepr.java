@@ -1,7 +1,7 @@
 package ru.geekbrains.controller.repr;
 
-import ru.geekbrains.model.Role;
-import ru.geekbrains.model.User;
+import ru.geekbrains.persist.model.Role;
+import ru.geekbrains.persist.model.User;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;

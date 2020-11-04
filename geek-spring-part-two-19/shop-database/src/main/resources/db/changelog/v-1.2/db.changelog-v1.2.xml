@@ -25,4 +25,23 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="12" author="dd">
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 path="02-alter-picture-data.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+        <rollback>
+            <sqlFile dbms="mysql"
+                     encoding="utf8"
+                     endDelimiter="\nGO"
+                     path="02-drop-column-picture-data.sql"
+                     relativeToChangelogFile="true"
+                     splitStatements="true"
+                     stripComments="true"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

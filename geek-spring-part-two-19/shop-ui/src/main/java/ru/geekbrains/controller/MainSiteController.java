@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.geekbrains.repo.BrandRepository;
-import ru.geekbrains.repo.CategoryRepository;
+import ru.geekbrains.exceptions.NotFoundException;
+import ru.geekbrains.persist.repo.BrandRepository;
+import ru.geekbrains.persist.repo.CategoryRepository;
 import ru.geekbrains.service.ProductService;
 
 @Controller
@@ -32,6 +34,15 @@ public class MainSiteController {
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("brands", brandRepository.findAll());
         return "index";
+    }
+
+    @RequestMapping("/product/{id}")
+    public String productPage(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("product", productService.findById(id)
+                .orElseThrow(NotFoundException::new));
+        return "single-product";
     }
 
     @GetMapping("/login")

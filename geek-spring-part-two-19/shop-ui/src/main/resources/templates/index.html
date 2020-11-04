@@ -16,7 +16,7 @@
         <div class="row no-gutters align-items-center pt-60px">
           <div class="col-5 d-none d-sm-block">
             <div class="hero-banner__img">
-              <img class="img-fluid" src="img/home/smallFly.png" alt="">
+              <img class="img-fluid" th:src="@{/img/home/smallFly.png}" alt="">
             </div>
           </div>
           <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0">
@@ -36,21 +36,21 @@
 <!--    <section class="section-margin mt-0">-->
 <!--      <div class="owl-carousel owl-theme hero-carousel">-->
 <!--        <div class="hero-carousel__slide">-->
-<!--          <img src="img/home/cessna-logo-1.png" alt="" class="img-fluid">-->
+<!--          <img th:src="@{/img/home/cessna-logo-1.png}" alt="" class="img-fluid">-->
 <!--          <a href="#" class="hero-carousel__slideOverlay">-->
 <!--            <h3>Cessna aircraft for sale</h3>-->
 <!--            <p>Showing all</p>-->
 <!--          </a>-->
 <!--        </div>-->
 <!--        <div class="hero-carousel__slide">-->
-<!--          <img src="img/home/Piper_Aircraft_logo.svg.png" alt="" class="img-fluid">-->
+<!--          <img th:src="@{/img/home/Piper_Aircraft_logo.svg.png}" alt="" class="img-fluid">-->
 <!--          <a href="#" class="hero-carousel__slideOverlay">-->
 <!--            <h3>Piper aircraft for sale</h3>-->
 <!--            <p>Showing all</p>-->
 <!--          </a>-->
 <!--        </div>-->
 <!--        <div class="hero-carousel__slide">-->
-<!--          <img src="img/home/cirrus-aircraft-logo-clipart.png" alt="" class="img-fluid">-->
+<!--          <img th:src="@{/img/home/cirrus-aircraft-logo-clipart.png}" alt="" class="img-fluid">-->
 <!--          <a href="#" class="hero-carousel__slideOverlay">-->
 <!--            <h3>Cirrus aircraft for sale</h3>-->
 <!--            <p>Showing all</p>-->
@@ -73,17 +73,18 @@
             <div class="card text-center card-product">
               <div class="card-product__img">
 <!--                th:text="${foo.messageData[0].name}
-                    src="img/product/2005 Cessna 182T G1000 G-CEFV for sale at AT Aviation.jpeg"-->
-                <img class="card-img" th:src="@{/picture/{pictureId}(pictureId=${prod.pictures[0].id})}" alt="">
+                    th:src="@{/img/product/2005 Cessna 182T G1000 G-CEFV for sale at AT Aviation.jpeg}"-->
+                <img class="card-img" th:unless="${prod.pictureIds.isEmpty()}"
+                     th:src="@{/picture/{pictureId}(pictureId=${prod.pictureIds.get(0)})}" alt="">
                 <ul class="card-product__imgOverlay">
-                  <li><button><i class="ti-search"></i></button></li>
+                  <li><button th:onclick="'window.location.href = \'' + @{/product/{prodId}(prodId=${prod.id})} + '\''" ><i class="ti-search" ></i></button></li>
                   <li><button><i class="ti-shopping-cart"></i></button></li>
                   <li><button><i class="ti-heart"></i></button></li>
                 </ul>
               </div>
               <div class="card-body">
-                <p th:text="${prod.category.name}">Cesna</p>
-                <h4 class="card-product__title"><a href="single-product.html" th:text="${prod.name}">2005 Cessna 182T G1000 G-CEFV</a></h4>
+                <p th:text="${prod.category}">Cesna</p>
+                <h4 class="card-product__title"><a th:href="@{/product/{prodId}(prodId=${prod.id})}" th:text="${prod.name}">2005 Cessna 182T G1000 G-CEFV</a></h4>
                 <p class="card-product__price"><span th:text=="${prod.price != 0} ? '£'+${prod.price} : 'call'"></span></p>
               </div>
             </div>
@@ -121,7 +122,7 @@
         <div class="owl-carousel owl-theme" id="bestSellerCarousel">
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/cesna172skyhawk.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/cesna172skyhawk.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -137,7 +138,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/PiperPA-28Series.png" alt="">
+              <img class="img-fluid"  th:src="@{/img/product/PiperPA-28Series.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -153,7 +154,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/cesna152.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/cesna152.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -169,7 +170,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/cesna182Skylane.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/cesna182Skylane.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -185,7 +186,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/PiperJ-3Cub.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/PiperJ-3Cub.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -201,7 +202,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/BeechcraftBonanza.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/BeechcraftBonanza.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -217,7 +218,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/MooneyM20.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/MooneyM20.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -233,7 +234,7 @@
 
           <div class="card text-center card-product">
             <div class="card-product__img">
-              <img class="img-fluid" src="img/product/PiperPacer.png" alt="">
+              <img class="img-fluid" th:src="@{/img/product/PiperPacer.png}" alt="">
               <ul class="card-product__imgOverlay">
                 <li><button><i class="ti-search"></i></button></li>
                 <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -263,7 +264,7 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card card-blog">
               <div class="card-blog__img">
-                <img class="card-img rounded-0" src="img/blog/changesInGAPilotmedical.jpg" alt="">
+                <img class="card-img rounded-0" th:src="@{/img/blog/changesInGAPilotmedical.jpg}" alt="">
               </div>
               <div class="card-body">
                 <ul class="card-blog__info">
@@ -280,7 +281,7 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card card-blog">
               <div class="card-blog__img">
-                <img class="card-img rounded-0" src="img/blog/Ower6kGApilotsGivenEUGrants.png" alt="">
+                <img class="card-img rounded-0" th:src="@{/img/blog/Ower6kGApilotsGivenEUGrants.png}" alt="">
               </div>
               <div class="card-body">
                 <ul class="card-blog__info">
@@ -297,7 +298,7 @@
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="card card-blog">
               <div class="card-blog__img">
-                <img class="card-img rounded-0" src="img/blog/caaStatementAndBraxit.png" alt="">
+                <img class="card-img rounded-0" th:src="@{/img/blog/caaStatementAndBraxit.png}" alt="">
               </div>
               <div class="card-body">
                 <ul class="card-blog__info">

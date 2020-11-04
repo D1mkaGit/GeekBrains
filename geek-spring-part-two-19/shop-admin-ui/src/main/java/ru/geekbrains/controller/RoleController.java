@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.geekbrains.model.Role;
-import ru.geekbrains.repo.RoleRepository;
+import ru.geekbrains.exceptions.NotFoundException;
+import ru.geekbrains.persist.model.Role;
+import ru.geekbrains.persist.repo.RoleRepository;
 
 
 @Controller
