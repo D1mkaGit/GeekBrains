@@ -1,0 +1,2 @@
+ALTER TABLE `users` DROP INDEX `username_UNIQUE`;
+GO

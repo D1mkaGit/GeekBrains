@@ -62,7 +62,7 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-haspopup="true"
                                aria-expanded="false">
-                                <span sec:authorize="isAuthenticated()" sec:authentication="principal.username"></span>
+                                <span sec:authorize="isAuthenticated()">Welcome: <span sec:authentication="principal.username"></span></span>
                                 <span sec:authorize="isAnonymous()">Account</span>
                             </a>
                             <ul class="dropdown-menu">
