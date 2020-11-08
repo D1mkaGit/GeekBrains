@@ -19,6 +19,7 @@ import ru.geekbrains.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class MainSiteController {
@@ -47,15 +48,31 @@ public class MainSiteController {
     public String indexPage(Model model) {
         model.addAttribute("activePage", "Home");
         model.addAttribute("products", productService.findAll());
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("brands", brandRepository.findAll());
+        addDefaultAttributes(model);
         return "index";
+    }
+
+    @RequestMapping("/category/{id}")
+    public String byCategoryPage(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("activePage", "byCategory");
+        addDefaultAttributes(model);
+        model.addAttribute("category", categoryRepository.findById(id).orElseThrow(IllegalStateException::new));
+        model.addAttribute("products", productService.findByCategoryId(id));
+        return "by-category";
+    }
+
+    @GetMapping("/brand/{id}")
+    public String byBrandPage(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("activePage", "byBrand");
+        addDefaultAttributes(model);
+        model.addAttribute("brand", brandRepository.findById(id).orElseThrow(NotFoundException::new));
+        model.addAttribute("products", productService.findByBrandId(id));
+        return "by-brand";
     }
 
     @RequestMapping("/product/{id}")
     public String productPage(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("brands", brandRepository.findAll());
+        addDefaultAttributes(model);
         model.addAttribute("product", productService.findById(id)
                 .orElseThrow(NotFoundException::new));
         return "single-product";
@@ -64,6 +81,7 @@ public class MainSiteController {
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("activePage", "Account");
+        addDefaultAttributes(model);
         model.addAttribute("user", new UserRepr());
         return "register";
     }
@@ -71,6 +89,7 @@ public class MainSiteController {
     @GetMapping("/profile")
     public String showProfilePage(Model model, HttpServletRequest request) {
         model.addAttribute("activePage", "Account");
+        addDefaultAttributes(model);
         if (request.getUserPrincipal() == null) return "redirect:/";
         model.addAttribute("user", userService.findOneByUsername(request.getUserPrincipal().getName())
                 .orElseThrow(NotFoundException::new)
@@ -99,5 +118,11 @@ public class MainSiteController {
         return "redirect:/profile";
     }
 
-
+    private Model addDefaultAttributes(Model model){
+        List<Long> catIds = productService.findDistinctCategoryId();
+        List<Long> brandIds = productService.findDistinctBrandId();
+        model.addAttribute("brands", brandRepository.findByIdIn(brandIds));
+        model.addAttribute("categories", categoryRepository.findByIdIn(catIds));
+        return model;
+    }
 }
