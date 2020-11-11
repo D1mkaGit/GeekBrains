@@ -45,7 +45,7 @@
 							<input th:type="hidden" th:field="*{id}">
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" th:field="*{username}"
-									   id="username" name="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+									   id="username" name="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'" required>
 							</div>
 							<div class="col-md-12 form-group">
 								<input type="text" class="form-control" th:field="*{email}"
@@ -53,10 +53,10 @@
               </div>
               <div class="col-md-12 form-group">
 								<input type="password" class="form-control" th:field="*{password}"
-									   id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+									   id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required>
               </div>
               <div class="col-md-12 form-group">
-								<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'">
+								<input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'" required>
 							</div>
 							<div class="col-md-12 form-group">
 								<div class="creat_account">

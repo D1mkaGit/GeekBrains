@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Aviation sales - Home</title>
+    <title>:: Aviation sales ::</title>
 
     <link rel="icon" th:href="@{/img/Fevicon.png}" type="image/png">
     <link rel="stylesheet" th:href="@{/vendors/bootstrap/bootstrap.min.css}">
@@ -16,6 +16,8 @@
     <link rel="stylesheet" th:href="@{/vendors/nice-select/nice-select.css}">
     <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.theme.default.min.cs}">
     <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/linericon/style.css}">
+    <link rel="stylesheet" th:href="@{/vendors/nouislider/nouislider.min.css}">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -87,7 +89,9 @@
                             <button><i class="ti-search"></i></button>
                         </li>
                         <li class="nav-item">
-                            <button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button>
+                            <form th:action="@{/cart}" method="GET" >
+                                <button><i class="ti-shopping-cart"></i><span th:unless="${lineItems == null}"><span  class="nav-shop__circle" th:if="${lineItems.size()} > 0" th:text="${lineItems.size()}"></span></span></button>
+                            </form>
                         </li>
                         <li class="nav-item"><a class="button button-header" href="#">Buy Now</a></li>
                     </ul>

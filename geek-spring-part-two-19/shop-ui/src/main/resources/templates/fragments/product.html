@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="product (prod)" class="card text-center card-product">
+    <div class="card-product__img">
+        <img class="card-img" th:unless="${prod.pictureIds.isEmpty()}"
+             th:src="@{/picture/{pictureId}(pictureId=${prod.pictureIds.get(0)})}" alt="">
+        <ul class="card-product__imgOverlay">
+            <li>
+                <button th:onclick="'window.location.href = \'' + @{/product/{prodId}(prodId=${prod.id})} + '\''"><i
+                        class="ti-search"></i></button>
+            </li>
+            <li>
+                <form th:action="@{/cart}" th:method="post">
+                    <input type="hidden" name="bidPrice" th:with="bidPrice=${prod.price + 1}" th:value ="${bidPrice}"/>
+                    <input type="hidden" name="productId" th:value="${prod.id}">
+                    <button><i class="ti-shopping-cart"></i></button>
+                </form>
+            </li>
+            <li>
+                <button><i class="ti-heart"></i></button>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <p th:text="${prod.category}"></p>
+        <h4 class="card-product__title"><a th:href="@{/product/{prodId}(prodId=${prod.id})}" th:text="${prod.name}"></a>
+        </h4>
+        <p class="card-product__price"><span th:text=="${prod.price !=0} ? '£'+${prod.price} : 'call'"></span></p>
+    </div>
+</div>
+
+</html>
