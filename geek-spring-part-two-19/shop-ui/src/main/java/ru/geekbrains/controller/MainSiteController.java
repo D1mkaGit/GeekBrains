@@ -15,6 +15,7 @@ import ru.geekbrains.exceptions.NotFoundException;
 import ru.geekbrains.persist.repo.BrandRepository;
 import ru.geekbrains.persist.repo.CategoryRepository;
 import ru.geekbrains.security.UserAuthService;
+import ru.geekbrains.service.CartService;
 import ru.geekbrains.service.ProductService;
 import ru.geekbrains.service.UserService;
 
@@ -32,18 +33,20 @@ public class MainSiteController {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final UserAuthService userAuthService;
+    private final CartService cartService;
 
     @Autowired
     public MainSiteController(ProductService productService,
                               CategoryRepository categoryRepository,
                               BrandRepository brandRepository,
                               UserService userService,
-                              UserAuthService userAuthService, ChatController chatController) {
+                              UserAuthService userAuthService, CartService cartService) {
         this.productService = productService;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
         this.userService = userService;
         this.userAuthService = userAuthService;
+        this.cartService = cartService;
     }
 
     @RequestMapping("/")
@@ -57,6 +60,7 @@ public class MainSiteController {
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("activePage", "Account");
+        addDefaultAttributes(model);
         return "login";
     }
 
@@ -131,6 +135,7 @@ public class MainSiteController {
         List<Long> brandIds = productService.findDistinctBrandId();
         model.addAttribute("brands", brandRepository.findByIdIn(brandIds));
         model.addAttribute("categories", categoryRepository.findByIdIn(catIds));
+        model.addAttribute("lineItems", cartService.getLineItems());
         return model;
     }
 }
