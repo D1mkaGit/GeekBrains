@@ -35,7 +35,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String showLoginPage(Model model) {
+        model.addAttribute("activePage", "Account");
         return "login";
     }
 

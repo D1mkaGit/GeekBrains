@@ -27,6 +27,7 @@
         <module>shop-picture-service</module>
         <module>shop-admin-ui</module>
         <module>shop-ui</module>
+        <module>shop-user-service</module>
     </modules>
 
     <dependencies>

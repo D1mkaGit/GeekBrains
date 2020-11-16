@@ -25,6 +25,22 @@ public class ProductServiceImpl implements ProductService, Serializable {
 
     @Override
     @Transactional
+    public List<ProductRepr> findByCategoryId(Long id) {
+        return productRepository.findByCategoryId(id).stream()
+                .map(ProductRepr::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<ProductRepr> findByBrandId(Long id) {
+        return productRepository.findByBrandId(id).stream()
+                .map(ProductRepr::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
     public List<ProductRepr> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductRepr::new)
@@ -37,4 +53,25 @@ public class ProductServiceImpl implements ProductService, Serializable {
         return productRepository.findById(id).map(ProductRepr::new);
     }
 
+    @Override
+    @Transactional
+    public List<Long> findDistinctCategoryId() {
+        return productRepository
+                .findAll()
+                .stream()
+                .map(p -> Long.valueOf(p.getCategory().getId()))
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<Long> findDistinctBrandId() {
+        return productRepository
+                .findAll()
+                .stream()
+                .map(p -> Long.valueOf(p.getBrand().getId()))
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

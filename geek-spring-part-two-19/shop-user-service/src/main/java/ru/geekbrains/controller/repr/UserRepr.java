@@ -8,21 +8,20 @@ import java.util.Set;
 
 public class UserRepr {
 
-    private Long id;
+    Long id;
 
     @NotEmpty
-    private String username;
+    String username;
 
-    @NotEmpty
-    private String password;
+    String password; // todo: нужно где-то на бэке проверять, что пароль не пустой на реге, а в профайле сохранять без пароля
 
-    private String firstName;
+    String firstName;
 
-    private String lastName;
+    String lastName;
 
-    private String email;
+    String email;
 
-    private Set<Role> roles;
+    Set<Role> roles;
 
     public UserRepr() {
     }

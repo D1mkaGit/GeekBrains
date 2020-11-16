@@ -1,5 +1,7 @@
 package ru.geekbrains.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,12 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.persist.model.Role;
 import ru.geekbrains.persist.repo.UserRepository;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class UserAuthService implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthService.class);
 
     private final UserRepository userRepository;
 
@@ -38,5 +44,14 @@ public class UserAuthService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName()))
                 .collect(Collectors.toList());
+    }
+
+
+    public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {
+        try {
+            request.login(username, password);
+        } catch (ServletException e) {
+            logger.error("Error while login ", e);
+        }
     }
 }
