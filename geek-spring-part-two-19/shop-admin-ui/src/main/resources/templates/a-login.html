@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="fragments/a-header :: head"></head>
 
 <body class="bg-light">
 
@@ -12,7 +12,7 @@
             <h1 class="text-center mb-4">BootAdmin</h1>
             <div class="card">
                 <div class="card-body">
-                    <form th:action="@{/authenticateTheUser}" method="post">
+                    <form th:action="@{/admin/doAdminLogin}" method="post">
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<script th:replace="fragments/footer :: scripts"></script>
+<script th:replace="fragments/a-footer :: scripts"></script>
 
 </body>
 </html>

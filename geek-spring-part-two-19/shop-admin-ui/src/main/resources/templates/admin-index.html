@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="fragments/a-header :: head"></head>
 
 <body class="bg-light">
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/a-header :: header"></div>
 
 <div class="d-flex">
     <div th:replace="fragments/menu :: menu"></div>
@@ -17,11 +17,13 @@
         <div class="card mb-4">
             <div class="card-body">
                 Index Admin page
+            </div>
         </div>
+        <div th:include="fragments/chat :: chat"/>
     </div>
 </div>
-
-<script th:replace="fragments/footer :: scripts"></script>
-
 </body>
+<script th:replace="fragments/a-footer :: scripts"></script>
+
+
 </html>

@@ -2,13 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<body>
-</body>
-
     <th:block th:fragment="scripts">
         <script th:src="@{/js/jquery.min.js}"></script>
         <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
         <script th:src="@{/js/bootadmin.min.js}"></script>
+
+        <script th:src="@{/webjars/sockjs-client/1.0.2/sockjs.min.js}"></script>
+        <script th:src="@{/webjars/stomp-websocket/2.3.3/stomp.min.js}"></script>
+        <script sec:authorize="isAuthenticated()" th:src="@{/js/chat.js}"></script>
     </th:block>
 
 </html>

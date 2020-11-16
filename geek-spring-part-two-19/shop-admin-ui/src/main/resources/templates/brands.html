@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="fragments/a-header :: head"></head>
 
 <body class="bg-light">
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/a-header :: header"></div>
 
 <div class="d-flex">
     <div th:replace="fragments/menu :: menu"></div>
@@ -16,8 +16,8 @@
 
         <div class="card mb-4">
 
-            <div class="card-body">
-                <form class="form-group" th:action="@{/brand/create}">
+            <div class="card-body h-100">
+                <form class="form-group" th:action="@{/admin/brand/create}">
                     <button type="submit" class="btn btn-primary">Create new</button>
                 </form>
 
@@ -34,11 +34,11 @@
                         <td th:text="${brand.id}"></td>
                         <td th:text="${brand.name}"></td>
                         <td>
-                            <a th:href="@{/brand/{id}/edit(id=${brand.id})}" class="btn btn-icon btn-pill btn-primary"
+                            <a th:href="@{/admin/brand/{id}/edit(id=${brand.id})}" class="btn btn-icon btn-pill btn-primary"
                                data-toggle="tooltip" title="Edit">
                                 <i class="fa fa-fw fa-edit"></i>
                             </a>
-                            <form th:action="@{/brand/{id}/delete(id=${brand.id})}" th:method="delete" class="d-inline">
+                            <form th:action="@{/admin/brand/{id}/delete(id=${brand.id})}" th:method="delete" class="d-inline">
                                 <button class="btn btn-icon btn-pill btn-danger" data-toggle="tooltip" title="Delete">
                                     <i class="fa fa-fw fa-trash"></i>
                                 </button>
@@ -53,7 +53,7 @@
     </div>
 </div>
 
-<script th:replace="fragments/footer :: scripts"></script>
+<script th:replace="fragments/a-footer :: scripts"></script>
 <script th:src="@{/js/datatables.min.js}"></script>
 <script>
     $(document).ready(function () {

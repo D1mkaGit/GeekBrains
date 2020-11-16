@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="fragments/a-header :: head"></head>
 
 <body class="bg-light">
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/a-header :: header"></div>
 
 <div class="d-flex">
     <div th:replace="fragments/menu :: menu"></div>
@@ -15,7 +15,7 @@
         <h2 class="mb-4" th:if="${edit}" >Edit user</h2>
         <h2 class="mb-4" th:if="${create}" >Create user</h2>
 
-        <form th:object="${user}" method="post" th:action="@{/user}">
+        <form th:object="${user}" method="post" th:action="@{/admin/user}">
             <div class="card mb-4">
                 <div class="card-body">
                     <input th:type="hidden" th:field="*{id}">
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<script th:replace="fragments/footer :: scripts"></script>
+<script th:replace="fragments/a-footer :: scripts"></script>
 
 </body>
 </html>

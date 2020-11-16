@@ -1,6 +1,7 @@
 package ru.geekbrains.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.geekbrains.chat.ChatController;
 import ru.geekbrains.controller.repr.UserRepr;
 import ru.geekbrains.exceptions.NotFoundException;
 import ru.geekbrains.persist.repo.BrandRepository;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@ComponentScan(basePackages = "ru.geekbrains.chat")
 public class MainSiteController {
 
     private final ProductService productService;
@@ -35,13 +38,12 @@ public class MainSiteController {
                               CategoryRepository categoryRepository,
                               BrandRepository brandRepository,
                               UserService userService,
-                              UserAuthService userAuthService) {
+                              UserAuthService userAuthService, ChatController chatController) {
         this.productService = productService;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
         this.userService = userService;
         this.userAuthService = userAuthService;
-
     }
 
     @RequestMapping("/")
@@ -50,6 +52,12 @@ public class MainSiteController {
         model.addAttribute("products", productService.findAll());
         addDefaultAttributes(model);
         return "index";
+    }
+
+    @GetMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("activePage", "Account");
+        return "login";
     }
 
     @RequestMapping("/category/{id}")
@@ -100,7 +108,8 @@ public class MainSiteController {
     @PostMapping("/regguestuser")
     public String mainSiteUpsertUser(@Valid UserRepr user, Model model, BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
-            if (request.getUserPrincipal() == null) return "register"; // возваращаем на регу при ошибке валидации при регистрации
+            if (request.getUserPrincipal() == null)
+                return "register"; // возваращаем на регу при ошибке валидации при регистрации
             else {
                 model.addAttribute("user", userService.findOneByUsername(request.getUserPrincipal().getName())
                         .orElseThrow(NotFoundException::new));
@@ -111,14 +120,13 @@ public class MainSiteController {
         if (request.getUserPrincipal() == null) {// если нието не залогинен, логинем
             userService.saveWithRoleLike(user, "GUEST");
             userAuthService.authWithHttpServletRequest(request, user.getUsername(), user.getPassword());
-        }
-        else {
+        } else {
             userService.save(user);
         }
         return "redirect:/profile";
     }
 
-    private Model addDefaultAttributes(Model model){
+    private Model addDefaultAttributes(Model model) {
         List<Long> catIds = productService.findDistinctCategoryId();
         List<Long> brandIds = productService.findDistinctBrandId();
         model.addAttribute("brands", brandRepository.findByIdIn(brandIds));

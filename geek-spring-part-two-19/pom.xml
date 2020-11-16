@@ -28,6 +28,7 @@
         <module>shop-admin-ui</module>
         <module>shop-ui</module>
         <module>shop-user-service</module>
+        <module>shop-chat-service</module>
     </modules>
 
     <dependencies>

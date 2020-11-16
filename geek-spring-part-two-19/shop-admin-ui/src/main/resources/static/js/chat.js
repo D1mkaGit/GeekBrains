@@ -2,7 +2,7 @@ let stompClient = null;
 let username = 'noname';
 
 function connect() {
-    let socket = new SockJS('/gs-guide-websocket/');
+    let socket = new SockJS('/gs-guide-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
@@ -34,8 +34,7 @@ function sendMessage() {
 
 function buildMessageHtml(username, message, direction) {
     return '<li class="' + (direction ? 'left' : 'right') + ' clearfix"' +
-        'onclick="getElementById(\'btn-input\').value = \'/' + username + ': \';getElementById(\'btn-input\').focus()" ' +
-        'style="cursor: pointer;">' +
+        'onclick="getElementById(\'btn-input\').value = \'/' + username + ': \';getElementById(\'btn-input\').focus()">' +
         '<span class="chat-img ' + (direction ? 'float-left' : 'float-right') + '">' +
         '<img src="http://placehold.it/50/55C1E7/fff&text=' + username.charAt(0) + '" alt="' + username + ' Avatar" class="img-circle"/>' +
         '</span>' +

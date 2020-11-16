@@ -30,9 +30,30 @@ public class ChatController {
             logger.error("No user to send message");
             return;
         }
-        template.convertAndSendToUser(headerAccessor.getUser().getName(), "/chat_out/receive_message",
-                new ChatMessage("Server", "Answer to: " + chatMessage.getMessage()),
+        String receiver = "admin";
+        String msg = chatMessage.getMessage();
+        String firstPartOfMessage = chatMessage.getMessage();
+//        logger.info(firstPartOfMessage);
+
+        if (firstPartOfMessage.matches("^[ /\\\\].*")) {
+            if (firstPartOfMessage.contains(": ")) {
+                String[] parts = firstPartOfMessage.split(": ");
+                receiver = parts[0]
+                        .replace("/", "");
+                msg = parts[1];
+//                logger.info(parts[0]);
+//                logger.info(parts[1]);
+            }
+        }
+//        logger.info(receiver);
+
+        template.convertAndSendToUser(receiver, "/chat_out/receive_message",
+                new ChatMessage(headerAccessor.getUser().getName(), "Say: " + msg),
                 createHeaders(headerAccessor.getSessionId()));
+
+        //template.convertAndSendToUser(headerAccessor.getUser().getName(), "/chat_out/receive_message",
+        //        new ChatMessage("Server", "Answer to: " + chatMessage.getMessage()),
+        //        createHeaders(headerAccessor.getSessionId()));
     }
 
     @GetMapping("/test/message")
