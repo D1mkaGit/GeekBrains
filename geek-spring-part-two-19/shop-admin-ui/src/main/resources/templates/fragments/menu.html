@@ -6,15 +6,15 @@
 
     <div th:fragment="menu" class="sidebar sidebar-dark bg-dark">
         <ul class="list-unstyled">
-            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Users'} ? active"><a th:href="@{/users}">
+            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Users'} ? active"><a th:href="@{/admin/users}">
                 <i class="fa fa-fw fa-link"></i> Users</a></li>
-            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Roles'} ? active"><a th:href="@{/roles}">
+            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Roles'} ? active"><a th:href="@{/admin/roles}">
                 <i class="fa fa-fw fa-link"></i> Roles</a></li>
-            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Categories'} ? active"><a th:href="@{/categories}">
+            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Categories'} ? active"><a th:href="@{/admin/categories}">
                 <i class="fa fa-fw fa-link"></i> Categories</a></li>
-            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Brands'} ? active"><a th:href="@{/brands}">
+            <li sec:authorize="hasRole('ADMIN') or hasRole ('MANAGER')" th:classappend="${activePage == 'Brands'} ? active"><a th:href="@{/admin/brands}">
                 <i class="fa fa-fw fa-link"></i> Brands</a></li>
-            <li th:classappend="${activePage == 'Products'} ? active"><a th:href="@{/products}">
+            <li th:classappend="${activePage == 'Products'} ? active"><a th:href="@{/admin/products}">
                 <i class="fa fa-fw fa-link"></i> Products</a></li>
         </ul>
     </div>

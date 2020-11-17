@@ -34,20 +34,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String showLoginPage(Model model) {
-        model.addAttribute("activePage", "Account");
-        return "login";
-    }
 
-    @GetMapping("/users")
+
+    @GetMapping("/admin/users")
     public String adminUsersPage(Model model) {
         model.addAttribute("activePage", "Users");
         model.addAttribute("users", userService.findAll());
         return "users";
     }
 
-    @GetMapping("/user/{id}/edit")
+    @GetMapping("/admin/user/{id}/edit")
     public String adminEditUser(Model model, @PathVariable("id") Long id) {
         model.addAttribute("edit", true);
         model.addAttribute("activePage", "Users");
@@ -56,7 +52,7 @@ public class UserController {
         return "user_form";
     }
 
-    @GetMapping("/user/create")
+    @GetMapping("/admin/user/create")
     public String adminCreateUser(Model model) {
         model.addAttribute("create", true);
         model.addAttribute("activePage", "Users");
@@ -65,7 +61,7 @@ public class UserController {
         return "user_form";
     }
 
-    @PostMapping("/user")
+    @PostMapping("/admin/user")
     public String adminUpsertUser(@Valid UserRepr user, Model model, BindingResult bindingResult) {
         model.addAttribute("activePage", "Users");
 
@@ -74,13 +70,13 @@ public class UserController {
         }
 
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @DeleteMapping("/user/{id}/delete")
+    @DeleteMapping("/admin/user/{id}/delete")
     public String adminDeleteUser(Model model, @PathVariable("id") Long id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 //
 //    @GetMapping("/roles")

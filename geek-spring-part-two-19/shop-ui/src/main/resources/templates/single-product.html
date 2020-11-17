@@ -42,7 +42,7 @@
 					</div>
 				</div>
 				<div class="col-lg-5 offset-lg-1">
-					<div class="s_product_text">
+					<div class="s_product_text mb-5 mt-1">
 						<h3 th:text="${product.name}">Faded SkyBlu Denim Jeans</h3>
 						<h2><span th:text=="${product.price != 0} ? '£'+${product.price} : 'call'"></h2>
 						<ul class="list">
@@ -53,8 +53,12 @@
 						<p>Mill Oil is an innovative oil filled radiator with the most modern technology. If you are looking for
 							something that can make your interior look awesome, and at the same time give you the pleasant warm feeling
 							during the winter.</p>
-						<div class="product_count">
-							<a class="button primary-btn" href="#">Add to Cart</a>               
+						<div>
+							<form th:action="@{/cart}" th:method="post">
+								<input type="hidden" name="bidPrice" th:with="bidPrice=${product.price + 1}" th:value ="${bidPrice}"/>
+								<input type="hidden" name="productId" th:value="${product.id}">
+								<button type="submit" value="submit" class="button button-hero">Add to Cart</button>
+							</form>
 						</div>
 <!--						<div class="card_area d-flex align-items-center">-->
 <!--							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>-->
@@ -66,6 +70,8 @@
 		</div>
 	</div>
 	<!--================End Single Product Area =================-->
+
+<div th:include="fragments/chat :: chat"/>
 
 <footer class="footer" th:replace="fragments/footer :: footer" />
 

@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.geekbrains.controller.repr.ProductRepr;
 import ru.geekbrains.exceptions.NotFoundException;
@@ -35,14 +32,14 @@ public class ProductController {
         this.brandRepository = brandRepository;
     }
 
-    @GetMapping ("/products")
+    @GetMapping ("/admin/products")
     public String adminProductsPage(Model model) {
         model.addAttribute("activePage", "Products");
         model.addAttribute("products", productService.findAll());
         return "products";
     }
 
-    @GetMapping("/product/{id}/edit")
+    @GetMapping("/admin/product/{id}/edit")
     public String adminEditProduct(Model model, @PathVariable("id") Long id) {
         model.addAttribute("edit", true);
         model.addAttribute("activePage", "Products");
@@ -52,14 +49,14 @@ public class ProductController {
         return "product_form";
     }
 
-    @DeleteMapping("/product/{id}/delete")
+    @DeleteMapping("/admin/product/{id}/delete")
     public String adminDeleteProduct(Model model, @PathVariable("id") Long id) {
         model.addAttribute("activePage", "Products");
         productService.deleteById(id);
-        return "redirect:/products";
+        return "redirect:/admin/products";
     }
 
-    @GetMapping("/product/create")
+    @GetMapping("/admin/product/create")
     public String adminCreateProduct(Model model) {
         model.addAttribute("create", true);
         model.addAttribute("activePage", "Products");
@@ -69,7 +66,7 @@ public class ProductController {
         return "product_form";
     }
 
-    @PostMapping("/product")
+    @PostMapping("/admin/product")
     public String adminUpsertProduct(Model model, RedirectAttributes redirectAttributes, ProductRepr product) {
         model.addAttribute("activePage", "Products");
 
@@ -79,10 +76,10 @@ public class ProductController {
             logger.error("Problem with creating or updating product", ex);
             redirectAttributes.addFlashAttribute("error", true);
             if (product.getId() == null) {
-                return "redirect:/product/create";
+                return "redirect:/admin/product/create";
             }
-            return "redirect:/product/" + product.getId() + "/edit";
+            return "redirect:/admin/product/" + product.getId() + "/edit";
         }
-        return "redirect:/products";
+        return "redirect:/admin/products";
     }
 }

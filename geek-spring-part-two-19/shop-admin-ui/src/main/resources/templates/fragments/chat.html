@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="chat">
+    <div id="chat-window">
+        <div class="card overflow-auto">
+            <div class="card-header">
+                <span class="fa fa-comment"></span> Chat
+                <div class="btn-group float-right">
+                    <a href="#collapseOne"
+                       data-toggle="collapse"
+                       type="button"
+                       class="btn-sm">
+                        <span class="fa fa-chevron-down"></span>
+                    </a>
+                </div>
+            </div>
+            <div id="collapseOne" class="collapse" data-parent="#chat-window">
+                <div class="card-body">
+                    <ul class="chat">
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm"
+                               placeholder="Type your message here..."/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn" id="btn-chat">
+                                Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
