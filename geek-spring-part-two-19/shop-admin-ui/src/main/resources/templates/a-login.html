@@ -12,19 +12,33 @@
             <h1 class="text-center mb-4">BootAdmin</h1>
             <div class="card">
                 <div class="card-body">
-                    <form th:action="@{/admin/doAdminLogin}" method="post">
+                    <form th:action="@{/admin/login}" method="post">
+                        <div>
+                            <div th:if="${param.error} != null">
+                                <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                    Invalid username or password
+                                </div>
+                            </div>
+                            <div th:if="${param.logout} != null">
+                                <div class="alert alert-success col-xs-offset-1 col-xs-10">
+                                    You have been logged out.
+                                </div>
+                            </div>
+                        </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <input type="text" id="inp-username" class="form-control" name="username" placeholder="Username">
+                            <input type="text" id="inp-username" class="form-control" name="username"
+                                   placeholder="Username">
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-key"></i></span>
                             </div>
-                            <input type="password" id="inp-password" class="form-control" name="password" placeholder="Password">
+                            <input type="password" id="inp-password" class="form-control" name="password"
+                                   placeholder="Password">
                         </div>
 
                         <div class="form-check mb-3">
