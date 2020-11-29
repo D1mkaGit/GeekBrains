@@ -5,7 +5,7 @@
 <div th:fragment="product (prod)" class="card text-center card-product">
     <div class="card-product__img">
         <img class="card-img" th:unless="${prod.pictureIds.isEmpty()}"
-             th:src="@{/picture/{pictureId}(pictureId=${prod.pictureIds.get(0)})}" alt="">
+             th:src="@{{pictureServiceUrl}/picture/{pictureId}(pictureId=${prod.pictureIds.get(0)}, pictureServiceUrl=${pictureServiceUrl})}" alt="">
         <ul class="card-product__imgOverlay">
             <li>
                 <button th:onclick="'window.location.href = \'' + @{/product/{prodId}(prodId=${prod.id})} + '\''"><i
@@ -27,7 +27,7 @@
         <p th:text="${prod.category}"></p>
         <h4 class="card-product__title"><a th:href="@{/product/{prodId}(prodId=${prod.id})}" th:text="${prod.name}"></a>
         </h4>
-        <p class="card-product__price"><span th:text=="${prod.price !=0} ? '£'+${prod.price} : 'call'"></span></p>
+        <p class="card-product__price"><span th:text=="${prod.price !=0} ? '£'+${prod.price} : 'call'" /></span></p>
     </div>
 </div>
 

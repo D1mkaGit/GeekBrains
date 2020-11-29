@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService, Serializable {
         return productRepository
                 .findAll()
                 .stream()
-                .map(p -> Long.valueOf(p.getCategory().getId()))
+                .map(p -> p.getCategory().getId())
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService, Serializable {
         return productRepository
                 .findAll()
                 .stream()
-                .map(p -> Long.valueOf(p.getBrand().getId()))
+                .map(p -> p.getBrand().getId())
                 .distinct()
                 .collect(Collectors.toList());
     }

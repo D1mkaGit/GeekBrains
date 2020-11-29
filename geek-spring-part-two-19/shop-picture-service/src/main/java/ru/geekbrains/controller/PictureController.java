@@ -1,5 +1,7 @@
 package ru.geekbrains.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Conditional;
 import ru.geekbrains.service.PictureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.geekbrains.exceptions.NotFoundException;
+import ru.geekbrains.service.PictureServiceConfiguration;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,8 +36,13 @@ public class PictureController {
 
         Optional<String> picture = pictureService.getPictureContentTypeById(pictureId);
         if (picture.isPresent()) {
-            response.setContentType(picture.get());
-            response.getOutputStream().write(pictureService.getPictureDataById(pictureId).get());
+            Optional<byte[]> picData = pictureService.getPictureDataById(pictureId);
+            if (picData.isPresent()) {
+                response.setContentType(picture.get());
+                response.getOutputStream().write(picData.get());
+            } else {
+                throw new NotFoundException();
+            }
         } else {
             throw new NotFoundException();
         }

@@ -37,7 +37,7 @@
 					<div class="owl-carousel owl-theme s_Product_carousel">
 						<div th:each="pic : ${product.pictureIds}" class="single-prd-item">
 							<img class="img-fluid" th:unless="${product.pictureIds.isEmpty()}"
-								 th:src="@{/picture/{pictureId}(pictureId=${pic})}" alt="">
+								 th:src="@{{pictureServiceUrl}/picture/{pictureId}(pictureId=${pic}, pictureServiceUrl=${pictureServiceUrl})}" alt="">
 						</div>
 					</div>
 				</div>

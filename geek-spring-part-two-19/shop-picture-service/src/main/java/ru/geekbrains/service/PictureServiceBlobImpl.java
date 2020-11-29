@@ -12,7 +12,6 @@ public class PictureServiceBlobImpl implements PictureService {
 
     private final PictureRepository pictureRepository;
 
-    @Autowired
     public PictureServiceBlobImpl(PictureRepository pictureRepository) {
         this.pictureRepository = pictureRepository;
     }

@@ -2,11 +2,12 @@ package ru.geekbrains.service;
 
 import ru.geekbrains.controller.repr.UserRepr;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 
-public interface UserService {
+public interface UserService extends Serializable {
 
     void save(UserRepr userRepr);
 

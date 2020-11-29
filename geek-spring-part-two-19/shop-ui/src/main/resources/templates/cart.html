@@ -32,7 +32,7 @@
                                 <div class="col-4">
                                     <a th:href="@{/product/{prodId}(prodId=${lineItem.productRepr.id})}">
                                         <img class="img-thumbnail" th:unless="${lineItem.productRepr.pictureIds.isEmpty()}"
-                                             th:src="@{/picture/{pictureId}(pictureId=${lineItem.productRepr.pictureIds.get(0)})}"
+                                             th:src="@{{pictureServiceUrl}/picture/{pictureId}(pictureId=${lineItem.productRepr.pictureIds.get(0)}, pictureServiceUrl=${pictureServiceUrl})}"
                                              th:alt="${lineItem.productRepr.name}">
                                     </a>
                                 </div>
