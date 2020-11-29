@@ -13,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(2)
+public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private PasswordEncoder passwordEncoder;
 
@@ -39,40 +39,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
                 .antMatchers("/profile/**").authenticated()
+                .antMatchers("/**").permitAll()
 
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/doUserLogin")
+                //.loginProcessingUrl("/doUserLogin")
                 .defaultSuccessUrl("/profile", true)
+                .permitAll()
 
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login")
-                .permitAll();
-    }
+                .logoutSuccessUrl("/login?logout");
 
-    @Configuration
-    @Order(2)
-    public static class SpringSecurityConfig2 extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .authorizeRequests()
-                    .antMatchers("/admin/login").permitAll()
-                    .antMatchers("/admin/**").authenticated()
-
-                    .and()
-                    .formLogin()
-                    .loginPage("/admin/login")
-                    .loginProcessingUrl("/admin/doAdminLogin")
-                    .failureUrl("/admin/login?error=loginError")
-                    .defaultSuccessUrl("/admin/");
-
-        }
+        http.csrf().disable();
     }
 
     public DaoAuthenticationProvider authenticationProvider() {

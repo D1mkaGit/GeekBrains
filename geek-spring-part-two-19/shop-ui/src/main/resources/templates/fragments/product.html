@@ -23,7 +23,7 @@
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="card">
         <p th:text="${prod.category}"></p>
         <h4 class="card-product__title"><a th:href="@{/product/{prodId}(prodId=${prod.id})}" th:text="${prod.name}"></a>
         </h4>
