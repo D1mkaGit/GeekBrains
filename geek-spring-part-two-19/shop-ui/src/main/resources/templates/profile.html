@@ -1,5 +1,5 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/header :: head"></head>
 
@@ -8,50 +8,50 @@
 <header class="header_area" th:replace="fragments/header :: header"></header>
 
 
-	<section class="login_box_area section-margin">
-		<div class="container">
-				<form class="form-contact contact_form" th:object="${user}" method="post" th:action="@{/regguestuser}"
-					  id="profileForm">
-					<input th:type="hidden" th:field="*{id}">
-					<input th:type="hidden" th:field="*{username}">
+<section class="login_box_area section-margin">
+    <div class="container">
+        <form class="form-contact contact_form" th:object="${user}" method="post" th:action="@{/regguestuser}"
+              id="profileForm">
+            <input th:type="hidden" th:field="*{id}">
+            <input th:type="hidden" th:field="*{username}">
 
-					<div class="row justify-content-center align-items-center">
-						<div class="col-10 col-md-8 col-lg-6">
-							<div class="form-group">
-								<label for="username">User name</label>
-								<input class="form-control" th:field="*{username}"
-									   name="username" id="username" type="text" placeholder="Enter your name" required disabled>
-							</div>
-							<div class="form-group">
-								<label for="email">Email</label>
-								<input class="form-control" th:field="*{email}"
-									   name="email" id="email" type="email" placeholder="Enter email address">
-							</div>
-							<div class="form-group">
-								<label for="firstname">First name</label>
-								<input class="form-control" th:field="*{firstName}"
-									   name="firstname" id="firstname" type="text" placeholder="Enter your firstname">
-							</div>
-							<div class="form-group">
-								<label for="lastname">First name</label>
-								<input class="form-control" th:field="*{lastName}"
-									   name="lastname" id="lastname" type="text" placeholder="Enter your lastname">
-							</div>
-							<div class="form-group">
-								<label for="password">Password</label>
-								<input class="form-control" th:field="*{password}"
-									   name="password" id="password" type="password" placeholder="Enter new password" required>
-							</div>
-							<div class="form-group text-center">
-								<button type="submit" class="button button--active button-contactForm">Save profile</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</section>
-	<!--================End Login Box Area =================-->
+            <div class="row justify-content-center align-items-center">
+                <div class="col-10 col-md-8 col-lg-6">
+                    <div class="form-group">
+                        <label for="username">User name</label>
+                        <input class="form-control" th:field="*{username}"
+                               name="username" id="username" type="text" placeholder="Enter your name" required
+                               disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input class="form-control" th:field="*{email}"
+                               name="email" id="email" type="email" placeholder="Enter email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname">First name</label>
+                        <input class="form-control" th:field="*{firstName}"
+                               name="firstname" id="firstname" type="text" placeholder="Enter your firstname">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">First name</label>
+                        <input class="form-control" th:field="*{lastName}"
+                               name="lastname" id="lastname" type="text" placeholder="Enter your lastname">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input class="form-control" th:field="*{password}"
+                               name="password" id="password" type="password" placeholder="Enter new password" required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="button button--active button-contactForm">Save profile</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!--================End Login Box Area =================-->
 
 <div th:include="fragments/chat :: chat"/>
 

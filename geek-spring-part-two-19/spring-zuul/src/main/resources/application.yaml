@@ -1,0 +1,25 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: shop-zuul-proxy
+
+zuul:
+  routes:
+    picture-service:
+      path: /picture-service/**
+      sensitiveHeaders:
+      serviceId: PICTURE-SERVICE
+
+#shop-picture-service:
+#  ribbon:
+#    listOfServers: http://localhost:8082,http://localhost:8087
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    fetchRegistry: true

@@ -34,8 +34,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
-
     @GetMapping("/admin/users")
     public String adminUsersPage(Model model) {
         model.addAttribute("activePage", "Users");
