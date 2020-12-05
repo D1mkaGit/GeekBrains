@@ -24,6 +24,7 @@
 
     <modules>
         <module>shop-common</module>
+        <module>spring-cloud-config</module>
         <module>shop-database</module>
         <module>shop-picture-service</module>
         <module>shop-picture-service-app</module>
@@ -35,8 +36,9 @@
         <module>shop-chat-service-app</module>
         <module>spring-eureka</module>
         <module>spring-zuul</module>
-        <module>spring-cloud-config</module>
         <module>spring-gateway</module>
+        <module>rabbit-mq-sender</module>
+        <module>spring-integration-demo</module>
     </modules>
 
     <dependencies>
