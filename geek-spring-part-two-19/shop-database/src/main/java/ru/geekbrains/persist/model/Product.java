@@ -25,7 +25,6 @@ public class Product {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ToString.Exclude // нужно для lombok, иначе падает редактирование с ошибкой: Product.toString() null и Category.toString() null
     @ManyToOne(optional = false)
     private Category category;
 

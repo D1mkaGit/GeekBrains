@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
     List<Category> findByIdIn(List<Long> categoryIdList);
+
+    Category findCategoryById(Long categoryId);
 }

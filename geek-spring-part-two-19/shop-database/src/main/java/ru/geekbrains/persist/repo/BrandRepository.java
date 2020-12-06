@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long>, JpaSpecificationExecutor<Brand> {
     List<Brand> findByIdIn(List<Long> brandIdList);
+
+    Brand findBrandById(Long brandId);
 }
