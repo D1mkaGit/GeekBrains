@@ -39,6 +39,7 @@
         <module>spring-gateway</module>
         <module>rabbit-mq-sender</module>
         <module>spring-integration-demo</module>
+        <module>spring-integration-product-import-from-csv</module>
     </modules>
 
     <dependencies>
