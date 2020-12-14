@@ -23,23 +23,25 @@
     </properties>
 
     <modules>
-        <module>shop-common</module>
+        <module>spring-eureka</module>
         <module>spring-cloud-config</module>
+        <module>shop-common</module>
         <module>shop-database</module>
         <module>shop-picture-service</module>
         <module>shop-picture-service-app</module>
-        <module>shop-admin-ui</module>
-        <module>shop-ui</module>
         <module>shop-user-service</module>
         <module>shop-user-service-app</module>
         <module>shop-chat-service</module>
         <module>shop-chat-service-app</module>
-        <module>spring-eureka</module>
-        <module>spring-zuul</module>
         <module>spring-gateway</module>
+        <module>shop-ui</module>
+
+        <module>shop-admin-ui</module>
+        <module>spring-zuul</module>
         <module>rabbit-mq-sender</module>
         <module>spring-integration-demo</module>
         <module>spring-integration-product-import-from-csv</module>
+<!--        <module>shop-ui-tests</module>-->
     </modules>
 
     <dependencies>
