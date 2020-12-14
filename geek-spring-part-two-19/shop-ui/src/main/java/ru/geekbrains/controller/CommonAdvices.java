@@ -18,7 +18,7 @@ public class CommonAdvices {
     private final EurekaClient eurekaClient;
 
     @Autowired
-    public CommonAdvices(@Qualifier("eurekaClient") EurekaClient eurekaClient) {
+    public CommonAdvices(EurekaClient eurekaClient) { //@Qualifier("eurekaClient")
         this.eurekaClient = eurekaClient;
     }
 

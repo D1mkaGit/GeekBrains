@@ -63,6 +63,7 @@ public class CartServiceImpl implements CartService {
         return new ArrayList<>(lineItems.keySet());
     }
 
+    //TODO: Need to find how to handle lineItem with bid price // FIXME: 12/13/2020
     @Override
     public void updateCart(LineItem lineItem) {
         lineItems.put(lineItem, lineItem.getBidPrice());

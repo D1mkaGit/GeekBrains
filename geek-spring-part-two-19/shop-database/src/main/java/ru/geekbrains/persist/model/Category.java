@@ -41,5 +41,8 @@ public class Category implements Serializable {
         return Objects.hash(id, name);
     }
 
+    public Category(String name) {
+        this.name = name;
+    }
 }
 

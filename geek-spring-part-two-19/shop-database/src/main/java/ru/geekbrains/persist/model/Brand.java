@@ -1,6 +1,7 @@
 package ru.geekbrains.persist.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,11 +10,12 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(name = "brands")
-public class Brand  implements Serializable {
+public class Brand implements Serializable {
     @Id
     @Column(name = "id")
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(name = "name", unique = true, nullable = false)
@@ -23,4 +25,8 @@ public class Brand  implements Serializable {
     @OneToMany(mappedBy = "brand",
             cascade = CascadeType.ALL)
     List<Product> products;
+
+    public Brand(String name) {
+        this.name = name;
+    }
 }

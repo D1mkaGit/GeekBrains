@@ -36,4 +36,11 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "picture_id"))
     private List<Picture> pictures;
+
+    public Product(String name, BigDecimal price, Category category, Brand brand) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.brand = brand;
+    }
 }

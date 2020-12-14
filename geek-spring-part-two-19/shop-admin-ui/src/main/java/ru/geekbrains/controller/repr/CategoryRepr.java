@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class CategoryRepr implements Serializable {
 
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -23,7 +23,7 @@ public class CategoryRepr implements Serializable {
         this.name = category.getName();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

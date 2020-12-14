@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@ComponentScan(basePackages = "ru.geekbrains.chat")
+@ComponentScan(basePackages = "ru.geekbrains")
 public class MainSiteController {
 
     private final ProductService productService;
