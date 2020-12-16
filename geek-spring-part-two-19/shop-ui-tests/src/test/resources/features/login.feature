@@ -1,8 +1,7 @@
 Feature: Login
 
   Scenario Outline: Successful Login to the admin page and logout after
-    Given I open web browser
-    When I open to admin login page
+    Given I open web browser to admin login page
     And I provide username as "<username>" and password as "<password>"
     And I click on login button
     Then name should be "<name>"
@@ -15,8 +14,7 @@ Feature: Login
       | admin | admin | admin |
 
   Scenario Outline: Successful Login to the user page and logout after
-    Given I open web browser
-    When I open to user login page
+    Given I open web browser to login page
     And I provide username as "<username>" and password as "<password>" on user login page
     And I click on login button on user login page
     Then name should be "<name>" on user page

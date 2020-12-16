@@ -1,34 +1,30 @@
 package ru.geekmarket.steps;
 
 import cucumber.api.java.After;
+import cucumber.api.java.AfterStep;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.geekmarket.DriverInitializer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LoginSteps {
+public class LoginSteps extends TestHelper {
 
-    private WebDriver webDriver = null;
+    private WebDriver webDriver;
 
-    @Given("^I open web browser$")
-    public void iOpenFirefoxBrowser() {
+    @Given("^I open web browser to admin login page$")
+    public void iOpenToLoginHtmlPage() {
         webDriver = DriverInitializer.getDriver();
-    }
-
-    @When("^I open to admin login page$")
-    public void iNavigateToLoginHtmlPage() {
         webDriver.get(DriverInitializer.getProperty("admin.login.url"));
     }
 
-    @When("^I open to user login page$")
-    public void iNavigateToUserLoginHtmlPage() {
+    @Given("^I open web browser to login page$")
+    public void iOpenToUserLoginHtmlPage() {
+        webDriver = DriverInitializer.getDriver();
         webDriver.get(DriverInitializer.getProperty("login.url"));
     }
 
@@ -73,9 +69,7 @@ public class LoginSteps {
 
     @Then("^name should be \"([^\"]*)\" on user page$")
     public void nameShouldBeOnProfilePage(String name) throws Throwable {
-        Thread.sleep(500);
-        WebElement navBarToggle = webDriver.findElement(By.className("navbar-toggler"));
-        if (isClickable(navBarToggle)) navBarToggle.click();
+        expandMenuIfNeeded(webDriver);
         Thread.sleep(500);
         WebElement webElement = webDriver.findElement(By.cssSelector(".dropdown-toggle>span>span"));
         Thread.sleep(500);
@@ -118,6 +112,7 @@ public class LoginSteps {
     public void userLoggedOut() {
         webDriver.findElement(By.id("inp-username"));
         webDriver.findElement(By.id("inp-password"));
+        webDriver.quit();
     }
 
     @Then("^user logged out from profile$")
@@ -125,21 +120,6 @@ public class LoginSteps {
         assertThat(webDriver.findElement(By.cssSelector(".alert-success")).getText()).isEqualTo("You have been logged out.");
         webDriver.findElement(By.id("name")).isDisplayed();
         webDriver.findElement(By.id("password")).isDisplayed();
-    }
-
-    @After
-    public void quitBrowser() {
         webDriver.quit();
     }
-
-    public boolean isClickable(WebElement webElement) {
-        try {
-            WebDriverWait wait = new WebDriverWait(webDriver, 5);
-            wait.until(ExpectedConditions.elementToBeClickable(webElement));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
 }
