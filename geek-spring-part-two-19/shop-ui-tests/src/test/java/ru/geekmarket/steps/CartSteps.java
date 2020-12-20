@@ -46,7 +46,7 @@ public class CartSteps extends TestHelper {
 
     @When("^I click on add to cart button from product page$")
     public void iClickOnAddToCartButtonOnProductPage() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(1000);
         prodName = webDriver.findElement(By.cssSelector("div > h3")).getText();
         prodPrice = webDriver.findElement(By.cssSelector("div > h2 > span")).getText();
         webDriver.findElement(By.cssSelector("div > form > button")).click();
@@ -73,10 +73,6 @@ public class CartSteps extends TestHelper {
         By emptyCartMessageElement = By.cssSelector("h5");
         wait.until(ExpectedConditions.presenceOfElementLocated(emptyCartMessageElement));
         webDriver.findElement(emptyCartMessageElement).getText().equals("Empty cart");
-    }
-
-    @After
-    public void quitBrowser() {
         webDriver.quit();
     }
 }
