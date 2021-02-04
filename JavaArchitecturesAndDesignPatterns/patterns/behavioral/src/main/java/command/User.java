@@ -1,9 +1,9 @@
 package command;
 
 public class User {
-    ReportI genClientsRep;
-    ReportI genAccountingRep;
-    ReportI genGoodsRep;
+    final ReportI genClientsRep;
+    final ReportI genAccountingRep;
+    final ReportI genGoodsRep;
 
     public User(ReportI genClientsRep, ReportI genAccountingRep, ReportI genGoogsRep) {
         this.genClientsRep = genClientsRep;
