@@ -12,6 +12,7 @@
         <module>creational</module>
         <module>structural</module>
         <module>behavioral</module>
+        <module>sytem-paterns1</module>
     </modules>
 
     <properties>
