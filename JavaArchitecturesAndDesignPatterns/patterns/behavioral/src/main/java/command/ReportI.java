@@ -1,5 +1,5 @@
 package command;
 
 public interface ReportI {
-    void Generate();
+    void generate();
 }

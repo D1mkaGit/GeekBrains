@@ -12,14 +12,14 @@ public class User {
     }
 
     void genClientsRep() {
-        genClientsRep.Generate();
+        genClientsRep.generate();
     }
 
     void genAccountingRep() {
-        genAccountingRep.Generate();
+        genAccountingRep.generate();
     }
 
     void genGoodsRep() {
-        genGoodsRep.Generate();
+        genGoodsRep.generate();
     }
 }
