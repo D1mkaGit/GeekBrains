@@ -7,7 +7,7 @@ public class AccountingReport extends Report {
     }
 
     @Override
-    public void Generate() {
+    public void generate() {
         reports.generateAccountingReport();
     }
 }
