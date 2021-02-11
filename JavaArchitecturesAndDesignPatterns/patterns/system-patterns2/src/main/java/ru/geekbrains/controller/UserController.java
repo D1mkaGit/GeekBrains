@@ -1,6 +1,5 @@
 package ru.geekbrains.controller;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +70,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user";
         }
-
-        // TODO реализовать проверку повторного ввода пароля.
-        // TODO Исправить метод bindingResult.rejectValue();
 
         userRepository.save(user);
         return "redirect:/user";
