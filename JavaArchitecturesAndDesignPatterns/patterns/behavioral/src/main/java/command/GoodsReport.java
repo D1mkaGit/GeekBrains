@@ -7,7 +7,7 @@ public class GoodsReport extends Report {
     }
 
     @Override
-    public void Generate() {
+    public void generate() {
         reports.generateGoodsReport();
     }
 }
