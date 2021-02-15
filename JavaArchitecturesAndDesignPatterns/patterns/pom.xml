@@ -13,6 +13,7 @@
         <module>structural</module>
         <module>behavioral</module>
         <module>system-patterns1</module>
+        <module>system-patterns2</module>
     </modules>
 
     <properties>
