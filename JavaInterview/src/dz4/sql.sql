@@ -84,22 +84,47 @@ INSERT INTO `cinema`.`tikets` (`movie_id`, `price`, `movie_time`) VALUES ('3', '
 -- ошибки в расписании (фильмы накладываются друг на друга), отсортированные по возрастанию времени. 
 -- Выводить надо колонки «фильм 1», «время начала», «длительность», «фильм 2», «время начала», «длительность»;
 
-SELECT name, time, duration FROM schedules AS s
-JOIN movies
-ON s.movie_id = movies.id
-WHERE DATE_ADD(time, INTERVAL duration MINUTE) > SOME
-(
-SELECT time FROM schedules
-WHERE time >= s.time
-AND time < DATE_ADD(s.time, INTERVAL duration MINUTE)
-)
-AND time < SOME
-(
-SELECT time FROM schedules
-WHERE time >= s.time
-AND time < DATE_ADD(s.time, INTERVAL duration MINUTE)
-)
-ORDER BY time 
+WITH intervals AS (
+SELECT S.movie_id, 
+S.id as session_id, 
+F.name, 
+S.time as start_time, 
+F.duration,
+DATE_ADD(time, INTERVAL F.duration MINUTE) as end_time
+FROM schedules S 
+INNER JOIN movies F on S.movie_id = F.id)
+SELECT I1.name as "фильм 1", 
+I1.start_time as "время начала", 
+I1.duration as "длительность",
+I2.name as "фильм 2", 
+I2.start_time as "время начала", 
+I2.duration as "длительность"
+FROM intervals I1
+INNER JOIN intervals I2 ON I1.start_time < I2.end_time AND I1.end_time > I2.start_time
+AND I1.session_id != I2.session_id
+AND I2.session_id > I1.session_id
+
+-- перерывы 30 минут и более между фильмами — выводить по уменьшению длительности перерыва. 
+-- Колонки «фильм 1», «время начала», «длительность», «время начала второго фильма», «длительность перерыва»;
+
+WITH intervals AS (
+SELECT S.movie_id, 
+S.id as schedule_id, 
+F.name, 
+S.time as start_time, 
+F.duration,
+DATE_ADD(time, INTERVAL F.duration MINUTE) as end_time
+FROM schedules S 
+INNER JOIN movies F on S.movie_id = F.id)
+SELECT I1.name as "фильм 1", 
+I1.start_time as "время начала", 
+I1.duration as "длительность", -- I1.end_time,
+I2.name as "фильм 2", -- добавил для удобства
+I2.start_time as "время начала второго фильма", -- I2.end_time,
+TIMESTAMPDIFF(MINUTE, I1.end_time, I2.start_time) as "длительность перерыва"
+FROM intervals I1
+INNER JOIN intervals I2 ON I1.end_time < I2.start_time
+order by TIMESTAMPDIFF(MINUTE, I1.end_time, I2.start_time) -- если оставить киилистическое название, то ордер не просходит 
 
 
 
