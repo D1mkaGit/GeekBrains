@@ -3,7 +3,7 @@ package ru.geekbrains;
 import java.util.List;
 
 public class App {
-    static final Integer numberOfDefaultStudents = 10;
+    static final Integer numberOfDefaultStudents = 1000;
 
     public static void main(String[] args) {
 /*        EntityManagerFactory emFactory = new Configuration()
