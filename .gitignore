@@ -1,7 +1,6 @@
 /SaveEcxel/.idea/
-NetworkStorage/java-nio/.idea/misc.xml
-NetworkStorage/java-nio/.idea/modules.xml
-JavaArchitecturesAndDesignPatterns/paterns-lesson3/.idea/compiler.xml
-JavaArchitecturesAndDesignPatterns/paterns-lesson3/.idea/jarRepositories.xml
-JavaArchitecturesAndDesignPatterns/paterns-lesson3/.idea/misc.xml
-JavaArchitecturesAndDesignPatterns/paterns-lesson3/.idea/vcs.xml
+NetworkStorage/java-nio/.idea/
+JavaArchitecturesAndDesignPatterns/paterns-lesson3/.idea/
+NetworkStorage/.idea/
+*.iml
+JavaArchitecturesAndDesignPatterns/.idea/
