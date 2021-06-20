@@ -15,7 +15,7 @@ import javax.validation.Valid;
 public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
     public StudentController(StudentRepository studentRepository) {

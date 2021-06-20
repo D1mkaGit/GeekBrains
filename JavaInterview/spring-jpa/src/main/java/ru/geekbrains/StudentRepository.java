@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class StudentRepository {
 
     // Identity Map
-    private Map<Long, Student> studentMap = new ConcurrentHashMap<>();
+    private final Map<Long, Student> studentMap = new ConcurrentHashMap<>();
 
-    private AtomicLong identity = new AtomicLong(0);
+    private final AtomicLong identity = new AtomicLong(0);
 
     @PostConstruct
     public void init() {
