@@ -24,4 +24,10 @@
         <url-pattern>*.jpeg</url-pattern>
     </servlet-mapping>
 
+    <error-page>
+        <!--        <error-code></error-code>-->
+        <exception-type>ru.geekbrains.NotFoundException</exception-type>
+        <location>/not_found</location>
+    </error-page>
+
 </web-app>
