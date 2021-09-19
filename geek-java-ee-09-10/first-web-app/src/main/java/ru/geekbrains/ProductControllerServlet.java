@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @WebServlet("/product/*")
 public class ProductControllerServlet extends HttpServlet {
 
-    private static final Pattern pathParam = Pattern.compile("\\/(\\d*)$"); // \1231231
+    private static final Pattern pathParam = Pattern.compile("/(\\d*)$"); // \1231231
 
     private ProductRepository productRepository;
 
@@ -30,7 +30,8 @@ public class ProductControllerServlet extends HttpServlet {
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
             req.setAttribute("products", productRepository.findAll());
             getServletContext().getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
-        } if (req.getPathInfo().equals("/new")) {
+        }
+        if (req.getPathInfo().equals("/new")) {
             // TODO
             getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
         } else {
@@ -54,11 +55,15 @@ public class ProductControllerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getCharacterEncoding() == null) {
+            req.setCharacterEncoding("UTF-8");
+        }
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
             String strId = req.getParameter("id");
             try {
-                // TODO
-                Product product = new Product(Long.parseLong(strId),
+                Long id = null;
+                if (!strId.equals("")) id = Long.parseLong(strId);
+                Product product = new Product(id,
                         req.getParameter("name"),
                         new BigDecimal(req.getParameter("price")));
                 productRepository.save(product);
