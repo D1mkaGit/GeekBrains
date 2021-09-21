@@ -13,7 +13,7 @@ public class ProductRepository {
 
     private final Map<Long, Product> productMap = new HashMap<>();
 
-    private AtomicLong identity = new AtomicLong();
+    private final AtomicLong identity = new AtomicLong();
 
     @PostConstruct
     public void init() {
