@@ -1,0 +1,87 @@
+<html lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pp="http://primefaces.org/ui">
+
+<h:head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
+    <title>Product list application</title>
+</h:head>
+
+<h:body>
+
+    <ui:include src="WEB-INF/fragments/navigation.xhtml">
+        <ui:param name="pageName" value="Product"/>
+    </ui:include>
+
+    <div class="container">
+
+        <div class="row py-2">
+            <div class="col-md-3 col-xs-12">
+                <ul class="list-group my-2">
+                    <li class="list-group-item active">Category 1</li>
+                    <li class="list-group-item">Category 2</li>
+                    <li class="list-group-item">Category 3</li>
+                    <li class="list-group-item">Category 4</li>
+                    <li class="list-group-item">Category 5</li>
+                </ul>
+            </div>
+
+            <div class="col-md-9 col-xs-12">
+                <h:form id="productTable">
+                    <h:commandButton value="Add product" styleClass="btn btn-primary my-2"
+                                     action="#{productController.addProduct()}"/>
+
+                    <h:dataTable value="#{productController.findAll()}" var="product"
+                                 styleClass="table table-bordered">
+                        <h:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{product.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{product.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Price</f:facet>
+                            #{product.price}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action</f:facet>
+
+                            <h:commandButton value="Edit" styleClass="btn btn-success mr-2"
+                                             action="#{productController.editProduct(product)}"/>
+                            <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             action="#{productController.deleteProduct(product)}">
+                                <f:ajax event="click" render="productTable"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+</h:body>
+
+</html>

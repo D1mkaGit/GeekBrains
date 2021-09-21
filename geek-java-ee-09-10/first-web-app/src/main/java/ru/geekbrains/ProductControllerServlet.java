@@ -32,7 +32,7 @@ public class ProductControllerServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/WEB-INF/views/products.jsp").forward(req, resp);
         }
         if (req.getPathInfo().equals("/new")) {
-            // TODO
+            req.setAttribute("product", new Product());
             getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
         } else {
             Matcher matcher = pathParam.matcher(req.getPathInfo());
@@ -57,8 +57,8 @@ public class ProductControllerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
             String strId = req.getParameter("id");
+            Long id = null;
             try {
-                Long id = null;
                 if (!strId.equals("")) id = Long.parseLong(strId);
                 Product product = new Product(id,
                         req.getParameter("name"),
