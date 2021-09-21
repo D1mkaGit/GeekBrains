@@ -11,44 +11,39 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">ToDo</a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">List</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<%@include file="navbar.jsp" %>
 
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
             <c:url value="/product" var="productSubmitUrl"/>
-            <form action="${productSubmitUrl}" method="post">
+            <form action="${productSubmitUrl}" method="post" accept-charset="utf-8" onsubmit="return CheckSubmit()">
                 <input value="${requestScope.product.id}" type="hidden" id="id" name="id">
                 <div class="form-group">
-                    <label>Name</label>
-                    <input value="${requestScope.product.name}" type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                    <label for="name">Name</label>
+                    <input value="${requestScope.product.name}" type="text" class="form-control" id="name" name="name"
+                           placeholder="Enter name" required onchange="allowSubmit=true">
                 </div>
                 <div class="form-group">
-                    <label>Price</label>
-                    <input value="${requestScope.product.price}" type="number" class="form-control" id="price" name="price" placeholder="Enter price" >
+                    <label for="price">Price</label>
+                    <input value="${requestScope.product.price}" type="number" class="form-control" id="price"
+                                                      name="price" placeholder="Enter price" required onchange="allowSubmit=true">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="${productSubmitUrl}" type="button" class="btn btn-primary">Back</a>
             </form>
         </div>
     </div>
 </div>
 
-<%@include file="scripts.jsp"%>
+<%@include file="scripts.jsp" %>
+<script>
+    allowSubmit = false;
+    function CheckSubmit(){
+        if(!allowSubmit)alert('Nothing has been changed');
+        return allowSubmit
+    }
+</script>
 
 </body>
 
