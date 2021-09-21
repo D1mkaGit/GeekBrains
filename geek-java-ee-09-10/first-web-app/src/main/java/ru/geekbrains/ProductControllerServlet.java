@@ -55,9 +55,6 @@ public class ProductControllerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getCharacterEncoding() == null) {
-            req.setCharacterEncoding("UTF-8");
-        }
         if (req.getPathInfo() == null || req.getPathInfo().equals("/")) {
             String strId = req.getParameter("id");
             try {
