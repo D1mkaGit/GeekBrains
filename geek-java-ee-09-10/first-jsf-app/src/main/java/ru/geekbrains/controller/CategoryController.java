@@ -6,6 +6,7 @@ import ru.geekbrains.persist.CategoryRepository;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class CategoryController implements Serializable {
         return "category.xhtml?faces-redirect=true";
     }
 
+    @Transactional
     public void deleteCategory(Category category) {
         categoryRepository.delete(category.getId());
     }
