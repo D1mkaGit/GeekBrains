@@ -20,6 +20,12 @@ public class ProductRepository {
                 .getResultList();
     }
 
+    public List<Product> findAllById(long catId) {
+        return em.createQuery("from Product where category_id = :catId", Product.class)
+                .setParameter("catId", catId)
+                .getResultList();
+    }
+
     public Optional<Product> findById(long id) {
         return Optional.ofNullable(em.find(Product.class, id));
     }

@@ -1,5 +1,6 @@
 package ru.geekbrains.service;
 
+import ru.geekbrains.persist.BrandRepository;
 import ru.geekbrains.persist.CategoryRepository;
 import ru.geekbrains.persist.Product;
 import ru.geekbrains.persist.ProductRepository;
@@ -25,19 +26,29 @@ public class ProductService {
     @Inject
     private CategoryRepository categoryRepository;
 
+    @Inject
+    private BrandRepository brandRepository;
+
     @PostConstruct
     public void init() {
         if (productRepository.count() == 0) {
-            productRepository.save(new Product(null, "Product 1", new BigDecimal(100), null));
-            productRepository.save(new Product(null, "Product 2", new BigDecimal(200), null));
-            productRepository.save(new Product(null, "Product 3", new BigDecimal(300), null));
-            productRepository.save(new Product(null, "Продукт 4", new BigDecimal(300), null));
+            productRepository.save(new Product(null, "Product 1", new BigDecimal(100), null, null));
+            productRepository.save(new Product(null, "Product 2", new BigDecimal(200), null, null));
+            productRepository.save(new Product(null, "Product 3", new BigDecimal(300), null, null));
+            productRepository.save(new Product(null, "Продукт 4", new BigDecimal(300), null, null));
         }
     }
 
     @Transactional
     public List<ProductDto> findAll() {
         return productRepository.findAll().stream()
+                .map(ProductService::convert)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProductDto> findAllById(long catId) {
+        return productRepository.findAllById(catId).stream()
                 .map(ProductService::convert)
                 .collect(Collectors.toList());
     }
@@ -53,8 +64,8 @@ public class ProductService {
                 productDto.getId(),
                 productDto.getName(),
                 productDto.getPrice(),
-                categoryRepository.getReference(productDto.getCategoryId())
-        );
+                categoryRepository.getReference(productDto.getCategoryId()),
+                brandRepository.getReference(productDto.getBrandId()));
         return productRepository.save(product);
     }
 
@@ -73,7 +84,9 @@ public class ProductService {
                 prod.getName(),
                 prod.getPrice(),
                 prod.getCategory() != null ? prod.getCategory().getId() : null,
-                prod.getCategory() != null ? prod.getCategory().getName() : null
+                prod.getCategory() != null ? prod.getCategory().getName() : null,
+                prod.getBrand() != null ? prod.getBrand().getId() : null,
+                prod.getBrand() != null ? prod.getBrand().getName() : null
         );
     }
 }

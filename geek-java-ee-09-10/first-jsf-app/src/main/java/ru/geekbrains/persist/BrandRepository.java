@@ -9,11 +9,12 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 @Named
-public class CategoryRepository {
+public class BrandRepository {
 
     @PersistenceContext(unitName = "ds")
     private EntityManager em;
@@ -26,9 +27,9 @@ public class CategoryRepository {
         if (this.count() == 0) {
             try {
                 ut.begin();
-                this.save(new Category(null, "Category 1"));
-                this.save(new Category(null, "Category 2"));
-                this.save(new Category(null, "Category 3"));
+                this.save(new Brand(null, "Band 1"));
+                this.save(new Brand(null, "Brand 2"));
+                this.save(new Brand(null, "Brand 3"));
                 ut.commit();
             } catch (Exception ex) {
                 try {
@@ -40,37 +41,37 @@ public class CategoryRepository {
         }
     }
 
-    public List<Category> findAll() {
-        return em.createQuery("from Category ", Category.class)
+    public List<Brand> findAll() {
+        return em.createQuery("from Brand ", Brand.class)
                 .getResultList();
     }
 
-    public Optional<Category> findById(long id) {
-        return Optional.ofNullable(em.find(Category.class, id));
+    public Optional<Brand> findById(long id) {
+        return Optional.ofNullable(em.find(Brand.class, id));
     }
 
-    public Category getReference(Long id) {
-        return em.getReference(Category.class, id);
+    public Brand getReference(Long id) {
+        return em.getReference(Brand.class, id);
     }
 
     @Transactional
-    public Category save(Category category) {
-        if (category.getId() == null) {
-            em.persist(category);
-            return category;
+    public Brand save(Brand brand) {
+        if (brand.getId() == null) {
+            em.persist(brand);
+            return brand;
         }
-        return em.merge(category);
+        return em.merge(brand);
     }
 
     @Transactional
     public void delete(long id) {
-        em.createQuery("delete from Category where id = :id")
+        em.createQuery("delete from Brand where id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
     }
 
     public long count() {
-        return em.createQuery("select count(*) from Category ", Long.class)
+        return em.createQuery("select count(*) from Brand ", Long.class)
                 .getSingleResult();
     }
 }
