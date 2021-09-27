@@ -1,0 +1,45 @@
+<html lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pp="http://primefaces.org/ui"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:include src="WEB-INF/fragments/head.xhtml">
+    <ui:param name="titleName" value="Brand form"/>
+</ui:include>
+
+<h:body>
+
+    <ui:include src="WEB-INF/fragments/navigation.xhtml">
+        <ui:param name="pageName" value="Brand"/>
+    </ui:include>
+
+    <div class="container">
+        <div class="row py-2">
+            <div class="col-12">
+                <h:form>
+                    <div class="form-group">
+                        <h:outputLabel value="Name"/>
+                        <h:inputText styleClass="form-control" id="name"
+                                     value="#{brandController.brand.name}"
+                                     placeholder="Enter name"
+                                     validatorMessage="Name cannot be empty">
+                        <f:validateRequired/>
+                        </h:inputText>
+                        <h:message for="name" style="color:red" />
+                    </div>
+
+                    <h:commandButton value="Submit" styleClass="btn btn-primary"
+                                     action="#{brandController.saveBrand()}"/>
+
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+    <ui:include src="WEB-INF/fragments/scripts.xhtml"/>
+
+</h:body>
+
+</html>

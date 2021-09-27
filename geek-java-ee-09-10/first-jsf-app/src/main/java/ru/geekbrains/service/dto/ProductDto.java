@@ -14,15 +14,21 @@ public class ProductDto {
 
     private String categoryName;
 
+    private Long brandId;
+
+    private String brandName;
+
     public ProductDto() {
     }
 
-    public ProductDto(Long id, String name, BigDecimal price, Long categoryId, String categoryName) {
+    public ProductDto(Long id, String name, BigDecimal price, Long categoryId, String categoryName, Long brandId, String brandName) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.brandId = brandId;
+        this.brandName = brandName;
     }
 
     public Long getId() {
@@ -63,5 +69,21 @@ public class ProductDto {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 }

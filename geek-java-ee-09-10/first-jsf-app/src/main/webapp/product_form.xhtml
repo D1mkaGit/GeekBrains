@@ -50,6 +50,17 @@
                                            itemLabelEscaped="true"/>
                         </h:selectOneListbox>
                     </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Brand"/>
+                        <h:selectOneListbox size="1" styleClass="form-control" id="productBrand"
+                                            value="#{productController.product.brandId}">
+                            <f:selectItems value="#{productController.brands}"
+                                           var="brnd"
+                                           itemValue="#{brnd.id}"
+                                           itemLabel="#{brnd.name}"
+                                           itemLabelEscaped="true"/>
+                        </h:selectOneListbox>
+                    </div>
 
                     <h:commandButton value="Submit" styleClass="btn btn-primary"
                                      action="#{productController.saveProduct()}"/>
