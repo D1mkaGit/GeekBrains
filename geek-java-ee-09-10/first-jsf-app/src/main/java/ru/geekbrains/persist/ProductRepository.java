@@ -1,44 +1,53 @@
 package ru.geekbrains.persist;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 @Named
 public class ProductRepository {
 
-    private final Map<Long, Product> productMap = new HashMap<>();
-
-    private final AtomicLong identity = new AtomicLong();
-
-    @PostConstruct
-    public void init() {
-        this.save(new Product(null, "Product 1", new BigDecimal(100)));
-        this.save(new Product(null, "Product 2", new BigDecimal(200)));
-        this.save(new Product(null, "Product 3", new BigDecimal(300)));
-        this.save(new Product(null, "Продукт 4", new BigDecimal(300)));
-    }
+    @PersistenceContext(unitName = "ds")
+    private EntityManager em;
 
     public List<Product> findAll() {
-        return new ArrayList<>(productMap.values());
+        return em.createQuery("from Product", Product.class)
+                .getResultList();
+    }
+
+    public List<Product> findAllById(long catId) {
+        return em.createQuery("from Product where category_id = :catId", Product.class)
+                .setParameter("catId", catId)
+                .getResultList();
     }
 
     public Optional<Product> findById(long id) {
-        return Optional.ofNullable(productMap.get(id));
+        return Optional.ofNullable(em.find(Product.class, id));
     }
 
+    @Transactional
     public Product save(Product product) {
         if (product.getId() == null) {
-            product.setId(identity.incrementAndGet());
+            em.persist(product);
+            return product;
         }
-        return productMap.put(product.getId(), product);
+        return em.merge(product);
     }
 
+    @Transactional
     public void delete(long id) {
-        productMap.remove(id);
+        em.createQuery("delete from Product where id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    public long count() {
+        return em.createQuery("select count(*) from Product", Long.class)
+                .getSingleResult();
     }
 }

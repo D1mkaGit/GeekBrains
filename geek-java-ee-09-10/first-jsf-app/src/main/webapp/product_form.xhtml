@@ -39,6 +39,28 @@
                         </h:inputText>
                         <h:message for="price" style="color:red" />
                     </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Category"/>
+                        <h:selectOneListbox size="1" styleClass="form-control" id="productCategory"
+                                            value="#{productController.product.categoryId}">
+                            <f:selectItems value="#{productController.categories}"
+                                           var="cat"
+                                           itemValue="#{cat.id}"
+                                           itemLabel="#{cat.name}"
+                                           itemLabelEscaped="true"/>
+                        </h:selectOneListbox>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Brand"/>
+                        <h:selectOneListbox size="1" styleClass="form-control" id="productBrand"
+                                            value="#{productController.product.brandId}">
+                            <f:selectItems value="#{productController.brands}"
+                                           var="brnd"
+                                           itemValue="#{brnd.id}"
+                                           itemLabel="#{brnd.name}"
+                                           itemLabelEscaped="true"/>
+                        </h:selectOneListbox>
+                    </div>
 
                     <h:commandButton value="Submit" styleClass="btn btn-primary"
                                      action="#{productController.saveProduct()}"/>

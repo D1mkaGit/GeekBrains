@@ -1,11 +1,18 @@
 package ru.geekbrains.controller;
 
-import ru.geekbrains.persist.Product;
-import ru.geekbrains.persist.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.geekbrains.persist.Brand;
+import ru.geekbrains.persist.BrandRepository;
+import ru.geekbrains.persist.Category;
+import ru.geekbrains.persist.CategoryRepository;
+import ru.geekbrains.service.ProductService;
+import ru.geekbrains.service.dto.ProductDto;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,39 +20,80 @@ import java.util.List;
 @Named
 public class ProductController implements Serializable {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
     @Inject
-    private ProductRepository productRepository;
+    private ProductService productService;
 
-    private Product product;
+    @Inject
+    private CategoryRepository categoryRepository;
 
-    public Product getProduct() {
+    @Inject
+    private BrandRepository brandRepository;
+
+    @Inject
+    private HttpServletRequest request;
+
+    private List<ProductDto> products;
+
+    private List<Category> categories;
+
+    private List<Brand> brands;
+
+    private ProductDto product;
+
+    public void preloadData() {
+        String catId = request.getParameter("categoryId");
+        logger.info("categoryId param {}", catId);
+        if (catId == null || catId.isBlank()) {
+            this.products = productService.findAll();
+        } else {
+            this.products = productService.findAllById(Long.parseLong(catId));
+        }
+        this.categories = categoryRepository.findAll();
+        this.brands = brandRepository.findAll();
+    }
+
+    public ProductDto getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductDto product) {
         this.product = product;
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public List<ProductDto> findAll() {
+        return products;
     }
 
-    public String editProduct(Product product) {
+    public String editProduct(ProductDto product) {
         this.product = product;
         return "/product_form.xhtml?faces-redirect=true";
     }
 
     public String addProduct() {
-        this.product = new Product();
+        this.product = new ProductDto();
         return "/product_form.xhtml?faces-redirect=true";
     }
 
     public String saveProduct() {
-        productRepository.save(product);
+        productService.save(product);
         return "/product.xhtml?faces-redirect=true";
     }
 
-    public void deleteProduct(Product product) {
-        productRepository.delete(product.getId());
+    public void deleteProduct(ProductDto product) {
+        productService.delete(product.getId());
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public List<Brand> getBrands() {
+        return brands;
+    }
+
+    public HttpServletRequest getRequest() {
+        return request;
     }
 }

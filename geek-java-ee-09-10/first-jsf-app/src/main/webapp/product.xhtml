@@ -2,13 +2,15 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:pp="http://primefaces.org/ui">
+>
 
 <ui:include src="WEB-INF/fragments/head.xhtml">
     <ui:param name="titleName" value="Product list application"/>
 </ui:include>
 
 <h:body>
+
+    <f:event listener="#{productController.preloadData}" type="preRenderView"></f:event>
 
     <ui:include src="WEB-INF/fragments/navigation.xhtml">
         <ui:param name="pageName" value="Product"/>
@@ -18,13 +20,18 @@
 
         <div class="row py-2">
             <div class="col-md-3 col-xs-12">
-                <ul class="list-group my-2">
-                    <!--<li class="list-group-item active">Category 1</li>-->
-                    <ui:repeat value="#{categoryController.findAll()}" var="category">
-                        <li class="list-group-item #{category.id == 1 ? 'active' : ''}">
-                            <h:outputText value="#{category.name}"/></li>
-                    </ui:repeat>
-                </ul>
+
+                <h:link styleClass="list-group-item list-group-item-action
+                #{request.getParameter('categoryId') == null || request.getParameter('categoryId').equals('')  ? 'active' : ''}"
+                        value="All Products" outcome="/product">
+                </h:link>
+                <ui:repeat value="#{productController.categories}" var="cat">
+                    <h:link styleClass="list-group-item list-group-item-action #{cat.id == request.getParameter('categoryId') ? 'active' : ''}"
+                            value="#{cat.name}" outcome="/product">
+                        <f:param name="categoryId" value="#{cat.id}"/>
+                    </h:link>
+                </ui:repeat>
+
             </div>
 
             <div class="col-md-9 col-xs-12">
@@ -45,6 +52,14 @@
                         <h:column>
                             <f:facet name="header">Price</f:facet>
                             #{product.price}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Category</f:facet>
+                            #{product.categoryName}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Brand</f:facet>
+                            #{product.brandName}
                         </h:column>
                         <h:column>
                             <f:facet name="header">Action</f:facet>
