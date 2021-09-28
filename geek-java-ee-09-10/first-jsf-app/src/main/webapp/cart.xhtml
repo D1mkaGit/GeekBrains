@@ -1,0 +1,24 @@
+<html lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pp="http://primefaces.org/ui">
+
+<ui:include src="WEB-INF/fragments/head.xhtml">
+    <ui:param name="titleName" value="Cart"/>
+</ui:include>
+
+<h:body>
+
+    <ui:include src="WEB-INF/fragments/navigation.xhtml">
+        <ui:param name="pageName" value="Cart"/>
+    </ui:include>
+
+    <div class="container">
+        Cart
+    </div>
+
+    <ui:include src="WEB-INF/fragments/scripts.xhtml"/>
+</h:body>
+
+</html>

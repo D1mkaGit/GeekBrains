@@ -2,24 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>geek-java-ee-09-10</artifactId>
+        <groupId>ru.geekbrains</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.geekbrains</groupId>
-    <artifactId>geek-java-ee-09-10</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <artifactId>product-api</artifactId>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
-        <maven.compier.target>11</maven.compier.target>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
-    <modules>
-        <module>first-web-app</module>
-        <module>first-jsf-app</module>
-        <module>product-api</module>
-        <module>client</module>
-    </modules>
-
 
 </project>

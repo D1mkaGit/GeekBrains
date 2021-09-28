@@ -1,44 +1,17 @@
 package ru.geekbrains.persist;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.SystemException;
-import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-@ApplicationScoped
-@Named
+@Stateless
 public class CategoryRepository {
 
     @PersistenceContext(unitName = "ds")
     private EntityManager em;
-
-    @Resource
-    private UserTransaction ut;
-
-    @PostConstruct
-    public void init() {
-        if (this.count() == 0) {
-            try {
-                ut.begin();
-                this.save(new Category(null, "Category 1"));
-                this.save(new Category(null, "Category 2"));
-                this.save(new Category(null, "Category 3"));
-                ut.commit();
-            } catch (Exception ex) {
-                try {
-                    ut.rollback();
-                } catch (SystemException exx) {
-                    throw new RuntimeException(exx);
-                }
-            }
-        }
-    }
 
     public List<Category> findAll() {
         return em.createQuery("from Category ", Category.class)
@@ -53,7 +26,7 @@ public class CategoryRepository {
         return em.getReference(Category.class, id);
     }
 
-    @Transactional
+    @TransactionAttribute
     public Category save(Category category) {
         if (category.getId() == null) {
             em.persist(category);
@@ -62,7 +35,7 @@ public class CategoryRepository {
         return em.merge(category);
     }
 
-    @Transactional
+    @TransactionAttribute
     public void delete(long id) {
         em.createQuery("delete from Category where id = :id")
                 .setParameter("id", id)

@@ -9,6 +9,7 @@ import ru.geekbrains.persist.CategoryRepository;
 import ru.geekbrains.service.ProductService;
 import ru.geekbrains.service.dto.ProductDto;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,13 +23,13 @@ public class ProductController implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-    @Inject
+    @EJB
     private ProductService productService;
 
-    @Inject
+    @EJB
     private CategoryRepository categoryRepository;
 
-    @Inject
+    @EJB
     private BrandRepository brandRepository;
 
     @Inject
@@ -48,7 +49,7 @@ public class ProductController implements Serializable {
         if (catId == null || catId.isBlank()) {
             this.products = productService.findAll();
         } else {
-            this.products = productService.findAllById(Long.parseLong(catId));
+            this.products = productService.findByCategoryId(Long.parseLong(catId));
         }
         this.categories = categoryRepository.findAll();
         this.brands = brandRepository.findAll();
