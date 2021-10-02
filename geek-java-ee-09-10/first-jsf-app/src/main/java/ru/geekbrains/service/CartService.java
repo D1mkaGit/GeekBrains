@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Stateful
 public class CartService {
 
     private final Map<LineItem, Integer> lineItems = new HashMap<>();
+
+    private AtomicLong identity = new AtomicLong();
 
     public List<LineItem> findAll() {
         lineItems.forEach(LineItem::setQty);
@@ -20,11 +23,10 @@ public class CartService {
     }
 
     public void addToCart(ProductDto product, Integer qty) {
-        // TODO
+        lineItems.put(new LineItem(product, qty, product.getPrice()), Math.toIntExact(identity.incrementAndGet()));
     }
 
-    public void removeProduct(ProductDto product) {
-        // TODO
+    public void removeProduct(LineItem lineItem) {
+        this.lineItems.remove(lineItem);
     }
-
 }

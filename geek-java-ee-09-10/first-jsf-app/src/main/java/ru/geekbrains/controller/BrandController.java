@@ -3,8 +3,8 @@ package ru.geekbrains.controller;
 import ru.geekbrains.persist.Brand;
 import ru.geekbrains.persist.BrandRepository;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @Named
 public class BrandController implements Serializable {
 
-    @Inject
+    @EJB
     private BrandRepository brandRepository;
 
     private Brand brand;

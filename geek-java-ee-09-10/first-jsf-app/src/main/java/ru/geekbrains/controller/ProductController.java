@@ -29,7 +29,7 @@ public class ProductController implements Serializable {
     @EJB
     private CategoryRepository categoryRepository;
 
-    @Inject
+    @EJB
     private BrandRepository brandRepository;
 
     @Inject
