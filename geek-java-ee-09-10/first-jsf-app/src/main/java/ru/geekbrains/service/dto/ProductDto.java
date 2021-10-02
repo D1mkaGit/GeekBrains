@@ -1,6 +1,7 @@
 package ru.geekbrains.service.dto;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class ProductDto {
 
@@ -85,5 +86,24 @@ public class ProductDto {
 
     public void setBrandName(String brandName) {
         this.brandName = brandName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDto that = (ProductDto) o;
+        return id.equals(that.id) &&
+                name.equals(that.name) &&
+                price.equals(that.price) &&
+                Objects.equals(categoryId, that.categoryId) &&
+                Objects.equals(categoryName, that.categoryName) &&
+                Objects.equals(brandId, that.brandId) &&
+                Objects.equals(brandName, that.brandName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, categoryId, categoryName, brandId, brandName);
     }
 }

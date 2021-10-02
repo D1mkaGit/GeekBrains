@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @SessionScoped
@@ -21,11 +22,19 @@ public class CartController implements Serializable {
         return cartService.findAll();
     }
 
-    public void addToCart(ProductDto product) {
-        cartService.addToCart(product, 1);
+    public void addSingleProductToCart(ProductDto product) {
+        addQtyOfProductsToCart(product, 1);
+    }
+
+    public void addQtyOfProductsToCart(ProductDto product, int qty) {
+        cartService.addToCart(product, qty);
     }
 
     public void removeFromCart(LineItem lineItem){
         cartService.removeProduct(lineItem);
+    }
+
+    public BigDecimal getTotalCartPrice(){
+        return cartService.getTotalCartPrice();
     }
 }
