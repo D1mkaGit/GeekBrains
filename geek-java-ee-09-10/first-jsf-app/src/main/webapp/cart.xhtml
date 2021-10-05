@@ -2,7 +2,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:pp="http://primefaces.org/ui">
+>
 
 <ui:include src="WEB-INF/fragments/head.xhtml">
     <ui:param name="titleName" value="Cart"/>
@@ -15,7 +15,42 @@
     </ui:include>
 
     <div class="container">
-        Cart
+        <div class="col-md-9 col-xs-12">
+            <h:form id="cartTable">
+
+                <h:dataTable value="#{cartController.findAll()}" var="lineItem"
+                             styleClass="table table-bordered">
+                    <h:column>
+                        <f:facet name="header">Name</f:facet>
+                        #{lineItem.product.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Qty</f:facet>
+                        #{lineItem.qty}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Product Price</f:facet>
+                        #{lineItem.price}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Total Price</f:facet>
+                        #{lineItem.price*lineItem.qty}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Action</f:facet>
+
+                        <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                         action="#{cartController.removeFromCart(lineItem)}">
+                            <f:ajax event="click" render="cartTable"/>
+                        </h:commandButton>
+
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+
+            Total: #{cartController.totalCartPrice}
+
+        </div>
     </div>
 
     <ui:include src="WEB-INF/fragments/scripts.xhtml"/>

@@ -9,7 +9,6 @@ import ru.geekbrains.persist.ProductRepository;
 import ru.geekbrains.service.dto.ProductDto;
 
 import javax.ejb.*;
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote 
     @EJB
     private CategoryRepository categoryRepository;
 
-    @Inject
+    @EJB
     private BrandRepository brandRepository;
 
     public List<ProductDto> findAll() {

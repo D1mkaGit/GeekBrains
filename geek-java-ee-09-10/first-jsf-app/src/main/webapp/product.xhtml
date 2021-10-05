@@ -66,9 +66,12 @@
 
                             <h:commandButton value="Edit" styleClass="btn btn-success mr-2"
                                              action="#{productController.editProduct(product)}"/>
-                            <h:commandButton value="Delete" styleClass="btn btn-danger"
+                            <h:commandButton value="Delete" styleClass="btn btn-danger mr-2"
                                              action="#{productController.deleteProduct(product)}">
                                 <f:ajax event="click" render="productTable"/>
+                            </h:commandButton>
+                            <h:commandButton value="Add to cart" styleClass="btn btn-warning"
+                                             action="#{cartController.addSingleProductToCart(product)}">
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>

@@ -13,10 +13,10 @@ public class LineItem {
 
     private BigDecimal price;
 
-    public LineItem(ProductDto product, Integer qty, BigDecimal price) {
+    public LineItem(ProductDto product, Integer qty) {
         this.product = product;
         this.qty = qty;
-        this.price = price;
+        this.price = product.getPrice();
         this.productId = product.getId();
     }
 
