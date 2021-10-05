@@ -1,0 +1,39 @@
+GET http://localhost:8080/first-jsf-app/api/v1/product
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/product/3
+
+###
+
+POST http://localhost:8080/first-jsf-app/api/v1/product
+Content-Type: application/json
+
+{
+  "brandId": 2,
+  "brandName": "Brand 2",
+  "categoryId": 5,
+  "categoryName": "Category 2",
+  "id": null,
+  "name": "Product 4",
+  "price": 444.00
+}
+
+###
+
+PUT http://localhost:8080/first-jsf-app/api/v1/product
+Content-Type: application/json
+
+{
+  "brandId": 2,
+  "brandName": "Brand 2",
+  "categoryId": 5,
+  "categoryName": "Category 2",
+  "id": 8,
+  "name": "Product 4 changed",
+  "price": 3333.00
+}
+
+###
+
+DELETE http://localhost:8080/first-jsf-app/api/v1/product/7

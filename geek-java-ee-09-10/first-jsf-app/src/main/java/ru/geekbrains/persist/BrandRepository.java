@@ -1,15 +1,9 @@
 package ru.geekbrains.persist;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.SystemException;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 import java.util.List;
 import java.util.Optional;
 

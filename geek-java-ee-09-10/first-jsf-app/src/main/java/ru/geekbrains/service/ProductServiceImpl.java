@@ -6,6 +6,7 @@ import ru.geekbrains.persist.BrandRepository;
 import ru.geekbrains.persist.CategoryRepository;
 import ru.geekbrains.persist.Product;
 import ru.geekbrains.persist.ProductRepository;
+import ru.geekbrains.rest.ProductResource;
 import ru.geekbrains.service.dto.ProductDto;
 
 import javax.ejb.*;
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 
 @Stateless
 @Remote(ProductServiceRemote.class)
-@Local(ProductService.class)
-public class ProductServiceImpl implements ProductService, ProductServiceRemote {
+@Local({ProductService.class, ProductResource.class})
+public class ProductServiceImpl implements ProductService, ProductServiceRemote, ProductResource {
 
     @EJB
     private ProductRepository productRepository;
@@ -44,6 +45,11 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote 
                 .map(ProductServiceImpl::convert);
     }
 
+    public ProductDto findByIdOrException(long id) {
+        return findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+    }
+
     @TransactionAttribute
     public Product save(ProductDto productDto) {
         Product product = new Product(
@@ -54,6 +60,34 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote 
                 brandRepository.getReference(productDto.getBrandId())
         );
         return productRepository.save(product);
+    }
+
+    public ProductDto update(ProductDto productDto) {
+        if (productDto.getId() == null) {
+            throw new RuntimeException("Id shouldn't be null for new Product");
+        }
+        Product saved = this.save(productDto);
+        return new ProductDto(saved.getId(),
+                saved.getName(),
+                saved.getPrice(),
+                saved.getCategory().getId(),
+                saved.getCategory().getName(),
+                saved.getBrand().getId(),
+                saved.getBrand().getName());
+    }
+
+    public ProductDto insert(ProductDto productDto) {
+        if (productDto.getId() != null) {
+            throw new RuntimeException("Id should be null for new Product");
+        }
+        Product saved = this.save(productDto);
+        return new ProductDto(saved.getId(),
+                saved.getName(),
+                saved.getPrice(),
+                saved.getCategory().getId(),
+                saved.getCategory().getName(),
+                saved.getBrand().getId(),
+                saved.getBrand().getName());
     }
 
     @TransactionAttribute
