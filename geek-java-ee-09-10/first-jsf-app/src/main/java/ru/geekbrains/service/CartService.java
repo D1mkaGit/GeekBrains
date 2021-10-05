@@ -20,20 +20,13 @@ public class CartService {
     private final AtomicLong identity = new AtomicLong();
 
     public List<LineItem> findAll() {
+        lineItems.forEach(LineItem::setQty);
         return new ArrayList<>(lineItems.keySet());
     }
 
     public void addToCart(ProductDto product, Integer qty) {
-        AtomicBoolean foundLineItemInCart = new AtomicBoolean(false);
-        lineItems.forEach(
-                (k, v) -> {
-                    if (k.getProduct().equals(product)) {
-                        k.setQty(k.getQty() + 1);
-                        foundLineItemInCart.set(true);
-                    }
-                });
-        if (!foundLineItemInCart.get())
-            lineItems.put(new LineItem(product, qty, product.getPrice()), Math.toIntExact(identity.incrementAndGet()));
+        LineItem lineItem = new LineItem(product, qty);
+        lineItems.put(lineItem, lineItems.getOrDefault(lineItem, 0) + qty);
     }
 
     public void removeProduct(LineItem lineItem) {
