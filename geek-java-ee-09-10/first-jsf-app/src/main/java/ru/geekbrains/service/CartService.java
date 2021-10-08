@@ -1,8 +1,10 @@
 package ru.geekbrains.service;
 
+import ru.geekbrains.rest.CartResource;
 import ru.geekbrains.service.dto.LineItem;
 import ru.geekbrains.service.dto.ProductDto;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,7 +14,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Stateful
-public class CartService {
+@LocalBean
+public class CartService implements CartResource {
 
     private final Map<LineItem, Integer> lineItems = new HashMap<>();
 

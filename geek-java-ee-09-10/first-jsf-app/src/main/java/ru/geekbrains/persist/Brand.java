@@ -2,6 +2,7 @@ package ru.geekbrains.persist;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "brands")
@@ -13,7 +14,7 @@ public class Brand {
     @Column(length = 128, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     private List<Product> products;
 
     public Brand() {
@@ -22,6 +23,12 @@ public class Brand {
     public Brand(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Brand(Long id, String name, List<Product> products) {
+        this.id = id;
+        this.name = name;
+        this.products = products;
     }
 
     public Long getId() {
@@ -46,5 +53,20 @@ public class Brand {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Brand brand = (Brand) o;
+        return id.equals(brand.id) &&
+                name.equals(brand.name) &&
+                Objects.equals(products, brand.products);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, products);
     }
 }
