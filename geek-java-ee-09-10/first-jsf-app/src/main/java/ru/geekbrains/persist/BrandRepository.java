@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
-@LocalBean
-public class BrandRepository implements BrandResource{
+public class BrandRepository{
 
     @PersistenceContext(unitName = "ds")
     private EntityManager em;
@@ -26,10 +25,6 @@ public class BrandRepository implements BrandResource{
         return Optional.ofNullable(em.find(Brand.class, id));
     }
 
-    public Brand findByIdOrException(long id) {
-        return findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
-    }
 
     public Brand getReference(Long id) {
         return em.getReference(Brand.class, id);

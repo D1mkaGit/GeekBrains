@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
-@LocalBean
-public class CategoryRepository implements CategoryResource {
+public class CategoryRepository {
 
     @PersistenceContext(unitName = "ds")
     private EntityManager em;

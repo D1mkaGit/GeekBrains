@@ -1,6 +1,7 @@
 package ru.geekbrains.rest;
 
 import ru.geekbrains.persist.Brand;
+import ru.geekbrains.service.dto.BrandDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,22 +12,22 @@ public interface BrandResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Brand> findAll();
+    List<BrandDto> findAll();
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Brand findByIdOrException(@PathParam("id") long id);
+    BrandDto findByIdOrException(@PathParam("id") long id);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Brand insert(Brand brand);
+    BrandDto insert(BrandDto brand);
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Brand update(Brand brand);
+    BrandDto update(BrandDto brand);
 
     @DELETE
     @Path("/{id}")

@@ -1,6 +1,7 @@
 package ru.geekbrains.rest;
 
 import ru.geekbrains.persist.Category;
+import ru.geekbrains.service.dto.CategoryDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -11,22 +12,22 @@ public interface CategoryResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Category> findAll();
+    List<CategoryDto> findAll();
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Category findByIdOrException(@PathParam("id") long id);
+    CategoryDto findByIdOrException(@PathParam("id") long id);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Category insert(Category category);
+    CategoryDto insert(CategoryDto category);
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Category update(Category category);
+    CategoryDto update(CategoryDto category);
 
     @DELETE
     @Path("/{id}")
