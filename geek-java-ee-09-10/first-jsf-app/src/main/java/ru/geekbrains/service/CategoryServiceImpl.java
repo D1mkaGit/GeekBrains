@@ -20,8 +20,9 @@ public class CategoryServiceImpl implements CategoryService, CategoryResource {
     @EJB
     private CategoryRepository categoryRepository;
 
+    @Override
     public List<CategoryDto> findAll() {
-        return categoryRepository.findAll().stream()
+        return categoryRepository.findAllWithProducts().stream()
                 .map(CategoryServiceImpl::convert)
                 .collect(Collectors.toList());
     }
@@ -75,7 +76,10 @@ public class CategoryServiceImpl implements CategoryService, CategoryResource {
     private static CategoryDto convert(Category category) {
         return new CategoryDto(
                 category.getId(),
-                category.getName()
+                category.getName(),
+                category.getProducts().stream()
+                        .map(ProductServiceImpl::convert)
+                        .collect(Collectors.toList())
         );
     }
 }

@@ -7,7 +7,7 @@ public class LineItem {
 
     private ProductDto product;
 
-    private Long productId;
+    private final Long productId;
 
     private Integer qty;
 

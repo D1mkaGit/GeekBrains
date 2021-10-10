@@ -30,11 +30,17 @@ public class CartController implements Serializable {
         cartService.addToCart(product, qty);
     }
 
-    public void removeFromCart(LineItem lineItem){
+    public void removeFromCart(LineItem lineItem) {
         cartService.removeProduct(lineItem);
     }
 
-    public BigDecimal getTotalCartPrice(){
+    public BigDecimal getTotalCartPrice() {
         return cartService.getTotalCartPrice();
+    }
+
+    public void emptyCart() {
+        for (LineItem item : findAll()) {
+            cartService.removeProduct(item);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package ru.geekbrains.rest;
 
-import ru.geekbrains.persist.Brand;
 import ru.geekbrains.service.dto.BrandDto;
 
 import javax.ws.rs.*;

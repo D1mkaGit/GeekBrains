@@ -1,12 +1,10 @@
 package ru.geekbrains.persist;
 
-import ru.geekbrains.rest.BrandResource;
-
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +16,14 @@ public class BrandRepository{
 
     public List<Brand> findAll() {
         return em.createQuery("from Brand ", Brand.class)
+                .getResultList();
+    }
+
+
+    public List<Brand> findAllWithProducts() {
+        EntityGraph<?> eg = em.getEntityGraph("brand-with-products-graph");
+        return em.createQuery("from Brand", Brand.class)
+                .setHint("javax.persistence.loadgraph", eg)
                 .getResultList();
     }
 

@@ -5,7 +5,6 @@ import ru.geekbrains.persist.BrandRepository;
 import ru.geekbrains.rest.BrandResource;
 import ru.geekbrains.service.dto.BrandDto;
 
-
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -76,7 +75,9 @@ public class BrandServiceImpl implements BrandService, BrandResource {
     private static BrandDto convert(Brand brand) {
         return new BrandDto(
                 brand.getId(),
-                brand.getName()
-        );
+                brand.getName(),
+                brand.getProducts().stream()
+                        .map(ProductServiceImpl::convert)
+                        .collect(Collectors.toList()));
     }
 }

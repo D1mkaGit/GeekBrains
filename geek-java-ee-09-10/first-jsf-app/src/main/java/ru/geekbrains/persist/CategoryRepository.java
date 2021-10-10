@@ -1,10 +1,8 @@
 package ru.geekbrains.persist;
 
-import ru.geekbrains.rest.CategoryResource;
-
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -18,6 +16,13 @@ public class CategoryRepository {
 
     public List<Category> findAll() {
         return em.createQuery("from Category ", Category.class)
+                .getResultList();
+    }
+
+    public List<Category> findAllWithProducts() {
+        EntityGraph<?> eg = em.getEntityGraph("category-with-products-graph");
+        return em.createQuery("from Category", Category.class)
+                .setHint("javax.persistence.loadgraph", eg)
                 .getResultList();
     }
 

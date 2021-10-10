@@ -1,6 +1,5 @@
 package ru.geekbrains.rest;
 
-import ru.geekbrains.persist.Category;
 import ru.geekbrains.service.dto.CategoryDto;
 
 import javax.ws.rs.*;

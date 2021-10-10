@@ -37,3 +37,79 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/first-jsf-app/api/v1/product/7
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/brand
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/brand/2
+
+###
+
+POST http://localhost:8080/first-jsf-app/api/v1/brand
+Content-Type: application/json
+
+{
+  "name": "Added brand"
+}
+
+###
+
+DELETE http://localhost:8080/first-jsf-app/api/v1/brand/5
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/category
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/category/6
+
+###
+
+POST http://localhost:8080/first-jsf-app/api/v1/category
+Content-Type: application/json
+
+{
+  "name": "Added category"
+}
+
+###
+
+DELETE http://localhost:8080/first-jsf-app/api/v1/brand/7
+
+###
+
+GET http://localhost:8080/first-jsf-app/api/v1/cart
+
+###
+
+POST http://localhost:8080/first-jsf-app/api/v1/cart
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Product 1",
+  "price": 100.00
+}
+
+###
+
+DELETE http://localhost:8080/first-jsf-app/api/v1/cart
+Content-Type: application/json
+{
+    "price": 100.00,
+    "product":
+{
+      "id": 1,
+      "name": "Product 1",
+      "price": 100.00
+    },
+    "qty": 1
+  }
+
+###
+
+DELETE http://localhost:8080/first-jsf-app/api/v1/cart/empty

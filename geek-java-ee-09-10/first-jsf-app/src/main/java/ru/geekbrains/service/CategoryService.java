@@ -1,6 +1,5 @@
 package ru.geekbrains.service;
 
-import ru.geekbrains.persist.Brand;
 import ru.geekbrains.persist.Category;
 import ru.geekbrains.service.dto.CategoryDto;
 

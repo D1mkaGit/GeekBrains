@@ -1,7 +1,5 @@
 package ru.geekbrains.service.dto;
 
-import ru.geekbrains.persist.Product;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +9,7 @@ public class BrandDto {
 
     private String name;
 
-    private List<Product> products;
+    private List<ProductDto> products;
 
     public BrandDto() {
     }
@@ -21,7 +19,7 @@ public class BrandDto {
         this.name = name;
     }
 
-    public BrandDto(Long id, String name, List<Product> products) {
+    public BrandDto(Long id, String name, List<ProductDto> products) {
         this.id = id;
         this.name = name;
         this.products = products;
@@ -43,11 +41,11 @@ public class BrandDto {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
+    public List<ProductDto> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<ProductDto> products) {
         this.products = products;
     }
 
