@@ -1,0 +1,47 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:include src="../WEB-INF/fragments/head.xhtml">
+    <ui:param name="titleName" value="User list application"/>
+</ui:include>
+
+<h:body>
+
+    <ui:include src="../WEB-INF/fragments/navigation.xhtml">
+        <ui:param name="pageName" value="User"/>
+    </ui:include>
+
+    <div class="container">
+        <div class="row py-2">
+            <div class="col-12">
+                <h:form id="productForm">
+                    <div class="form-group">
+                        <h:outputLabel value="Name" for="login"/>
+                        <h:inputText styleClass="form-control" id="login" name="login" placeholder="Enter login"
+                                     value="#{userController.user.login}"/>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Password" for="password"/>
+                        <h:inputText p:type="password" styleClass="form-control" id="password" name="password"
+                                     placeholder="Enter password"
+                                     value="#{userController.user.password}"/>
+                    </div>
+                    <div class="form-group">
+                        <h:selectManyCheckbox value="#{userController.user.roles}" layout="pageDirection">
+                            <f:selectItems value="#{userController.allRoles}" />
+                        </h:selectManyCheckbox>
+                    </div>
+                    <h:commandButton value="Submit" styleClass="btn btn-primary" action="#{userController.saveUser()}"/>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+    <ui:include src="../WEB-INF/fragments/scripts.xhtml"/>
+
+</h:body>
+
+</html>

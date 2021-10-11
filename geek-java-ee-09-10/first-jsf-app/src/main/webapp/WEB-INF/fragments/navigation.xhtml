@@ -25,6 +25,22 @@
             <li class="nav-item #{pageName == 'Cart' ? 'active' : ''}">
                 <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
             </li>
+            <li class="nav-item #{pageName == 'User' ? 'active' : ''}">
+                <h:link styleClass="nav-link" value="User" outcome="/admin/user"/>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <h:link styleClass="btn btn-primary" rendered="#{request.userPrincipal == null}"
+                        value="Login" outcome="/login"/>
+            </li>
+
+            <h:form styleClass="ml-2">
+                <h:commandLink styleClass="btn btn-primary" rendered="#{request.userPrincipal != null}"
+                               action="#{userController.logout()}"
+                               value="Logout #{request.remoteUser}"/>
+            </h:form>
         </ul>
     </div>
 </nav>
