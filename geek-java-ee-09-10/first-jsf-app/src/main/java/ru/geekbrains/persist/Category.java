@@ -4,6 +4,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@NamedEntityGraph(
+        name = "category-with-products-graph",
+        attributeNodes = {
+                @NamedAttributeNode("products")
+        }
+)
 @Table(name = "categories")
 public class Category {
 

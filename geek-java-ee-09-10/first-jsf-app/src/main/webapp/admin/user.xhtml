@@ -1,0 +1,53 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:include src="../WEB-INF/fragments/head.xhtml">
+    <ui:param name="titleName" value="User list application"/>
+</ui:include>
+
+<h:body>
+
+    <f:event listener="${userController.preLoad()}" type="preRenderView" />
+
+    <ui:include src="../WEB-INF/fragments/navigation.xhtml">
+        <ui:param name="pageName" value="User"/>
+    </ui:include>
+
+    <div class="container">
+        <div class="row py-2">
+            <h:form id="productsForm">
+                <div class="col-12">
+                    <h:commandButton value="Add user" styleClass="btn btn-primary"
+                                     action="#{userController.createUser()}"/>
+                </div>
+
+                <div class="col-12">
+                    <h:dataTable value="#{userController.allUsers}" var="user"
+                                 styleClass="table table-bordered my-2">
+                        <h:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{user.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Login</f:facet>
+                            #{user.login}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action</f:facet>
+                            <h:commandButton value="Edit" action="#{userController.editUser(user)}"
+                                             styleClass="mr-1"/>
+                            <h:commandButton value="Delete" action="#{userController.deleteUser(user)}">
+                                <f:ajax event="click" render="productsForm"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+            </h:form>
+        </div>
+    </div>
+
+    <ui:include src="../WEB-INF/fragments/scripts.xhtml"/>
+</h:body>
+</html>

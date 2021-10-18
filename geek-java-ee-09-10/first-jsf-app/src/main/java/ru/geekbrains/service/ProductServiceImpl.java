@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
         return productRepository.count();
     }
 
-    private static ProductDto convert(Product prod) {
+    static ProductDto convert(Product prod) {
         return new ProductDto(
                 prod.getId(),
                 prod.getName(),
