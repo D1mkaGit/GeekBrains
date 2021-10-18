@@ -1,0 +1,36 @@
+# Открываем транзакцию для изменения конфигурации сервера
+batch
+
+# 1. Создаем пространство безопасности, которое будет получать информацию о пользователях и ролях из реляционной БД
+/subsystem=elytron/jdbc-realm=servlet-security-jdbc-realm:add(\
+principal-query=[\
+{sql="SELECT PASSWORD FROM USERS WHERE LOGIN = ?", data-source="MySQLDS", clear-password-mapper={password-index=1}},\
+{sql="SELECT R.NAME, 'Roles' FROM USERS_ROLES UR INNER JOIN ROLES R ON R.ID = UR.ROLE_ID INNER JOIN USERS U ON U.ID = UR.USER_ID WHERE U.LOGIN = ?", data-source="MySQLDS", attribute-mapping=[{index=1, to=roles}]}])
+
+# 2. Используем преобразователь ролей по умолчанию. Нам не требуется никаких специальных операций для этого
+/subsystem=elytron/simple-role-decoder=from-roles-attribute:add(attribute=roles)
+
+# 3. Создаем домен безопасности сервера приложений с именем servlet-security-quickstart-sd
+/subsystem=elytron/security-domain=servlet-security-quickstart-sd:add(\
+default-realm=servlet-security-jdbc-realm, \
+realms=[{realm=servlet-security-jdbc-realm, role-decoder=from-roles-attribute}], \
+permission-mapper=default-permission-mapper)
+
+# 4.Создаем фабрику безопасности для аутентификации по протоколу HTTP. Связываем ее с доменом безопасности и областью безопасности
+/subsystem=elytron/http-authentication-factory=servlet-security-quickstart-http-auth:add(\
+http-server-mechanism-factory=global,\
+security-domain=servlet-security-quickstart-sd,\
+mechanism-configurations=[{mechanism-name=FORM,mechanism-realm-configurations=[{realm-name=RealmUsersRoles}]}])
+
+# 5. Создаем домен безопасности контейнера сервлетов Undertow и привязываем его к домену безопасности сервера
+/subsystem=undertow/application-security-domain=servlet-security-quickstart:add(\
+http-authentication-factory=servlet-security-quickstart-http-auth)
+
+# 6. Создаем домен безопасности для EJB-контейнера и привязываем его к домену безопасности сервера
+/subsystem=ejb3/application-security-domain=servlet-security-quickstart:add(security-domain=servlet-security-quickstart-sd)
+
+# Запускаем все выше приведенные команды конфигурации в рамках одной транзакции
+run-batch
+
+# Перезагружаем конфигурацию сервера приложений
+:reload
