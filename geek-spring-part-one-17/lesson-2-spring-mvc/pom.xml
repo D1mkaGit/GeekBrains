@@ -13,7 +13,7 @@
     <artifactId>lesson-2-spring-mvc</artifactId>
 
     <properties>
-        <spring.version>5.2.8.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
     </properties>
 
     <dependencies>
