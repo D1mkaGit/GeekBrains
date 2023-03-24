@@ -12,7 +12,7 @@
     <artifactId>lesson-1-network-chat</artifactId>
 
     <properties>
-        <spring.version>5.2.8.RELEASE</spring.version>
+        <spring.version>5.2.23.RELEASE</spring.version>
     </properties>
 
     <dependencies>
